@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field, EmailStr, ConfigDict
 
-from models.user import UserRole
+from models.user import UserRoleEnum
 
 
 class SignUpRequestSchema(BaseModel):
@@ -63,7 +63,7 @@ class SignUpResponseSchema(BaseModel):
     name: str
     surname: str
     email: str
-    role: UserRole
+    role: UserRoleEnum
     is_active: bool
     phone: Annotated[
         str | None,

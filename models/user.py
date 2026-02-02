@@ -4,7 +4,7 @@ from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import DateTime, Enum, String
 
-class UserRole(StrEnum):
+class UserRoleEnum(StrEnum):
     ADMIN = 'admin'
     MANAGER = 'manager'
     INSPECTOR = 'inspector'
@@ -48,10 +48,10 @@ class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     phone_number: Mapped[str | None] = mapped_column(
         String(16), nullable=True, comment='Phone number of the user'
     )
-    role: Mapped[UserRole] = mapped_column(
-        Enum(UserRole, name='user_role_enum', create_type=False),
+    role: Mapped[UserRoleEnum] = mapped_column(
+        Enum(UserRoleEnum, name='user_role_enum', create_type=False),
         nullable=False,
-        default=UserRole.SOLO_OPERATOR,
+        default=UserRoleEnum.SOLO_OPERATOR,
     )
 
     def __repr__(self) -> str:
