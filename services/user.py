@@ -5,6 +5,7 @@ from dao import UserDAO
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from exceptions import EmailAlreadyRegisteredException
+from exceptions.user import UserNotFoundByIdException
 from models.user import UserRoleEnum, User
 from schemas import SignUpRequestSchema, SignUpResponseSchema
 from services.jwt.hasher import Hasher
@@ -45,3 +46,21 @@ class UserService(BaseService):
             raise EmailAlreadyRegisteredException from None
         await self._session.commit()
         return SignUpResponseSchema.model_validate(user)
+
+    async def get_user_by_id(self, user_id: int) -> User:
+        """Retrieve a user by ID.
+
+        Args:
+            user_id (int): User ID.
+
+        Returns:
+            User: Retrieved user instance.
+
+        Raises:
+            UserNotFoundByIdException: If user does not exist or is inactive.
+
+        """
+        user: User | None = await self._user_dao.get_by_id(user_id)
+        if not user or not user.is_active:
+            raise UserNotFoundByIdException
+        return user
