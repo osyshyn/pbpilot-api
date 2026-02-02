@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  EnvMode:
+    Type: String
+    AllowedValues:
+      - dev
+      - prod
+    Description: Environment tag
+
+Resources:
+  FastApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: main.handler
+      Runtime: python3.13
+      CodeUri: .
+      FunctionName: !Sub "PbPilotAPI-${EnvMode}"
+      Timeout: 240
+      MemorySize: 512
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AmazonS3FullAccess
+      Environment:
+        Variables:
+          ENV: !Ref EnvMode
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY

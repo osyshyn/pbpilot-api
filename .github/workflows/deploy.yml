@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - development
 
 jobs:
   deploy:
@@ -12,6 +13,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Define Environment
+        id: env-def
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "ENV_MODE=prod" >> $GITHUB_ENV
+            echo "STACK_NAME=Pbpilot-prod" >> $GITHUB_ENV
+          else
+            echo "ENV_MODE=dev" >> $GITHUB_ENV
+            echo "STACK_NAME=Pbpilot-dev" >> $GITHUB_ENV
+          fi
 
       - name: Install UV
         uses: astral-sh/setup-uv@v4
@@ -41,4 +53,11 @@ jobs:
         run: sam build
 
       - name: SAM Deploy
-        run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name Pbpilot-prod --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }}
+        run: |
+          sam deploy \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset \
+            --stack-name ${{ env.STACK_NAME }} \
+            --capabilities CAPABILITY_IAM \
+            --region ${{ secrets.AWS_REGION }} \
+            --parameter-overrides EnvMode=${{ env.ENV_MODE }}
