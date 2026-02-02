@@ -7,7 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from exceptions import EmailAlreadyRegisteredException
 from exceptions.user import UserNotFoundByIdException
 from models.user import UserRoleEnum, User
-from schemas import SignUpRequestSchema, SignUpResponseSchema
+from schemas import SignUpRequestSchema, SignUpResponseSchema, \
+    UserResponseSchema
 from services.jwt.hasher import Hasher
 from sqlalchemy.exc import IntegrityError
 
@@ -64,3 +65,42 @@ class UserService(BaseService):
         if not user or not user.is_active:
             raise UserNotFoundByIdException
         return user
+
+    async def get_me(self, user_id: int) -> UserResponseSchema:
+        """Get current user profile with organization and avatar URL.
+
+        Args:
+            user_id: User ID.
+
+        Returns:
+            UserResponseShema: User information with organization.
+
+        Raises:
+            UserNotFoundByIdException: If user not found.
+
+        """
+        user = await self.get_user_by_id(user_id)
+        return UserResponseSchema.model_validate(user)
+
+    async def delete_user_by_id(
+            self, user_id: int
+    ) -> UserResponseSchema:
+        """Delete a user by ID.
+
+        Args:
+            current_user (User): Current authenticated user.
+            user_id (int): User ID.
+
+        Returns:
+            UserResponseShema: Deleted user information.
+
+        Raises:
+            UserNotFoundByIdException: If user does not exist.
+
+        """
+        user: User | None = await self._user_dao.delete_by_id(user_id)
+        if not user:
+            raise UserNotFoundByIdException
+        await self._session.commit()
+        return UserResponseSchema.model_validate(user)
+
