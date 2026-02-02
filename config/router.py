@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 from config.settings import Settings
 from endpoints import (
-    main_router, auth_router,
+    main_router, auth_router, user_router,
 )
 
 settings = Settings.load()
@@ -22,6 +22,7 @@ def initialize_routers() -> APIRouter:
     """
     main_api_router = APIRouter(prefix=f'/api/{settings.API_VERSION}')
     main_api_router.include_router(main_router, prefix='/health', tags=['main'])
+    main_api_router.include_router(user_router, prefix='/user')
     main_api_router.include_router(auth_router, prefix='/auth', tags=['auth'])
 
 
