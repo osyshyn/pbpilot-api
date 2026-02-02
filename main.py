@@ -3,11 +3,11 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from mangum import Mangum
 
 from config.logger import configure_logging
 from config.router import initialize_routers
 from config.settings import Settings
-from mangum import Mangum
 
 logger = logging.getLogger(__name__)
 
@@ -24,12 +24,12 @@ handler = Mangum(app)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
     ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 main_api_router = initialize_routers()

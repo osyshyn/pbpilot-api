@@ -18,6 +18,12 @@ repos:
     rev: v4.6.0
     hooks:
       - id: check-yaml
+        exclude: |
+          (?x)(
+            template\.ya?ml|
+            sam\.ya?ml|
+            .*cloudformation.*\.ya?ml
+          )
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: debug-statements
