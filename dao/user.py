@@ -58,3 +58,23 @@ class UserDAO(BaseDAO):
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
+
+    async def delete_by_id(self, user_id: int) -> User | None:
+        """Delete user by id.
+
+        Args:
+            user_id: User ID.
+
+        Returns:
+            User | None: Deleted user instance or None if not found.
+
+        """
+        stmt = (
+            update(User)
+            .where(User.id == user_id)
+            .values(is_active=False, deleted_at=datetime.now(UTC))
+            .returning(User)
+        )
+
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
