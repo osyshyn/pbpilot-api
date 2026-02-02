@@ -51,17 +51,18 @@ async def get_me(
     tags=['me'],
 )
 async def delete_me(
-    user: Annotated[User, Depends(get_current_user)],
+    token_user: Annotated[User, Depends(get_current_user)],
     service: Annotated[UserService, Depends(get_service(UserService))],
 ) -> UserResponseSchema:
     """Delete the current authenticated user's profile.
 
     Args:
-        user (User): Current authenticated user from token.
+        token_user (User): Current authenticated user from token.
         service (UserService): Service for user-related operations.
 
     Returns:
         UserResponseShema: Schema representing the deleted user.
 
     """
-    return await service.delete_user_by_id(user_id=user.id)
+    user = await service.delete_user_by_id(user_id=token_user.id)
+    return UserResponseSchema.model_validate(user)
