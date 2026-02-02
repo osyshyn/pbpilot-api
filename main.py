@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from config.logger import configure_logging
 from config.router import initialize_routers
 from config.settings import Settings
+from mangum import Mangum
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,7 @@ app = FastAPI(
     openapi_url='/openapi.json',
     root_path='/Prod',
 )
+handler = Mangum(app)
 
 app.add_middleware(
     CORSMiddleware,
