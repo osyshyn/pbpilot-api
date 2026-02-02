@@ -1,6 +1,7 @@
 from .user import (
     EmailAlreadyRegisteredException,
     UserIsNotActiveException,
+    UserHasNoPermissionPermission,
 )
 from .auth import (
     AccessTokenExpiredException,
@@ -18,4 +19,5 @@ __all__ = [
     'NoUpdateDataException',
     'RefreshTokenException',
     'WrongCredentialsException',
+    'UserHasNoPermissionPermission',
 ]
