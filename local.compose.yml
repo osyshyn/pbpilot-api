@@ -1,0 +1,21 @@
+services:
+    pbpilot_database:
+        container_name: "local_pbpilot_db"
+        image: postgres:17.5-alpine
+        restart: always
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=qwerty123
+            - POSTGRES_DB=pbpilot_db
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        networks:
+            - container
+
+volumes:
+    postgres_data:
+networks:
+    container:
+        driver: bridge
