@@ -66,7 +66,7 @@ class UserService(BaseService):
             raise UserNotFoundByIdException
         return user
 
-    async def get_me(self, user_id: int) -> UserResponseSchema:
+    async def get_me(self, user_id: int) -> User:
         """Get current user profile with organization and avatar URL.
 
         Args:
@@ -79,12 +79,11 @@ class UserService(BaseService):
             UserNotFoundByIdException: If user not found.
 
         """
-        user = await self.get_user_by_id(user_id)
-        return UserResponseSchema.model_validate(user)
+        return await self.get_user_by_id(user_id)
 
     async def delete_user_by_id(
             self, user_id: int
-    ) -> UserResponseSchema:
+    ) -> User:
         """Delete a user by ID.
 
         Args:
@@ -92,7 +91,7 @@ class UserService(BaseService):
             user_id (int): User ID.
 
         Returns:
-            UserResponseShema: Deleted user information.
+            User: Deleted user.
 
         Raises:
             UserNotFoundByIdException: If user does not exist.
@@ -102,5 +101,4 @@ class UserService(BaseService):
         if not user:
             raise UserNotFoundByIdException
         await self._session.commit()
-        return UserResponseSchema.model_validate(user)
-
+        return user

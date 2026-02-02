@@ -25,20 +25,21 @@ user_router = APIRouter()
     tags=['me'],
 )
 async def get_me(
-    user: Annotated[User, Depends(get_current_user)],
+    token_user: Annotated[User, Depends(get_current_user)],
     service: Annotated[UserService, Depends(get_service(UserService))],
 ) -> UserResponseSchema:
     """Get information about current user.
 
     Args:
-        user (User): Current authenticated user from token.
+        token_user (User): Current authenticated user from token.
         service: User service.
 
     Returns:
         UserResponseShema: Schema representing the user with organization data.
 
     """
-    return await service.get_me(user_id=user.id)
+    user = await service.get_me(user_id=token_user.id)
+    return UserResponseSchema.model_validate(user)
 
 
 @user_router.delete(
