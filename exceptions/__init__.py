@@ -1,5 +1,6 @@
 from .user import (
     EmailAlreadyRegisteredException,
+    UserIsNotActiveException,
 )
 from .auth import (
     AccessTokenExpiredException,
@@ -11,6 +12,7 @@ from .auth import (
 
 __all__ = [
     'EmailAlreadyRegisteredException',
+    'UserIsNotActiveException',
     'AccessTokenExpiredException',
     'NoFiltersException',
     'NoUpdateDataException',
