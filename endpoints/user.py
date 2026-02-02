@@ -1,10 +1,10 @@
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, File, Query, UploadFile
+from fastapi import APIRouter, Depends
 
-from core import exception_handler, get_service
-from dependencies import get_admin_user_from_token, get_current_user
+from core import get_service
+from dependencies import get_current_user
 from models import User
 from schemas import UserResponseSchema
 from services import UserService

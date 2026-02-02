@@ -1,3 +1,3 @@
 from .auth import AccessTokenDTO
 
-__all__ = ['AccessTokenDTO',]
+__all__ = ['AccessTokenDTO']

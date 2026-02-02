@@ -1,7 +1,7 @@
 """create_user_model
 
 Revision ID: b887b0e899b6
-Revises: 
+Revises:
 Create Date: 2026-02-02 22:18:46.538666
 
 """

@@ -27,13 +27,16 @@ async def get_current_user(
     user_id = await auth_service.validate_token_for_user(token)
     return await user_service.get_user_by_id(user_id)
 
+
 async def _get_current_user_by_role(
-        user: User,
-        role: UserRoleEnum,
+    user: User,
+    role: UserRoleEnum,
 ) -> User:
+    """Get a user with a specific role from a token."""
     if user.role != role:
         raise UserHasNoPermissionPermission
     return user
+
 
 async def get_admin_user_from_token(
     current_user: Annotated[User, Depends(get_current_user)],
@@ -48,15 +51,21 @@ async def get_admin_user_from_token(
 async def get_manager_user_from_token(
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> User:
+    """Get a user with a manager role from a token."""
     return await _get_current_user_by_role(current_user, UserRoleEnum.MANAGER)
 
 
 async def get_inspector_user_from_token(
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> User:
+    """Get a user with an inspector role from a token."""
     return await _get_current_user_by_role(current_user, UserRoleEnum.INSPECTOR)
+
 
 async def get_solo_operator_user_from_token(
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> User:
-    return await _get_current_user_by_role(current_user, UserRoleEnum.SOLO_OPERATOR)
+    """Get a user with a solo operator role from a token."""
+    return await _get_current_user_by_role(
+        current_user, UserRoleEnum.SOLO_OPERATOR
+    )

@@ -1,11 +1,13 @@
 from typing import Annotated
 
-from pydantic import BaseModel, Field, EmailStr, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from models.user import UserRoleEnum
 
 
 class SignUpRequestSchema(BaseModel):
+    """Schema representing user registration data."""
+
     email: Annotated[
         EmailStr,
         Field(
@@ -58,7 +60,10 @@ class SignUpRequestSchema(BaseModel):
         ),
     ]
 
+
 class SignUpResponseSchema(BaseModel):
+    """Schema representing user information after successful registration."""
+
     id: int
     name: str
     surname: str

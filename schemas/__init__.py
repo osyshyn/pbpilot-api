@@ -1,12 +1,13 @@
-from .main import HealthCheckResponseSchema
 from .auth import SignUpRequestSchema, SignUpResponseSchema
-from .token import TokenResponseSchemas, RefreshTokenRequestSchema
+from .main import HealthCheckResponseSchema
+from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
+
 __all__ = [
     'HealthCheckResponseSchema',
+    'RefreshTokenRequestSchema',
     'SignUpRequestSchema',
     'SignUpResponseSchema',
     'TokenResponseSchemas',
-    'RefreshTokenRequestSchema',
     'UserResponseSchema',
 ]

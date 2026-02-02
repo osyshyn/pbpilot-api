@@ -1,21 +1,39 @@
+from datetime import UTC, datetime
+
+from sqlalchemy import select, update
+
 from core.dao import BaseDAO
 from models import User
 from models.user import UserRoleEnum
-from sqlalchemy import select, update
-from datetime import UTC, datetime
 
 
 class UserDAO(BaseDAO):
+    """DAO for User model."""
+
     async def create(
-            self,
-            *,
-            name: str,
-            surname: str,
-            email: str,
-            password: str,
-            role: UserRoleEnum,
-            phone_number: str | None = None,
+        self,
+        *,
+        name: str,
+        surname: str,
+        email: str,
+        password: str,
+        role: UserRoleEnum,
+        phone_number: str | None = None,
     ) -> User:
+        """Create a new user.
+
+        Args:
+            name: User name.
+            surname: User surname.
+            email: User email.
+            password: User password.
+            role: User role.
+            phone_number: User phone number (optional).
+
+        Returns:
+            User: User instance.
+
+        """
         user = User(
             name=name,
             surname=surname,
@@ -28,7 +46,6 @@ class UserDAO(BaseDAO):
         await self._session.flush()
         await self._session.refresh(user)
         return user
-
 
     async def get_by_id(self, user_id: int) -> User | None:
         """Get user by id.
@@ -57,7 +74,6 @@ class UserDAO(BaseDAO):
         stmt = select(User).where(User.email == email)
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
-
 
     async def delete_by_id(self, user_id: int) -> User | None:
         """Delete user by id.

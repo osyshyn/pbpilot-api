@@ -1,17 +1,17 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 
 from config.settings import Settings
 from core import get_service
-from fastapi.security import OAuth2PasswordRequestForm
 from schemas import (
-    SignUpResponseSchema,
+    RefreshTokenRequestSchema,
     SignUpRequestSchema,
+    SignUpResponseSchema,
     TokenResponseSchemas,
-    RefreshTokenRequestSchema
 )
-from services import UserService, AuthService
+from services import AuthService, UserService
 
 auth_router = APIRouter()
 settings = Settings.load()
@@ -44,12 +44,12 @@ async def signup_user(
     response_model=TokenResponseSchemas,
     summary='User login',
     description=(
-            'Authenticate user with email and password to get access to tokens.'
+        'Authenticate user with email and password to get access to tokens.'
     ),
 )
 async def login_user(
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-        service: Annotated[AuthService, Depends(get_service(AuthService))],
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    service: Annotated[AuthService, Depends(get_service(AuthService))],
 ) -> TokenResponseSchemas:
     """Authenticate user and return access and refresh tokens.
 
@@ -65,9 +65,7 @@ async def login_user(
         email=form_data.username,
         password=form_data.password,
     )
-    return await service.create_token(
-        author_id=user.id, user_role=user.role
-    )
+    return await service.create_token(author_id=user.id, user_role=user.role)
 
 
 @auth_router.post(
@@ -91,11 +89,9 @@ async def refresh_token(
         TokenSchemas: New access and refresh tokens.
 
     """
-    token: TokenSchemas = await service.refresh_token(
+    return await service.refresh_token(
         refresh_token=refresh_request.refresh_token,
     )
-    return token
-
 
 
 @auth_router.delete(

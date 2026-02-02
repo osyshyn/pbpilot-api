@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from models.user import UserRoleEnum
 
@@ -60,6 +60,7 @@ class TokenResponseSchemas(_AccessTokenMixinSchema, _RefreshTokenMixinSchema):
 
     user_role: UserRoleEnum
     token_type: str = 'Bearer'  # noqa: S105
+
 
 class RefreshTokenRequestSchema(_RefreshTokenMixinSchema):
     """Schema representing a request to refresh an access token.

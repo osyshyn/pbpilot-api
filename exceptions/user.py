@@ -18,6 +18,7 @@ class EmailAlreadyRegisteredException(UserException):
             ),
         )
 
+
 class UserIsNotActiveException(UserException):
     """Raised when user is not active."""
 
@@ -27,6 +28,7 @@ class UserIsNotActiveException(UserException):
             status_code=404,
             detail='User is not active.',
         )
+
 
 class UserHasNoPermissionPermission(UserException):
     """Raised when user does not have permission."""
@@ -38,6 +40,7 @@ class UserHasNoPermissionPermission(UserException):
             detail='Current authenticated user'
             ' has no right to access this data',
         )
+
 
 class UserNotFoundByIdException(UserException):
     """Raised when user with provided id is not found."""

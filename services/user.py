@@ -1,28 +1,40 @@
 import logging
 
-from core import BaseService
-from dao import UserDAO
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from core import BaseService
+from dao import UserDAO
 from exceptions import EmailAlreadyRegisteredException
 from exceptions.user import UserNotFoundByIdException
-from models.user import UserRoleEnum, User
-from schemas import SignUpRequestSchema, SignUpResponseSchema, \
-    UserResponseSchema
+from models.user import User, UserRoleEnum
+from schemas import (
+    SignUpRequestSchema,
+    SignUpResponseSchema,
+)
 from services.jwt.hasher import Hasher
-from sqlalchemy.exc import IntegrityError
 
 logger = logging.getLogger(__name__)
 
 
 class UserService(BaseService):
+    """Service layer for managing user-related operations."""
+
     def __init__(
-            self,
-            db_session: AsyncSession,
-            *,
-            user_dao: UserDAO | None = None,
-            hash_service: Hasher | None = None,
+        self,
+        db_session: AsyncSession,
+        *,
+        user_dao: UserDAO | None = None,
+        hash_service: Hasher | None = None,
     ):
+        """Initialize UserService.
+
+        Args:
+            db_session (AsyncSession): Database session.
+            user_dao (UserDAO | None): Optional UserDAO instance.
+            hash_service (Hasher | None): Optional password hasher.
+
+        """
         super().__init__(db_session)
         self._hash_service = hash_service or Hasher()
         self._user_dao = user_dao or UserDAO(db_session)
@@ -31,6 +43,18 @@ class UserService(BaseService):
         self,
         user_data: SignUpRequestSchema,
     ) -> SignUpResponseSchema:
+        """Create a new user in the database.
+
+        Args:
+            user_data (CreateUserByAdminRequestSchema): User data
+        Returns:
+            CreateUserResponseShema: Created user information including
+            ID, name, surname, email, active status, and roles
+
+        Note:
+            If roles are not provided, defaults to [UserRolesEnum.SOLO_OPERATOR]
+
+        """
         hashed_pass: str = self._hash_service.hash_password(
             user_data.password,
         )
@@ -81,9 +105,7 @@ class UserService(BaseService):
         """
         return await self.get_user_by_id(user_id)
 
-    async def delete_user_by_id(
-            self, user_id: int
-    ) -> User:
+    async def delete_user_by_id(self, user_id: int) -> User:
         """Delete a user by ID.
 
         Args:

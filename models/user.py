@@ -1,14 +1,19 @@
 from enum import StrEnum
-from sqlalchemy import Enum
+
+from sqlalchemy import Enum, String
+from sqlalchemy.orm import Mapped, mapped_column
+
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import DateTime, Enum, String
+
 
 class UserRoleEnum(StrEnum):
+    """Enumeration of user roles."""
+
     ADMIN = 'admin'
     MANAGER = 'manager'
     INSPECTOR = 'inspector'
     SOLO_OPERATOR = 'solo'
+
 
 class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     """User model represents a system user.
@@ -55,4 +60,5 @@ class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     )
 
     def __repr__(self) -> str:
+        """Return a string representation of the User object."""
         return f'<User {self.email} ({self.role})>'

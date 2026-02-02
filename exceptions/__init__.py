@@ -1,8 +1,3 @@
-from .user import (
-    EmailAlreadyRegisteredException,
-    UserIsNotActiveException,
-    UserHasNoPermissionPermission,
-)
 from .auth import (
     AccessTokenExpiredException,
     NoFiltersException,
@@ -10,14 +5,19 @@ from .auth import (
     RefreshTokenException,
     WrongCredentialsException,
 )
+from .user import (
+    EmailAlreadyRegisteredException,
+    UserHasNoPermissionPermission,
+    UserIsNotActiveException,
+)
 
 __all__ = [
-    'EmailAlreadyRegisteredException',
-    'UserIsNotActiveException',
     'AccessTokenExpiredException',
+    'EmailAlreadyRegisteredException',
     'NoFiltersException',
     'NoUpdateDataException',
     'RefreshTokenException',
-    'WrongCredentialsException',
     'UserHasNoPermissionPermission',
+    'UserIsNotActiveException',
+    'WrongCredentialsException',
 ]
