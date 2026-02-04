@@ -2,6 +2,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
+from core import BaseModelSchema
 from models.user import UserRoleEnum
 
 
@@ -61,7 +62,7 @@ class SignUpRequestSchema(BaseModel):
     ]
 
 
-class SignUpResponseSchema(BaseModel):
+class SignUpResponseSchema(BaseModelSchema):
     """Schema representing user information after successful registration."""
 
     id: int
@@ -78,4 +79,3 @@ class SignUpResponseSchema(BaseModel):
             description='Phone number of the user',
         ),
     ] = None
-    model_config = ConfigDict(from_attributes=True)

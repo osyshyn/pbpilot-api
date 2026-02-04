@@ -2,10 +2,11 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field
 
+from core import BaseModelSchema
 from models.pricing_plan import UserPlanEnum, BillingPeriodEnum, CurrencyEnum
 
 
-class PricingPlanResponseSchema(BaseModel):
+class PricingPlanResponseSchema(BaseModelSchema):
     plan: Annotated[
         UserPlanEnum,
         Field(
@@ -35,5 +36,5 @@ class PricingPlanResponseSchema(BaseModel):
         )
     ]
 
-class PricingPlanListResponseSchema(BaseModel):
+class PricingPlanListResponseSchema(BaseModelSchema):
     items: list[PricingPlanResponseSchema]
