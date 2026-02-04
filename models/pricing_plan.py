@@ -8,15 +8,15 @@ from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
 
 class UserPlanEnum(StrEnum):
     """Enumeration of user plans."""
-    SOLO_INSPECTOR = 'solo_inspector'
-    ENTERPRISE = 'enterprise'
-    ENTERPRISE_PLUS = 'enterprise_plus'
+    SOLO_INSPECTOR = 'SOLO_INSPECTOR'
+    ENTERPRISE = 'ENTERPRISE'
+    ENTERPRISE_PLUS = 'ENTERPRISE_PLUS'
 
 
 class BillingPeriodEnum(StrEnum):
     """Enumeration of billing periods."""
-    MONTHLY = "monthly"
-    YEARLY = "yearly"
+    MONTHLY = "MONTHLY"
+    YEARLY = "YEARLY"
 
 
 class CurrencyEnum(StrEnum):
