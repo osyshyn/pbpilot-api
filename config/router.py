@@ -7,6 +7,7 @@ from endpoints import (
     auth_router,
     main_router,
     user_router,
+    pricing_plan_router,
 )
 
 settings = Settings.load()
@@ -26,5 +27,6 @@ def initialize_routers() -> APIRouter:
     main_api_router.include_router(main_router, prefix='/health', tags=['main'])
     main_api_router.include_router(user_router, prefix='/user')
     main_api_router.include_router(auth_router, prefix='/auth', tags=['auth'])
+    main_api_router.include_router(pricing_plan_router, prefix='/pricing_plan', tags=['pricing_plan'])
 
     return main_api_router
