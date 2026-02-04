@@ -59,6 +59,7 @@ class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         nullable=False,
         default=UserRoleEnum.SOLO_OPERATOR,
     )
+    # Billing settings
     current_plan: Mapped[UserPlanEnum] = mapped_column(
         Enum(UserPlanEnum, name="user_plan_enum"),
         nullable=True,
@@ -67,6 +68,11 @@ class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         Enum(BillingPeriodEnum, name="billing_period_enum"),
         nullable=True,
     )
+    free_reports_count: Mapped[int] = mapped_column(
+        nullable=True,
+        default=0
+    )
+
     def __repr__(self) -> str:
         """Return a string representation of the User object."""
         return f'<User {self.email} ({self.role})>'
