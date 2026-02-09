@@ -17,6 +17,7 @@ configure_logging()
 app = FastAPI(
     title=settings.API_TITLE,
     openapi_url='/openapi.json',
+    root_path='/Prod',
 )
 handler = Mangum(app)
 
