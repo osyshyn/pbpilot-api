@@ -3,7 +3,7 @@ from .main import HealthCheckResponseSchema
 from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
 from .pricing_plan import PricingPlanListResponseSchema, PricingPlanResponseSchema
-from .clients import ClientResponseSchema, ClientListResponseSchema, CreateClientRequestSchema
+from .clients import ClientResponseSchema, ClientListResponseSchema, CreateClientRequestSchema, UpdateClientRequestSchema
 __all__ = [
     'HealthCheckResponseSchema',
     'RefreshTokenRequestSchema',
@@ -16,4 +16,5 @@ __all__ = [
     'ClientResponseSchema',
     'ClientListResponseSchema',
     'CreateClientRequestSchema',
+    'UpdateClientRequestSchema',
 ]
