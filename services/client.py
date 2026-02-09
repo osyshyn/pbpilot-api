@@ -47,6 +47,12 @@ class ClientService(BaseService):
             raise ClientNotFoundException
         return client
 
+    async def get_by_email(self, client_email: str) -> Client:
+        client = await self._client_dao.get_by_email(client_email)
+        if not client:
+            raise ClientNotFoundException
+        return client
+
     async def update_client(
             self,
             client_id: int,
@@ -63,4 +69,12 @@ class ClientService(BaseService):
             raise ClientEmailAlreadyRegisteredException from None
         if not client:
             raise ClientNotFoundException
+        await self._session.commit()
+        return client
+
+    async def delete_by_id(self, client_id: int) -> Client:
+        client = await self._client_dao.delete_by_id(client_id=client_id)
+        if not client:
+            raise ClientNotFoundException
+        await self._session.commit()
         return client

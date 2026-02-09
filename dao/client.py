@@ -1,6 +1,7 @@
+from datetime import datetime, UTC
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 
 from core.dao import BaseDAO
 from models import Client
@@ -86,3 +87,14 @@ class ClientDAO(BaseDAO):
         await self._session.flush()
         await self._session.refresh(client)
         return client
+
+
+    async def delete_by_id(self, client_id: int) -> Client | None:
+        stmt = (
+            update(Client)
+            .where(Client.id == client_id)
+            .values(is_active=False, deleted_at=datetime.now(UTC))
+            .returning(Client)
+        )
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
