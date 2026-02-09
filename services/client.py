@@ -3,8 +3,9 @@ import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 
-from exceptions import ClientEmailAlreadyRegisteredException
-from schemas import CreateClientRequestSchema
+from exceptions import ClientEmailAlreadyRegisteredException, \
+    ClientNotFoundException
+from schemas import CreateClientRequestSchema, UpdateClientRequestSchema
 from core import BaseService
 from dao import ClientDAO
 from models import PricingPlan, Client
@@ -15,16 +16,18 @@ logger = logging.getLogger(__name__)
 class ClientService(BaseService):
 
     def __init__(
-        self,
-        db_session: AsyncSession,
-        *,
-        client_dao: ClientDAO | None = None,
+            self,
+            db_session: AsyncSession,
+            *,
+            client_dao: ClientDAO | None = None,
     ):
         super().__init__(db_session)
         self._client_dao = client_dao or ClientDAO(db_session)
 
-
-    async def create_client(self, client_data:CreateClientRequestSchema) -> Client:
+    async def create_client(
+            self,
+            client_data: CreateClientRequestSchema
+    ) -> Client:
         try:
             client = await self._client_dao.create(
                 name=client_data.name,
@@ -38,4 +41,26 @@ class ClientService(BaseService):
         await self._session.commit()
         return client
 
+    async def get_by_id(self, client_id: int) -> Client:
+        client = await self._client_dao.get_by_id(client_id)
+        if not client:
+            raise ClientNotFoundException
+        return client
 
+    async def update_client(
+            self,
+            client_id: int,
+            client_update_data: UpdateClientRequestSchema
+    ) -> Client:
+        try:
+            client = await self._client_dao.update_by_id(
+                client_id=client_id,
+                update_data=client_update_data.model_dump(
+                    exclude_unset=True
+                )
+            )
+        except IntegrityError:
+            raise ClientEmailAlreadyRegisteredException from None
+        if not client:
+            raise ClientNotFoundException
+        return client
