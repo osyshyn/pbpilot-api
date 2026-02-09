@@ -100,8 +100,13 @@ async def refresh_token(
         TokenSchemas: New access and refresh tokens.
 
     """
-    return await service.refresh_token(
+    access_token, new_refresh_token, user_role = await service.refresh_token(
         refresh_token=refresh_request.refresh_token,
+    )
+    return TokenResponseSchemas(
+        access_token=access_token,
+        refresh_token=new_refresh_token,
+        user_role=user_role,
     )
 
 

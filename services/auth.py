@@ -99,7 +99,7 @@ class AuthService(BaseService):
         )
         return access_token, refresh_token
 
-    async def refresh_token(self, refresh_token: str) -> TokenResponseSchemas:
+    async def refresh_token(self, refresh_token: str) -> tuple[str, str, UserRoleEnum]:
         """Refresh access and refresh tokens using a valid refresh token.
 
         Args:
@@ -142,12 +142,7 @@ class AuthService(BaseService):
                 expires_at=expires_at,
             )
             await self._session.commit()
-
-        return TokenResponseSchemas(
-            access_token=access_token,
-            refresh_token=new_refresh_token,
-            user_role=user.role,
-        )
+        return access_token, new_refresh_token, user.role
 
     async def logout_user(
         self,
