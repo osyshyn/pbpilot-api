@@ -24,7 +24,7 @@ class UserResponseSchema(BaseModelSchema):
         ),
     ] = None
     is_onboarding_completed: Annotated[
-        bool,
+        bool | None,
         Field(
             default=False,
             description='Is onboarding completed for the user',
