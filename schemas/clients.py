@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from core import BaseModelSchema
+from core import BaseModelSchema, BaseUpdateSchema
 from models.user import UserRoleEnum
 
 
@@ -93,6 +93,57 @@ class CreateClientRequestSchema(BaseModelSchema):
         ),
     ]
 
+class UpdateClientRequestSchema(BaseUpdateSchema):
+    name: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='First name of the client',
+            examples=['John', ],
+            min_length=3,
+            max_length=128,
+        )
+    ]
+    surname: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Last name of the client',
+            examples=['Doe', ],
+            min_length=3,
+            max_length=128,
+        )
+    ]
+    email: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Email address of the client',
+            examples=['john_doe@gmail.com', ],
+            min_length=3,
+            max_length=128,
+        )
+    ]
+    phone_number: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Phone number of the client',
+            examples=['+12345678901', ],
+            min_length=3,
+            max_length=128,
+        ),
+    ]
+    business_address: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Phone number of the client',
+            examples=['Main Street'],
+            min_length=3,
+            max_length=128,
+        ),
+    ]
 
 class ClientResponseSchema(_BaseClientSchema):
     """Schema representing a client."""
