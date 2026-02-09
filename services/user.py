@@ -59,6 +59,7 @@ class UserService(BaseService):
             user_data.password,
         )
         try:
+            # User need to book a call with owner to activate account
             user: User = await self._user_dao.create(
                 name=user_data.name,
                 surname=user_data.surname,
