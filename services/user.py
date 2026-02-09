@@ -10,7 +10,6 @@ from exceptions.user import UserNotFoundByIdException
 from models.user import User, UserRoleEnum
 from schemas import (
     SignUpRequestSchema,
-    SignUpResponseSchema,
 )
 from services.jwt.hasher import Hasher
 
@@ -42,7 +41,7 @@ class UserService(BaseService):
     async def create_new_user(
         self,
         user_data: SignUpRequestSchema,
-    ) -> SignUpResponseSchema:
+    ) -> User:
         """Create a new user in the database.
 
         Args:
@@ -74,7 +73,7 @@ class UserService(BaseService):
         except IntegrityError:
             raise EmailAlreadyRegisteredException from None
         await self._session.commit()
-        return SignUpResponseSchema.model_validate(user)
+        return user
 
     async def get_user_by_id(self, user_id: int) -> User:
         """Retrieve a user by ID.

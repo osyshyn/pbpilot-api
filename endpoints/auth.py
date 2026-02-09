@@ -23,8 +23,8 @@ settings = Settings.load()
     response_model=SignUpResponseSchema,
 )
 async def signup_user(
-    user_data: SignUpRequestSchema,
-    service: Annotated[UserService, Depends(get_service(UserService))],
+        user_data: SignUpRequestSchema,
+        service: Annotated[UserService, Depends(get_service(UserService))],
 ) -> SignUpResponseSchema:
     """Create a new user in the system.
 
@@ -36,7 +36,11 @@ async def signup_user(
         UserResponseShema: Schema representing the newly created user.
 
     """
-    return await service.create_new_user(user_data=user_data)
+    return SignUpResponseSchema.model_validate(
+        await service.create_new_user(
+            user_data=user_data
+        )
+    )
 
 
 @auth_router.post(
@@ -44,12 +48,12 @@ async def signup_user(
     response_model=TokenResponseSchemas,
     summary='User login',
     description=(
-        'Authenticate user with email and password to get access to tokens.'
+            'Authenticate user with email and password to get access to tokens.'
     ),
 )
 async def login_user(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    service: Annotated[AuthService, Depends(get_service(AuthService))],
+        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+        service: Annotated[AuthService, Depends(get_service(AuthService))],
 ) -> TokenResponseSchemas:
     """Authenticate user and return access and refresh tokens.
 
@@ -75,8 +79,8 @@ async def login_user(
     description='Get new access and refresh tokens using a valid one.',
 )
 async def refresh_token(
-    refresh_request: Annotated[RefreshTokenRequestSchema, Depends()],
-    service: Annotated[AuthService, Depends(get_service(AuthService))],
+        refresh_request: Annotated[RefreshTokenRequestSchema, Depends()],
+        service: Annotated[AuthService, Depends(get_service(AuthService))],
 ) -> TokenResponseSchemas:
     """Refresh access and refresh tokens using a valid refresh token.
 
@@ -101,8 +105,8 @@ async def refresh_token(
     description='Invalidate the provided refresh token to log out the user.',
 )
 async def logout_user(
-    refresh_request: Annotated[RefreshTokenRequestSchema, Depends()],
-    service: Annotated[AuthService, Depends(get_service(AuthService))],
+        refresh_request: Annotated[RefreshTokenRequestSchema, Depends()],
+        service: Annotated[AuthService, Depends(get_service(AuthService))],
 ) -> None:
     """Invalidate the provided refresh token, logging out the user.
 
