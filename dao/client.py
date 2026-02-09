@@ -1,4 +1,6 @@
-from datetime import UTC, datetime
+from typing import Any
+
+from sqlalchemy import select
 
 from core.dao import BaseDAO
 from models import Client
@@ -41,3 +43,46 @@ class ClientDAO(BaseDAO):
         await self._session.refresh(client)
         return client
 
+    async def get_by_email(self, email: str) -> Client | None:
+        """Get user by email.
+
+        Args:
+            email: Client email address.
+
+        Returns:
+            Client | None: User instance or None if not found.
+
+        """
+        stmt = select(Client).where(Client.email == email)
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def get_by_id(self, client_id: int) -> Client | None:
+        """Get user by email.
+
+        Args:
+            client_id: Client id.
+
+        Returns:
+            Client | None: User instance or None if not found.
+
+        """
+        stmt = select(Client).where(Client.id == client_id)
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def update_by_id(
+            self,
+            client_id: int,
+            update_data: dict[str, Any],
+    ) -> Client | None:
+        """Update user by id."""
+        client = await self.get_by_id(client_id)
+        if not client:
+            return None
+        for key, value in update_data.items():
+            if hasattr(client, key):
+                setattr(client, key, value)
+        await self._session.flush()
+        await self._session.refresh(client)
+        return client
