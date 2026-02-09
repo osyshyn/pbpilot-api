@@ -23,3 +23,4 @@ class UserResponseSchema(BaseModelSchema):
             description='Phone number of the user',
         ),
     ] = None
+    is_onboarding_completed: bool = False
