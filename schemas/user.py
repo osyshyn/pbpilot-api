@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from core import BaseModelSchema
 from models.user import UserRoleEnum
@@ -31,3 +31,7 @@ class UserResponseSchema(BaseModelSchema):
             examples=[True],
         ),
     ] = False
+
+    @field_validator('is_onboarding_completed', mode='before')
+    def ensure_bool(cls, v: bool | None) -> bool:
+        return bool(v)
