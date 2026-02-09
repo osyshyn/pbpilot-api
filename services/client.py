@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import BaseService
+from core.pagination import PaginationParams
 from dao import ClientDAO
 from exceptions import (
     ClientEmailAlreadyRegisteredException,
@@ -74,3 +75,11 @@ class ClientService(BaseService):
             raise ClientNotFoundException
         await self._session.commit()
         return client
+
+    async def get_all_clients(
+        self,
+        pagination: PaginationParams,
+    ) -> tuple[list[Client], int]:
+        return await self._client_dao.get_all(
+            page=pagination.page, limit=pagination.size
+        )

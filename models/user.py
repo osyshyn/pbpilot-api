@@ -59,6 +59,10 @@ class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         nullable=False,
         default=UserRoleEnum.SOLO_OPERATOR,
     )
+    is_onboarding_completed: Mapped[bool] = mapped_column(
+        nullable=True,
+        default=False
+    )
     # Billing settings
     current_plan: Mapped[UserPlanEnum] = mapped_column(
         Enum(UserPlanEnum, name='user_plan_enum'),

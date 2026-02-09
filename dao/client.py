@@ -101,3 +101,21 @@ class ClientDAO(BaseDAO):
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def get_all(
+        self,
+        page: int,
+        limit: int,
+    ) -> tuple[list[Client], int]:
+        """Get all clients with pagination.
+
+        Args:
+            page: Page number.
+            limit: Page size.
+
+        Returns:
+            tuple[list[Client], int]: List of clients and total count.
+
+        """
+        stmt = select(Client).where(Client.is_active == True)  # noqa: E712
+        return await self.paginate(query=stmt, page=page, limit=limit)

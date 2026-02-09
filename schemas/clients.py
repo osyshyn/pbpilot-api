@@ -161,9 +161,3 @@ class ClientResponseSchema(_BaseClientSchema):
             examples=[15],
         ),
     ]
-
-
-class ClientListResponseSchema(BaseModelSchema):
-    """Schema representing a list of clients."""
-
-    items: list[ClientResponseSchema]

@@ -4,6 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from core import get_service
+from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_admin_user_from_token
 from schemas import (
     ClientResponseSchema,
@@ -15,6 +16,28 @@ from services.client import ClientService
 logger = logging.getLogger(__name__)
 
 client_router = APIRouter()
+
+
+@client_router.get(
+    path='/',
+    summary='Get all clients',
+    dependencies=[Depends(get_admin_user_from_token)],
+)
+async def get_all_clients(
+    pagination: Annotated[PaginationParams, Depends()],
+    client_service: Annotated[
+        ClientService, Depends(get_service(ClientService))
+    ],
+) -> PaginatedResponse[ClientResponseSchema]:
+    items, total = await client_service.get_all_clients(pagination=pagination)
+    pages = (total + pagination.size - 1) // pagination.size
+    return PaginatedResponse(
+        items=items,  # type: ignore
+        total=total,
+        page=pagination.page,
+        size=pagination.size,
+        pages=pages,
+    )
 
 
 @client_router.post(
