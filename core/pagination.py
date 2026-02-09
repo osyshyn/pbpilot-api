@@ -1,7 +1,7 @@
 from typing import Generic, TypeVar
 
 from fastapi import Query
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from core.schemas import BaseModelSchema
 

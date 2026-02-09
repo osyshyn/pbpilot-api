@@ -1,13 +1,12 @@
 """Router initialization and configuration."""
 
-from fastapi import APIRouter, FastAPI
 import logging
 
+from fastapi import APIRouter, FastAPI
 from sqladmin import Admin
 
 from admins import ADMIN_VIEWS
 from config.database import engine
-
 from config.settings import Settings
 from endpoints import (
     auth_router,
@@ -44,12 +43,15 @@ def initialize_routers() -> APIRouter:
 
     return main_api_router
 
+
 def initialize_admin_panel(app: FastAPI) -> None:
     """Initialize an admin panel for the application."""
-    if settings.ENV in {'dev','local'}:
+    if settings.ENV in {'dev', 'local'}:
         logger.info('Initializing admin panel: %s', ADMIN_VIEWS)
         admin = Admin(app=app, engine=engine)
         for view_name in ADMIN_VIEWS:
             admin.add_view(view_name)
     else:
-        logger.info('Settings is not local or dev, skipping admin panel initialization.')
+        logger.info(
+            'Settings is not local or dev, skipping admin panel initialization.'
+        )

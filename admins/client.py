@@ -1,11 +1,12 @@
 from typing import ClassVar
 
 from sqladmin import ModelView
-from models import Client
+
 from core.admin import TimestampAdminMixin
+from models import Client
+
 
 class ClientAdmin(TimestampAdminMixin, ModelView, model=Client):
-
     column_list: ClassVar = [
         Client.id,
         Client.name,

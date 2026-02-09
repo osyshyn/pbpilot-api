@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
 from config.logger import configure_logging
-from config.router import initialize_routers, initialize_admin_panel
+from config.router import initialize_admin_panel, initialize_routers
 from config.settings import Settings
 
 logger = logging.getLogger(__name__)

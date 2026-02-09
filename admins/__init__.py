@@ -1,6 +1,6 @@
-from .user import UserAdmin
 from .client import ClientAdmin
+from .user import UserAdmin
 
 ADMIN_VIEWS = [UserAdmin, ClientAdmin]
 
-__all__ = ['UserAdmin', 'ClientAdmin', 'ADMIN_VIEWS']
+__all__ = ['ADMIN_VIEWS', 'ClientAdmin', 'UserAdmin']
