@@ -15,7 +15,7 @@ from services.client import ClientService
 
 logger = logging.getLogger(__name__)
 
-client_router = APIRouter() # TODO: add dep for admin in router not
+client_router = APIRouter()  # TODO: add dep for admin in router not
 
 
 @client_router.get(

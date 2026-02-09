@@ -18,10 +18,11 @@ class UserRoleEnum(StrEnum):
 
 class MarketingSourceEnum(StrEnum):
     """Enumeration of marketing sources."""
-    GOOGLE = "GOOGLE"
-    SOCIAL_MEDIA = "SOCIAL_MEDIA"
-    REFERRAL = "REFERRAL"
-    OTHER = "OTHER"
+
+    GOOGLE = 'GOOGLE'
+    SOCIAL_MEDIA = 'SOCIAL_MEDIA'
+    REFERRAL = 'REFERRAL'
+    OTHER = 'OTHER'
 
 
 class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
@@ -68,8 +69,7 @@ class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         default=UserRoleEnum.SOLO_OPERATOR,
     )
     is_onboarding_completed: Mapped[bool] = mapped_column(
-        nullable=True,
-        default=False
+        nullable=True, default=False
     )
     # Billing settings
     current_plan: Mapped[UserPlanEnum] = mapped_column(
@@ -85,16 +85,11 @@ class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     #  Marketing settings
     marketing_source: Mapped[MarketingSourceEnum] = mapped_column(
         Enum(
-            MarketingSourceEnum,
-            create_type=False,
-            name='marketing_source_enum'
+            MarketingSourceEnum, create_type=False, name='marketing_source_enum'
         ),
         nullable=True,
     )
-    marketing_source_details = mapped_column(
-        String(255),
-        nullable=True
-    )
+    marketing_source_details = mapped_column(String(255), nullable=True)
 
     def __repr__(self) -> str:
         """Return a string representation of the User object."""

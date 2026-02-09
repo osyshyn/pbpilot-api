@@ -4,7 +4,7 @@ from sqlalchemy import select, update
 
 from core.dao import BaseDAO
 from models import User
-from models.user import UserRoleEnum, MarketingSourceEnum
+from models.user import MarketingSourceEnum, UserRoleEnum
 
 
 class UserDAO(BaseDAO):
@@ -52,7 +52,7 @@ class UserDAO(BaseDAO):
             free_reports_count=free_reports_count,
             is_active=is_active,
             marketing_source=marketing_source,
-            marketing_source_details=marketing_source_details
+            marketing_source_details=marketing_source_details,
         )
         self._session.add(user)
         await self._session.flush()

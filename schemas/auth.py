@@ -3,7 +3,7 @@ from typing import Annotated, Self
 from pydantic import BaseModel, EmailStr, Field, model_validator
 
 from core import BaseModelSchema
-from models.user import UserRoleEnum, MarketingSourceEnum
+from models.user import MarketingSourceEnum, UserRoleEnum
 
 
 class SignUpRequestSchema(BaseModel):
@@ -66,7 +66,7 @@ class SignUpRequestSchema(BaseModel):
             description='Source of the marketing campaign',
             examples=[
                 MarketingSourceEnum.GOOGLE,
-            ]
+            ],
         ),
     ]
     marketing_source_details: Annotated[
@@ -82,12 +82,11 @@ class SignUpRequestSchema(BaseModel):
     def validate_marketing_source(self) -> Self:
         source = self.marketing_source
         details = self.marketing_source_details
-        if source == MarketingSourceEnum.OTHER and not details :
+        if source == MarketingSourceEnum.OTHER and not details:
             raise ValueError("Please provide details for 'Other' source")
         if source != MarketingSourceEnum.OTHER and details:
-            raise ValueError("Details are not required for other sources")
+            raise ValueError('Details are not required for other sources')
         return self
-
 
 
 class SignUpResponseSchema(BaseModelSchema):
