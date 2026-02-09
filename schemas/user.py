@@ -23,4 +23,11 @@ class UserResponseSchema(BaseModelSchema):
             description='Phone number of the user',
         ),
     ] = None
-    is_onboarding_completed: bool = False
+    is_onboarding_completed: Annotated[
+        bool,
+        Field(
+            default=False,
+            description='Is onboarding completed for the user',
+            examples=[True],
+        ),
+    ] = False
