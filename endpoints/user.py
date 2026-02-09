@@ -39,9 +39,7 @@ async def get_me(
 
     """
     return UserResponseSchema.model_validate(
-        await user_service.get_me(
-            user_id=token_user.id
-        )
+        await user_service.get_me(user_id=token_user.id)
     )
 
 
@@ -68,7 +66,5 @@ async def delete_me(
 
     """
     return UserResponseSchema.model_validate(
-        await user_service.delete_user_by_id(
-            user_id=token_user.id
-        )
+        await user_service.delete_user_by_id(user_id=token_user.id)
     )

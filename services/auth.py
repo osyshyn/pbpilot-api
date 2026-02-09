@@ -9,7 +9,6 @@ from exceptions import (
 )
 from models import User
 from models.user import UserRoleEnum
-from schemas import TokenResponseSchemas
 from services.jwt.hasher import Hasher
 from services.jwt.token import TokenManager
 
@@ -80,7 +79,8 @@ class AuthService(BaseService):
         return user
 
     async def create_token(
-        self, author_id: int,
+        self,
+        author_id: int,
     ) -> tuple[str, str]:
         """Generate access and refresh tokens for an author.
 
@@ -99,7 +99,9 @@ class AuthService(BaseService):
         )
         return access_token, refresh_token
 
-    async def refresh_token(self, refresh_token: str) -> tuple[str, str, UserRoleEnum]:
+    async def refresh_token(
+        self, refresh_token: str
+    ) -> tuple[str, str, UserRoleEnum]:
         """Refresh access and refresh tokens using a valid refresh token.
 
         Args:
