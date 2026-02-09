@@ -8,6 +8,12 @@ from models.user import UserRoleEnum
 
 class _BaseClientSchema(BaseModelSchema):
     """Base client schema."""
+    id: Annotated[
+        int, Field(
+            description='Unique identifier of the client',
+            examples=[1, ]
+        )
+    ]
     email: Annotated[
         str,
         Field(
@@ -119,7 +125,7 @@ class UpdateClientRequestSchema(BaseUpdateSchema):
         Field(
             default=None,
             description='Email address of the client',
-            examples=['john_doe@gmail.com', ],
+            examples=['john_doe_new_email@gmail.com', ],
             min_length=3,
             max_length=128,
         )
