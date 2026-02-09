@@ -1,4 +1,4 @@
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from typing import Any
 
 from sqlalchemy import select, update
@@ -11,13 +11,13 @@ class ClientDAO(BaseDAO):
     """DAO for Client model."""
 
     async def create(
-            self,
-            *,
-            name: str,
-            surname: str,
-            email: str,
-            business_address: str,
-            phone_number: str | None = None,
+        self,
+        *,
+        name: str,
+        surname: str,
+        email: str,
+        business_address: str,
+        phone_number: str | None = None,
     ) -> Client:
         """Create a new user.
 
@@ -54,7 +54,9 @@ class ClientDAO(BaseDAO):
             Client | None: User instance or None if not found.
 
         """
-        stmt = select(Client).where(Client.email == email, is_active=True)
+        stmt = select(Client).where(
+            Client.email == email, Client.is_active == True
+        )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
@@ -68,14 +70,16 @@ class ClientDAO(BaseDAO):
             Client | None: User instance or None if not found.
 
         """
-        stmt = select(Client).where(Client.id == client_id, is_active=True)
+        stmt = select(Client).where(
+            Client.id == client_id, Client.is_active == True
+        )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
     async def update_by_id(
-            self,
-            client_id: int,
-            update_data: dict[str, Any],
+        self,
+        client_id: int,
+        update_data: dict[str, Any],
     ) -> Client | None:
         """Update user by id."""
         client = await self.get_by_id(client_id)
@@ -87,7 +91,6 @@ class ClientDAO(BaseDAO):
         await self._session.flush()
         await self._session.refresh(client)
         return client
-
 
     async def delete_by_id(self, client_id: int) -> Client | None:
         stmt = (

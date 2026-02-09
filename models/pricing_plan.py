@@ -1,13 +1,14 @@
 from enum import StrEnum
 
-from sqlalchemy import Enum, String, UniqueConstraint
+from sqlalchemy import Enum, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
-from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
+from core.models import BaseIdMixin, BaseTimeStampMixin
 
 
 class UserPlanEnum(StrEnum):
     """Enumeration of user plans."""
+
     SOLO_INSPECTOR = 'SOLO_INSPECTOR'
     ENTERPRISE = 'ENTERPRISE'
     ENTERPRISE_PLUS = 'ENTERPRISE_PLUS'
@@ -15,13 +16,15 @@ class UserPlanEnum(StrEnum):
 
 class BillingPeriodEnum(StrEnum):
     """Enumeration of billing periods."""
-    MONTHLY = "MONTHLY"
-    YEARLY = "YEARLY"
+
+    MONTHLY = 'MONTHLY'
+    YEARLY = 'YEARLY'
 
 
 class CurrencyEnum(StrEnum):
     """Enumeration of currencies."""
-    USD = "USD"
+
+    USD = 'USD'
 
 
 class PricingPlan(BaseIdMixin, BaseTimeStampMixin):
@@ -42,8 +45,8 @@ class PricingPlan(BaseIdMixin, BaseTimeStampMixin):
     )
 
     __table_args__ = (
-        UniqueConstraint("plan", "period", name="uq_pricing_plan_period"),
+        UniqueConstraint('plan', 'period', name='uq_pricing_plan_period'),
     )
 
     def __repr__(self) -> str:
-        return f"<PricingPlan {self.plan} {self.period} {self.price}{self.currency}>"
+        return f'<PricingPlan {self.plan} {self.period} {self.price}{self.currency}>'

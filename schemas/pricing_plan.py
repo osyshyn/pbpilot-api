@@ -1,9 +1,9 @@
 from typing import Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from core import BaseModelSchema
-from models.pricing_plan import UserPlanEnum, BillingPeriodEnum, CurrencyEnum
+from models.pricing_plan import BillingPeriodEnum, CurrencyEnum, UserPlanEnum
 
 
 class PricingPlanResponseSchema(BaseModelSchema):
@@ -11,30 +11,31 @@ class PricingPlanResponseSchema(BaseModelSchema):
         UserPlanEnum,
         Field(
             description='User plan',
-            examples=[UserPlanEnum.ENTERPRISE,],
-        )
+            examples=[UserPlanEnum.ENTERPRISE],
+        ),
     ]
     period: Annotated[
         BillingPeriodEnum,
         Field(
             description='Billing period',
-            examples=[BillingPeriodEnum.MONTHLY,],
-        )
+            examples=[BillingPeriodEnum.MONTHLY],
+        ),
     ]
     price: Annotated[
         int,
         Field(
             description='Price per period',
-            examples=[100,],
-        )
+            examples=[100],
+        ),
     ]
     currency: Annotated[
         CurrencyEnum,
         Field(
             description='Currency',
-            examples=[CurrencyEnum.USD,],
-        )
+            examples=[CurrencyEnum.USD],
+        ),
     ]
+
 
 class PricingPlanListResponseSchema(BaseModelSchema):
     items: list[PricingPlanResponseSchema]

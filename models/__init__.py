@@ -1,6 +1,6 @@
 from .blacklist_token import BlacklistToken
-from .user import User
-from .pricing_plan import PricingPlan
 from .client import Client
+from .pricing_plan import PricingPlan
+from .user import User
 
-__all__ = ['BlacklistToken', 'User', 'PricingPlan','Client']
+__all__ = ['BlacklistToken', 'Client', 'PricingPlan', 'User']

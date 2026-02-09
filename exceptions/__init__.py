@@ -5,14 +5,20 @@ from .auth import (
     RefreshTokenException,
     WrongCredentialsException,
 )
+from .client import (
+    ClientEmailAlreadyRegisteredException,
+    ClientNotFoundException,
+)
 from .user import (
     EmailAlreadyRegisteredException,
     UserHasNoPermissionPermission,
     UserIsNotActiveException,
 )
-from .client import ClientEmailAlreadyRegisteredException, ClientNotFoundException
+
 __all__ = [
     'AccessTokenExpiredException',
+    'ClientEmailAlreadyRegisteredException',
+    'ClientNotFoundException',
     'EmailAlreadyRegisteredException',
     'NoFiltersException',
     'NoUpdateDataException',
@@ -20,6 +26,4 @@ __all__ = [
     'UserHasNoPermissionPermission',
     'UserIsNotActiveException',
     'WrongCredentialsException',
-    'ClientEmailAlreadyRegisteredException',
-    'ClientNotFoundException',
 ]

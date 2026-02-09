@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 from core import BaseModelSchema
 from models.user import UserRoleEnum
@@ -70,4 +70,3 @@ class RefreshTokenRequestSchema(_RefreshTokenMixinSchema, BaseModelSchema):
         refresh_token (str): The refresh token provided by the client.
 
     """
-

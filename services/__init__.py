@@ -1,5 +1,5 @@
 from .auth import AuthService
-from .user import UserService
 from .pricing_plan import PricingPlanService
+from .user import UserService
 
-__all__ = ['AuthService', 'UserService', 'PricingPlanService']
+__all__ = ['AuthService', 'PricingPlanService', 'UserService']

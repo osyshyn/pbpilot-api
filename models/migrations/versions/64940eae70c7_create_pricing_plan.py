@@ -15,7 +15,7 @@ def upgrade() -> None:
     user_plan_enum = postgresql.ENUM(
         'SOLO_INSPECTOR', 'ENTERPRISE', 'ENTERPRISE_PLUS',
         name='user_plan_enum',
-        create_type=False 
+        create_type=False
     )
     billing_period_enum = postgresql.ENUM(
         'MONTHLY', 'YEARLY',

@@ -4,7 +4,7 @@ from sqlalchemy import Enum, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
-from models.pricing_plan import UserPlanEnum, BillingPeriodEnum
+from models.pricing_plan import BillingPeriodEnum, UserPlanEnum
 
 
 class UserRoleEnum(StrEnum):
@@ -61,17 +61,14 @@ class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     )
     # Billing settings
     current_plan: Mapped[UserPlanEnum] = mapped_column(
-        Enum(UserPlanEnum, name="user_plan_enum"),
+        Enum(UserPlanEnum, name='user_plan_enum'),
         nullable=True,
     )
     billing_period: Mapped[BillingPeriodEnum] = mapped_column(
-        Enum(BillingPeriodEnum, name="billing_period_enum"),
+        Enum(BillingPeriodEnum, name='billing_period_enum'),
         nullable=True,
     )
-    free_reports_count: Mapped[int] = mapped_column(
-        nullable=True,
-        default=0
-    )
+    free_reports_count: Mapped[int] = mapped_column(nullable=True, default=0)
 
     def __repr__(self) -> str:
         """Return a string representation of the User object."""

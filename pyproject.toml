@@ -67,6 +67,7 @@ docstring-code-format = false # Do not format docstrings
 
 [tool.ruff.lint.per-file-ignores]
 "**" = [
+    "D101", # Docstring in `__init__`
     "D100", # Docstring in a public module
     "D104", # Docstring in a public package
     "D401", # docstring should be in imperative mood

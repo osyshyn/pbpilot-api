@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import ConfigDict, Field
+from pydantic import Field
 
 from core import BaseModelSchema
 from models.user import UserRoleEnum
@@ -23,4 +23,3 @@ class UserResponseSchema(BaseModelSchema):
             description='Phone number of the user',
         ),
     ] = None
-

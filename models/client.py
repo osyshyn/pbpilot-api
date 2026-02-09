@@ -1,6 +1,4 @@
-from enum import StrEnum
-
-from sqlalchemy import String, Enum
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
@@ -28,10 +26,7 @@ class Client(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         String(16), nullable=True, comment='Phone number of the user'
     )
 
-    business_address: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False
-    )
+    business_address: Mapped[str] = mapped_column(String(255), nullable=False)
 
     @property
     def full_name(self) -> str:

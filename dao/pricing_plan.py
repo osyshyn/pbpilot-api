@@ -1,6 +1,7 @@
-from typing import Sequence
+from collections.abc import Sequence
 
 from sqlalchemy import select
+
 from core.dao import BaseDAO
 from models import PricingPlan
 
@@ -13,6 +14,7 @@ class PricingPlanDAO(BaseDAO):
 
         Returns:
             list[PricingPlan]: List of all pricing plan records.
+
         """
         stmt = select(PricingPlan)
         result = await self._session.execute(stmt)

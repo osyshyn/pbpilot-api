@@ -6,8 +6,8 @@ from config.settings import Settings
 from endpoints import (
     auth_router,
     main_router,
-    user_router,
     pricing_plan_router,
+    user_router,
 )
 from endpoints.client import client_router
 
@@ -28,7 +28,11 @@ def initialize_routers() -> APIRouter:
     main_api_router.include_router(main_router, prefix='/health', tags=['main'])
     main_api_router.include_router(user_router, prefix='/user')
     main_api_router.include_router(auth_router, prefix='/auth', tags=['auth'])
-    main_api_router.include_router(pricing_plan_router, prefix='/pricing_plan', tags=['pricing_plan'])
-    main_api_router.include_router(client_router, prefix='/client', tags=['client'])
+    main_api_router.include_router(
+        pricing_plan_router, prefix='/pricing_plan', tags=['pricing_plan']
+    )
+    main_api_router.include_router(
+        client_router, prefix='/client', tags=['client']
+    )
 
     return main_api_router

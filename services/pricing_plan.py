@@ -1,26 +1,16 @@
 import logging
-from typing import Sequence
+from collections.abc import Sequence
 
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import BaseService
-from dao import UserDAO, PricingPlanDAO
-from exceptions import EmailAlreadyRegisteredException
-from exceptions.user import UserNotFoundByIdException
+from dao import PricingPlanDAO
 from models import PricingPlan
-from models.user import User, UserRoleEnum
-from schemas import (
-    SignUpRequestSchema,
-    SignUpResponseSchema,
-)
-from services.jwt.hasher import Hasher
 
 logger = logging.getLogger(__name__)
 
 
 class PricingPlanService(BaseService):
-
     def __init__(
         self,
         db_session: AsyncSession,

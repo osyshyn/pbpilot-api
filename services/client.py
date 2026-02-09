@@ -1,32 +1,32 @@
 import logging
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from exceptions import ClientEmailAlreadyRegisteredException, \
-    ClientNotFoundException
-from schemas import CreateClientRequestSchema, UpdateClientRequestSchema
 from core import BaseService
 from dao import ClientDAO
-from models import PricingPlan, Client
+from exceptions import (
+    ClientEmailAlreadyRegisteredException,
+    ClientNotFoundException,
+)
+from models import Client
+from schemas import CreateClientRequestSchema, UpdateClientRequestSchema
 
 logger = logging.getLogger(__name__)
 
 
 class ClientService(BaseService):
-
     def __init__(
-            self,
-            db_session: AsyncSession,
-            *,
-            client_dao: ClientDAO | None = None,
+        self,
+        db_session: AsyncSession,
+        *,
+        client_dao: ClientDAO | None = None,
     ):
         super().__init__(db_session)
         self._client_dao = client_dao or ClientDAO(db_session)
 
     async def create_client(
-            self,
-            client_data: CreateClientRequestSchema
+        self, client_data: CreateClientRequestSchema
     ) -> Client:
         try:
             client = await self._client_dao.create(
@@ -54,16 +54,12 @@ class ClientService(BaseService):
         return client
 
     async def update_client(
-            self,
-            client_id: int,
-            client_update_data: UpdateClientRequestSchema
+        self, client_id: int, client_update_data: UpdateClientRequestSchema
     ) -> Client:
         try:
             client = await self._client_dao.update_by_id(
                 client_id=client_id,
-                update_data=client_update_data.model_dump(
-                    exclude_unset=True
-                )
+                update_data=client_update_data.model_dump(exclude_unset=True),
             )
         except IntegrityError:
             raise ClientEmailAlreadyRegisteredException from None
