@@ -26,20 +26,23 @@ user_router = APIRouter()
 )
 async def get_me(
     token_user: Annotated[User, Depends(get_current_user)],
-    service: Annotated[UserService, Depends(get_service(UserService))],
+    user_service: Annotated[UserService, Depends(get_service(UserService))],
 ) -> UserResponseSchema:
     """Get information about current user.
 
     Args:
         token_user (User): Current authenticated user from token.
-        service: User service.
+        user_service: User service.
 
     Returns:
         UserResponseShema: Schema representing the user with organization data.
 
     """
-    user = await service.get_me(user_id=token_user.id)
-    return UserResponseSchema.model_validate(user)
+    return UserResponseSchema.model_validate(
+        await user_service.get_me(
+            user_id=token_user.id
+        )
+    )
 
 
 @user_router.delete(
@@ -52,17 +55,20 @@ async def get_me(
 )
 async def delete_me(
     token_user: Annotated[User, Depends(get_current_user)],
-    service: Annotated[UserService, Depends(get_service(UserService))],
+    user_service: Annotated[UserService, Depends(get_service(UserService))],
 ) -> UserResponseSchema:
     """Delete the current authenticated user's profile.
 
     Args:
         token_user (User): Current authenticated user from token.
-        service (UserService): Service for user-related operations.
+        user_service (UserService): Service for user-related operations.
 
     Returns:
         UserResponseShema: Schema representing the deleted user.
 
     """
-    user = await service.delete_user_by_id(user_id=token_user.id)
-    return UserResponseSchema.model_validate(user)
+    return UserResponseSchema.model_validate(
+        await user_service.delete_user_by_id(
+            user_id=token_user.id
+        )
+    )

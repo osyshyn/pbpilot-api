@@ -23,13 +23,13 @@ pricing_plan_router = APIRouter()
     dependencies=[Depends(get_current_user)],
 )
 async def get_pricing_plans(
-    service: Annotated[
+    pricing_plan_service: Annotated[
         PricingPlanService, Depends(get_service(PricingPlanService))
     ],
 ) -> PricingPlanListResponseSchema:
     return PricingPlanListResponseSchema(
         items=[
             PricingPlanResponseSchema.model_validate(p)
-            for p in await service.get_all_pricing_plans()
+            for p in await pricing_plan_service.get_all_pricing_plans()
         ]
     )

@@ -10,7 +10,6 @@ from exceptions.user import UserNotFoundByIdException
 from models.user import User, UserRoleEnum
 from schemas import (
     SignUpRequestSchema,
-    SignUpResponseSchema,
 )
 from services.jwt.hasher import Hasher
 
@@ -42,7 +41,7 @@ class UserService(BaseService):
     async def create_new_user(
         self,
         user_data: SignUpRequestSchema,
-    ) -> SignUpResponseSchema:
+    ) -> User:
         """Create a new user in the database.
 
         Args:
@@ -59,6 +58,7 @@ class UserService(BaseService):
             user_data.password,
         )
         try:
+            # User need to book a call with owner to activate account
             user: User = await self._user_dao.create(
                 name=user_data.name,
                 surname=user_data.surname,
@@ -67,11 +67,13 @@ class UserService(BaseService):
                 password=hashed_pass,
                 phone_number=user_data.phone_number,
                 is_active=False,
+                marketing_source=user_data.marketing_source,
+                marketing_source_details=user_data.marketing_source_details
             )
         except IntegrityError:
             raise EmailAlreadyRegisteredException from None
         await self._session.commit()
-        return SignUpResponseSchema.model_validate(user)
+        return user
 
     async def get_user_by_id(self, user_id: int) -> User:
         """Retrieve a user by ID.

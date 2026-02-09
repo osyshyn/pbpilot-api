@@ -1,9 +1,9 @@
-from typing import Annotated
+from typing import Annotated, Self
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, model_validator
 
 from core import BaseModelSchema
-from models.user import UserRoleEnum
+from models.user import UserRoleEnum, MarketingSourceEnum
 
 
 class SignUpRequestSchema(BaseModel):
@@ -60,6 +60,34 @@ class SignUpRequestSchema(BaseModel):
             examples=['+1 234 567 8901', '12345678900'],
         ),
     ]
+    marketing_source: Annotated[
+        MarketingSourceEnum,
+        Field(
+            description='Source of the marketing campaign',
+            examples=[
+                MarketingSourceEnum.GOOGLE,
+            ]
+        ),
+    ]
+    marketing_source_details: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Additional marketing source details',
+            examples=['Google Ads'],
+        ),
+    ] = None
+
+    @model_validator(mode='after')
+    def validate_marketing_source(self) -> Self:
+        source = self.marketing_source
+        details = self.marketing_source_details
+        if source == MarketingSourceEnum.OTHER and not details :
+            raise ValueError("Please provide details for 'Other' source")
+        if source != MarketingSourceEnum.OTHER and details:
+            raise ValueError("Details are not required for other sources")
+        return self
+
 
 
 class SignUpResponseSchema(BaseModelSchema):
