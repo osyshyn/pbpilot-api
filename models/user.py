@@ -16,6 +16,14 @@ class UserRoleEnum(StrEnum):
     SOLO_OPERATOR = 'solo'
 
 
+class MarketingSourceEnum(StrEnum):
+    """Enumeration of marketing sources."""
+    GOOGLE = "GOOGLE"
+    SOCIAL_MEDIA = "SOCIAL_MEDIA"
+    REFERRAL = "REFERRAL"
+    OTHER = "OTHER"
+
+
 class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     """User model represents a system user.
 
@@ -73,6 +81,20 @@ class User(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         nullable=True,
     )
     free_reports_count: Mapped[int] = mapped_column(nullable=True, default=0)
+
+    #  Marketing settings
+    marketing_source: Mapped[MarketingSourceEnum] = mapped_column(
+        Enum(
+            MarketingSourceEnum,
+            create_type=False,
+            name='marketing_source_enum'
+        ),
+        nullable=True,
+    )
+    marketing_source_details = mapped_column(
+        String(255),
+        nullable=True
+    )
 
     def __repr__(self) -> str:
         """Return a string representation of the User object."""
