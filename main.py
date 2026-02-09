@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
 from config.logger import configure_logging
-from config.router import initialize_routers
+from config.router import initialize_routers, initialize_admin_panel
 from config.settings import Settings
 
 logger = logging.getLogger(__name__)
@@ -32,6 +32,7 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
+initialize_admin_panel(app)
 main_api_router = initialize_routers()
 app.include_router(main_api_router)
 
