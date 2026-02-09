@@ -67,6 +67,8 @@ class UserService(BaseService):
                 password=hashed_pass,
                 phone_number=user_data.phone_number,
                 is_active=False,
+                marketing_source=user_data.marketing_source,
+                marketing_source_details=user_data.marketing_source_details
             )
         except IntegrityError:
             raise EmailAlreadyRegisteredException from None

@@ -4,7 +4,7 @@ from sqlalchemy import select, update
 
 from core.dao import BaseDAO
 from models import User
-from models.user import UserRoleEnum
+from models.user import UserRoleEnum, MarketingSourceEnum
 
 
 class UserDAO(BaseDAO):
@@ -20,6 +20,8 @@ class UserDAO(BaseDAO):
         role: UserRoleEnum,
         phone_number: str | None = None,
         free_reports_count: int = 5,
+        marketing_source: MarketingSourceEnum,
+        marketing_source_details: str | None = None,
         is_active: bool = True,
     ) -> User:
         """Create a new user.
@@ -32,6 +34,8 @@ class UserDAO(BaseDAO):
             role: User role.
             phone_number: User phone number (optional).
             free_reports_count: Number of free reports available for the user.
+            marketing_source: Marketing source of the user.
+            marketing_source_details: Additional marketing source details.
             is_active: Is created user will be active?.
 
         Returns:
@@ -47,6 +51,8 @@ class UserDAO(BaseDAO):
             phone_number=phone_number,
             free_reports_count=free_reports_count,
             is_active=is_active,
+            marketing_source=marketing_source,
+            marketing_source_details=marketing_source_details
         )
         self._session.add(user)
         await self._session.flush()
