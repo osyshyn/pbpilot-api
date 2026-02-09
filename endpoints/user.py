@@ -38,8 +38,11 @@ async def get_me(
         UserResponseShema: Schema representing the user with organization data.
 
     """
-    user = await service.get_me(user_id=token_user.id)
-    return UserResponseSchema.model_validate(user)
+    return UserResponseSchema.model_validate(
+        await service.get_me(
+            user_id=token_user.id
+        )
+    )
 
 
 @user_router.delete(
@@ -64,5 +67,8 @@ async def delete_me(
         UserResponseShema: Schema representing the deleted user.
 
     """
-    user = await service.delete_user_by_id(user_id=token_user.id)
-    return UserResponseSchema.model_validate(user)
+    return UserResponseSchema.model_validate(
+        await service.delete_user_by_id(
+            user_id=token_user.id
+        )
+    )
