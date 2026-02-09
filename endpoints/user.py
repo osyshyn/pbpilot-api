@@ -17,7 +17,7 @@ user_router = APIRouter()
 
 @user_router.get(
     path='/me',
-    summary='Get current user profile',
+    summary='Get     current user profile',
     description=(
         "Retrieve the current authenticated user's profile information "
         'including organization data if available.'

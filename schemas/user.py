@@ -1,11 +1,12 @@
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from core import BaseModelSchema
 from models.user import UserRoleEnum
 
 
-class UserResponseSchema(BaseModel):
+class UserResponseSchema(BaseModelSchema):
     """User response schema."""
 
     id: int
@@ -22,5 +23,3 @@ class UserResponseSchema(BaseModel):
             description='Phone number of the user',
         ),
     ] = None
-
-    model_config = ConfigDict(from_attributes=True)
