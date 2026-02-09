@@ -80,13 +80,12 @@ class AuthService(BaseService):
         return user
 
     async def create_token(
-        self, author_id: int, user_role: UserRoleEnum
-    ) -> TokenResponseSchemas:
+        self, author_id: int,
+    ) -> tuple[str, str]:
         """Generate access and refresh tokens for an author.
 
         Args:
             author_id (int): ID of the author.
-            user_role (UserRole): Role of the author.
 
         Returns:
             TokenResponseSchemas: Access and refresh tokens with token type.
@@ -98,11 +97,7 @@ class AuthService(BaseService):
         refresh_token: str = TokenManager.generate_refresh_token(
             author_id=author_id
         )
-        return TokenResponseSchemas(
-            access_token=access_token,
-            refresh_token=refresh_token,
-            user_role=user_role,
-        )
+        return access_token, refresh_token
 
     async def refresh_token(self, refresh_token: str) -> TokenResponseSchemas:
         """Refresh access and refresh tokens using a valid refresh token.

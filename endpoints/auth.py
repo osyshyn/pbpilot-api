@@ -69,7 +69,14 @@ async def login_user(
         email=form_data.username,
         password=form_data.password,
     )
-    return await service.create_token(author_id=user.id, user_role=user.role)
+    access, refresh = await service.create_token(
+        author_id=user.id,
+    )
+    return TokenResponseSchemas(
+        access_token=access,
+        refresh_token=refresh,
+        user_role=user.role,
+    )
 
 
 @auth_router.post(
