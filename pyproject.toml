@@ -17,6 +17,7 @@ dependencies = [
     "bcrypt>=5.0.0",
     "python-jose>=3.5.0",
     "python-multipart>=0.0.22",
+    "sqladmin[full]>=0.23.0",
 ]
 
 [dependency-groups]
