@@ -88,21 +88,6 @@ async def get_client_by_id(
         await client_service.get_by_id(client_id=client_id)
     )
 
-
-@client_router.get(
-    path='/{client_email}',
-    summary='Get client by email',
-    dependencies=[Depends(get_admin_user_from_token)],
-)
-async def get_client_by_email(
-    client_email: str,
-    client_service: ClientService = Depends(get_service(ClientService)),
-) -> ClientResponseSchema:
-    return ClientResponseSchema.model_validate(
-        await client_service.get_by_email(client_email=client_email)
-    )
-
-
 @client_router.delete(
     path='/{client_id}',
     summary='Delete client by id',
