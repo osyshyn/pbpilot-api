@@ -16,3 +16,12 @@ class ClientEmailAlreadyRegisteredException(ClientException):
                 'Client with this email already registered'
             ),
         )
+
+
+class ClientNotFoundException(ClientException):
+
+    def __init__(self) -> None:
+        super().__init__(
+            status_code=404,
+            detail='Client was not found by given id.',
+        )

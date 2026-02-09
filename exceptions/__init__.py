@@ -10,7 +10,7 @@ from .user import (
     UserHasNoPermissionPermission,
     UserIsNotActiveException,
 )
-from .client import ClientEmailAlreadyRegisteredException
+from .client import ClientEmailAlreadyRegisteredException, ClientNotFoundException
 __all__ = [
     'AccessTokenExpiredException',
     'EmailAlreadyRegisteredException',
@@ -21,4 +21,5 @@ __all__ = [
     'UserIsNotActiveException',
     'WrongCredentialsException',
     'ClientEmailAlreadyRegisteredException',
+    'ClientNotFoundException',
 ]
