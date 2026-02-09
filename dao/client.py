@@ -53,7 +53,7 @@ class ClientDAO(BaseDAO):
             Client | None: User instance or None if not found.
 
         """
-        stmt = select(Client).where(Client.email == email)
+        stmt = select(Client).where(Client.email == email, is_active=True)
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
@@ -67,7 +67,7 @@ class ClientDAO(BaseDAO):
             Client | None: User instance or None if not found.
 
         """
-        stmt = select(Client).where(Client.id == client_id)
+        stmt = select(Client).where(Client.id == client_id, is_active=True)
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
