@@ -32,7 +32,7 @@ async def get_all_clients(
     items, total = await client_service.get_all_clients(pagination=pagination)
     pages = (total + pagination.size - 1) // pagination.size
     return PaginatedResponse(
-        items=items,
+        items=items,  # type: ignore
         total=total,
         page=pagination.page,
         size=pagination.size,
