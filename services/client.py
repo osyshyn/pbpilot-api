@@ -83,4 +83,3 @@ class ClientService(BaseService):
         return await self._client_dao.get_all(
             page=pagination.page, limit=pagination.size
         )
-

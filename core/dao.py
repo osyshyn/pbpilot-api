@@ -44,4 +44,4 @@ class BaseDAO:
         items = await self._session.scalars(
             query.limit(limit).offset((page - 1) * limit)
         )
-        return items.all(), total
+        return items.all(), total # type: ignore

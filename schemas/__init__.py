@@ -1,6 +1,5 @@
 from .auth import SignUpRequestSchema, SignUpResponseSchema
 from .clients import (
-    ClientListResponseSchema,
     ClientResponseSchema,
     CreateClientRequestSchema,
     UpdateClientRequestSchema,
@@ -14,7 +13,6 @@ from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
 
 __all__ = [
-    'ClientListResponseSchema',
     'ClientResponseSchema',
     'CreateClientRequestSchema',
     'HealthCheckResponseSchema',

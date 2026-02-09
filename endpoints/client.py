@@ -40,7 +40,6 @@ async def get_all_clients(
     )
 
 
-
 @client_router.post(
     path='/',
     summary='Create new client',
