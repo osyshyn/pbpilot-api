@@ -12,33 +12,59 @@ class _BaseClientSchema(BaseModelSchema):
         str,
         Field(
             description='Full name of the client',
-            examples=['John Doe',],
+            examples=['John Doe', ],
+        )
+    ]
+
+
+class CreateClientRequestSchema(BaseModelSchema):
+    """Schema for creating a new client."""
+    name: Annotated[
+        str,
+        Field(
+            description='First name of the client',
+            examples=['John', ],
+            min_length=3,
+            max_length=128,
+        )
+    ]
+    surname: Annotated[
+        str,
+        Field(
+            description='Last name of the client',
+            examples=['Doe', ],
+            min_length=3,
+            max_length=128,
         )
     ]
     email: Annotated[
         str,
         Field(
             description='Email address of the client',
-            examples=['john_doe@gmail.com',],
+            examples=['john_doe@gmail.com', ],
+            min_length=3,
+            max_length=128,
         )
     ]
     phone_number: Annotated[
         str,
         Field(
             description='Phone number of the client',
-            examples=['+12345678901',],
+            examples=['+12345678901', ],
+            min_length=3,
+            max_length=128,
         ),
     ]
     business_address: Annotated[
         str,
         Field(
             description='Phone number of the client',
-            examples=['Main Street']
+            examples=['Main Street'],
+            min_length=3,
+            max_length=128,
         ),
     ]
 
-class CreateClientRequestSchema(_BaseClientSchema):
-    """Schema for creating a new client."""
 
 class ClientResponseSchema(_BaseClientSchema):
     """Schema representing a client."""
@@ -47,9 +73,10 @@ class ClientResponseSchema(_BaseClientSchema):
         Field(
             default=None,
             description='Number of active projects for the client',
-            examples=[15,],
+            examples=[15, ],
         )
     ]
+
 
 class ClientListResponseSchema(BaseModelSchema):
     """Schema representing a list of clients."""
