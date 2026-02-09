@@ -66,6 +66,7 @@ class UserService(BaseService):
                 role=UserRoleEnum.SOLO_OPERATOR,
                 password=hashed_pass,
                 phone_number=user_data.phone_number,
+                is_active=False,
             )
         except IntegrityError:
             raise EmailAlreadyRegisteredException from None

@@ -20,6 +20,7 @@ class UserDAO(BaseDAO):
         role: UserRoleEnum,
         phone_number: str | None = None,
         free_reports_count: int = 5,
+        is_active: bool = True,
     ) -> User:
         """Create a new user.
 
@@ -31,6 +32,7 @@ class UserDAO(BaseDAO):
             role: User role.
             phone_number: User phone number (optional).
             free_reports_count: Number of free reports available for the user.
+            is_active: Is created user will be active?.
 
         Returns:
             User: User instance.
@@ -44,6 +46,7 @@ class UserDAO(BaseDAO):
             role=role,
             phone_number=phone_number,
             free_reports_count=free_reports_count,
+            is_active=is_active,
         )
         self._session.add(user)
         await self._session.flush()
