@@ -18,7 +18,7 @@ client_router = APIRouter()
     summary='Create new client',
     dependencies=[Depends(get_admin_user_from_token)],
 )
-async def get_pricing_plans(
+async def create_client(
         client_data: CreateClientRequestSchema,
         service: Annotated[
             ClientService, Depends(get_service(ClientService))],
