@@ -9,7 +9,7 @@ from schemas import (
     RefreshTokenRequestSchema,
     SignUpRequestSchema,
     SignUpResponseSchema,
-    TokenResponseSchemas,
+    TokenResponseSchemas, LogInRequestSchema,
 )
 from services import AuthService, UserService
 
@@ -42,14 +42,14 @@ async def signup_user(
 
 
 @auth_router.post(
-    path='/login',
+    path='/swagger_login',
     response_model=TokenResponseSchemas,
     summary='User login',
     description=(
         'Authenticate user with email and password to get access to tokens.'
     ),
 )
-async def login_user(
+async def swagger_login_user(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     auth_service: Annotated[AuthService, Depends(get_service(AuthService))],
 ) -> TokenResponseSchemas:
@@ -66,6 +66,31 @@ async def login_user(
     user = await auth_service.auth_user(
         email=form_data.username,
         password=form_data.password,
+    )
+    access, refresh = await auth_service.create_token(
+        author_id=user.id,
+    )
+    return TokenResponseSchemas(
+        access_token=access,
+        refresh_token=refresh,
+        user_role=user.role,
+    )
+
+@auth_router.post(
+    path='/login',
+    response_model=TokenResponseSchemas,
+    summary='User login',
+    description=(
+        'Authenticate user with email and password to get access to tokens.'
+    ),
+)
+async def login_user(
+    user_data: LogInRequestSchema,
+    auth_service: Annotated[AuthService, Depends(get_service(AuthService))]
+) -> TokenResponseSchemas:
+    user = await auth_service.auth_user(
+        email=user_data.email,
+        password=user_data.password,
     )
     access, refresh = await auth_service.create_token(
         author_id=user.id,

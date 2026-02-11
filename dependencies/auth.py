@@ -14,7 +14,7 @@ from services.auth import AuthService
 
 settings = Settings.load()
 oauth_scheme: OAuth2PasswordBearer = OAuth2PasswordBearer(
-    tokenUrl=f'Prod/api/{settings.API_VERSION}/auth/login',
+    tokenUrl=f'Prod/api/{settings.API_VERSION}/auth/swagger_login',
 )
 
 
