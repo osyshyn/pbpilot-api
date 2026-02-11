@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import BaseService
 from dao import ClientDAO, ProjectDAO
-from exceptions import ClientNotFoundException
+from exceptions import ClientNotFoundException, ProjectNotFoundException
 from models import Project
 from schemas.projects import CreateProjectRequestSchema
 
@@ -39,3 +39,26 @@ class ProjectService(BaseService):
         if not project:
             raise RuntimeError('Project was not found after create')
         return project
+
+    async def get_project_by_id(self, project_id: int) -> Project:
+        """Get single project with its properties and structures."""
+        project = await self._project_dao.get_by_id_with_relations(project_id)
+        if not project:
+            raise ProjectNotFoundException
+        return project
+
+    async def delete_by_id(self, project_id: int) -> Project:
+        """Soft delete project by id."""
+        project = await self._project_dao.delete_by_id(project_id)
+        if not project:
+            raise ProjectNotFoundException
+        await self._session.commit()
+        return project
+
+    async def get_all_projects(
+        self,
+        page: int,
+        size: int,
+    ) -> tuple[list[Project], int]:
+        """Get all active projects with pagination."""
+        return await self._project_dao.get_all(page=page, limit=size)

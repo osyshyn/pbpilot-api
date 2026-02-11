@@ -4,6 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from core import get_service
+from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_admin_user_from_token
 from schemas.projects import CreateProjectRequestSchema, ProjectResponseSchema
 from services.project import ProjectService
@@ -26,3 +27,58 @@ async def create_project(
 ) -> ProjectResponseSchema:
     project = await project_service.create_project(data=project_data)
     return ProjectResponseSchema.model_validate(project)
+
+
+@project_router.get(
+    path='/{project_id}',
+    summary='Get project by id',
+    dependencies=[Depends(get_admin_user_from_token)],
+)
+async def get_project_by_id(
+    project_id: int,
+    project_service: Annotated[
+        ProjectService, Depends(get_service(ProjectService))
+    ],
+) -> ProjectResponseSchema:
+    project = await project_service.get_project_by_id(project_id=project_id)
+    return ProjectResponseSchema.model_validate(project)
+
+
+@project_router.delete(
+    path='/{project_id}',
+    summary='Delete project by id',
+    dependencies=[Depends(get_admin_user_from_token)],
+)
+async def delete_project_by_id(
+    project_id: int,
+    project_service: Annotated[
+        ProjectService, Depends(get_service(ProjectService))
+    ],
+) -> ProjectResponseSchema:
+    project = await project_service.delete_by_id(project_id=project_id)
+    return ProjectResponseSchema.model_validate(project)
+
+
+@project_router.get(
+    path='/',
+    summary='Get projects list',
+    dependencies=[Depends(get_admin_user_from_token)],
+)
+async def get_all_projects(
+    pagination: Annotated[PaginationParams, Depends()],
+    project_service: Annotated[
+        ProjectService, Depends(get_service(ProjectService))
+    ],
+) -> PaginatedResponse[ProjectResponseSchema]:
+    items, total = await project_service.get_all_projects(
+        page=pagination.page,
+        size=pagination.size,
+    )
+    pages = (total + pagination.size - 1) // pagination.size
+    return PaginatedResponse(
+        items=items,  # type: ignore[arg-type]
+        total=total,
+        page=pagination.page,
+        size=pagination.size,
+        pages=pages,
+    )
