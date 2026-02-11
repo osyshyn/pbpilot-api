@@ -42,7 +42,6 @@ class Project(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     property_manager_name: Mapped[str] = mapped_column(
         String(255),
         nullable=True,
-        blank=True
     )  # Property manager is optional for a project
 
     client: Mapped["Client"] = relationship(
@@ -83,21 +82,17 @@ class ProjectProperty(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     owner_lcc_name: Mapped[str] = mapped_column(
         String(255),
         nullable=True,
-        blank=True
     )
     year_of_construction: Mapped[int] = mapped_column(
         nullable=True,
-        blank=True
     )
     parcel_number: Mapped[str] = mapped_column(
         String(255),
         nullable=True,
-        blank=True
     )
     rental_registration_number: Mapped[str] = mapped_column(
         String(255),
         nullable=True,
-        blank=True
     )
 
     project_id: Mapped[int] = mapped_column(
