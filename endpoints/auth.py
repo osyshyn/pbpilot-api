@@ -6,10 +6,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 from config.settings import Settings
 from core import get_service
 from schemas import (
+    LogInRequestSchema,
     RefreshTokenRequestSchema,
     SignUpRequestSchema,
     SignUpResponseSchema,
-    TokenResponseSchemas, LogInRequestSchema,
+    TokenResponseSchemas,
 )
 from services import AuthService, UserService
 
@@ -76,6 +77,7 @@ async def swagger_login_user(
         user_role=user.role,
     )
 
+
 @auth_router.post(
     path='/login',
     response_model=TokenResponseSchemas,
@@ -86,7 +88,7 @@ async def swagger_login_user(
 )
 async def login_user(
     user_data: LogInRequestSchema,
-    auth_service: Annotated[AuthService, Depends(get_service(AuthService))]
+    auth_service: Annotated[AuthService, Depends(get_service(AuthService))],
 ) -> TokenResponseSchemas:
     user = await auth_service.auth_user(
         email=user_data.email,

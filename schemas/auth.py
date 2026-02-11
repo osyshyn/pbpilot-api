@@ -19,7 +19,8 @@ class _EmailMixin(BaseModel):
         ),
     ]
 
-class  _PasswordMixin(BaseModel):
+
+class _PasswordMixin(BaseModel):
     password: Annotated[
         str,
         Field(
@@ -30,8 +31,10 @@ class  _PasswordMixin(BaseModel):
         ),
     ]
 
+
 class LogInRequestSchema(_EmailMixin, _PasswordMixin):
     """Schema representing user login data."""
+
 
 class SignUpRequestSchema(_EmailMixin, _PasswordMixin):
     """Schema representing user registration data."""
