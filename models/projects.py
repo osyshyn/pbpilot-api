@@ -9,6 +9,7 @@ from sqlalchemy import Index, text
 if TYPE_CHECKING:
     from models.client import Client
 
+
 class BuildingTypeEnum(StrEnum):
     SINGLE_FAMILY = "SINGLE_FAMILY_HOUSE"
     DUPLEX = "DUPLEX"
@@ -19,7 +20,6 @@ class BuildingTypeEnum(StrEnum):
 
 class Project(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'projects'
-
 
     __table_args__ = (
         Index(
@@ -43,7 +43,7 @@ class Project(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         String(255),
         nullable=True,
         blank=True
-    ) # Property manager is optional for a project
+    )  # Property manager is optional for a project
 
     client: Mapped["Client"] = relationship(
         back_populates="projects"
@@ -54,9 +54,9 @@ class Project(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         cascade="all, delete-orphan",
     )
 
-
     def __repr__(self) -> str:
         return f'<Project {self.project_name}>'
+
 
 class ProjectProperty(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'project_properties'
@@ -68,7 +68,6 @@ class ProjectProperty(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
             postgresql_where=text("deleted_at IS NULL"),
         ),
     )
-
 
     address: Mapped[str] = mapped_column(
         String(255),
@@ -116,6 +115,10 @@ class ProjectProperty(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         cascade="all, delete-orphan",
     )
 
+    def __repr__(self) -> str:
+        return f'<ProjectProperty {self.address}>'
+
+
 class PropertyStructure(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'property_structures'
     __table_args__ = (
@@ -136,7 +139,7 @@ class PropertyStructure(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     type: Mapped[BuildingTypeEnum] = mapped_column(
         Enum(BuildingTypeEnum, name='property_type_enum', create_type=False),
         nullable=False
-    ) # Structure cannot have type MULTI_STRUCTURE
+    )  # Structure cannot have type MULTI_STRUCTURE
     number_of_units: Mapped[int] = mapped_column(
         nullable=False
     )
@@ -150,3 +153,6 @@ class PropertyStructure(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     property: Mapped["ProjectProperty"] = relationship(
         back_populates="structures"
     )
+
+    def __repr__(self) -> str:
+        return f'<PropertyStructure {self.address}>'
