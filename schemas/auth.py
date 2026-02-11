@@ -6,9 +6,7 @@ from core import BaseModelSchema
 from models.user import MarketingSourceEnum, UserRoleEnum
 
 
-class SignUpRequestSchema(BaseModel):
-    """Schema representing user registration data."""
-
+class _EmailMixin(BaseModel):
     email: Annotated[
         EmailStr,
         Field(
@@ -20,6 +18,24 @@ class SignUpRequestSchema(BaseModel):
             ],
         ),
     ]
+
+class  _PasswordMixin(BaseModel):
+    password: Annotated[
+        str,
+        Field(
+            min_length=8,
+            max_length=20,
+            pattern=r'^[A-Za-z\d!@#$%^&*]{8,}$',
+            examples=['StrongP@ss9'],
+        ),
+    ]
+
+class LogInRequestSchema(_EmailMixin, _PasswordMixin):
+    """Schema representing user login data."""
+
+class SignUpRequestSchema(_EmailMixin, _PasswordMixin):
+    """Schema representing user registration data."""
+
     name: Annotated[
         str,
         Field(
@@ -40,15 +56,6 @@ class SignUpRequestSchema(BaseModel):
             examples=[
                 'Doe',
             ],
-        ),
-    ]
-    password: Annotated[
-        str,
-        Field(
-            min_length=8,
-            max_length=20,
-            pattern=r'^[A-Za-z\d!@#$%^&*]{8,}$',
-            examples=['StrongP@ss9'],
         ),
     ]
     phone_number: Annotated[
