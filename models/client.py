@@ -1,8 +1,10 @@
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import TYPE_CHECKING
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
 
+if TYPE_CHECKING:
+    from models.projects import Project
 
 class Client(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'clients'
@@ -27,6 +29,11 @@ class Client(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     )
 
     business_address: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    projects: Mapped[list["Project"]] = relationship(
+        back_populates="client",
+        cascade="all, delete-orphan",
+    )
 
     @property
     def full_name(self) -> str:
