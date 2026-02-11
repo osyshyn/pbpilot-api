@@ -88,6 +88,7 @@ async def get_client_by_id(
         await client_service.get_by_id(client_id=client_id)
     )
 
+
 @client_router.delete(
     path='/{client_id}',
     summary='Delete client by id',

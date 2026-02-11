@@ -1,4 +1,4 @@
-from .auth import SignUpRequestSchema, SignUpResponseSchema
+from .auth import LogInRequestSchema, SignUpRequestSchema, SignUpResponseSchema
 from .clients import (
     ClientResponseSchema,
     CreateClientRequestSchema,
@@ -16,6 +16,7 @@ __all__ = [
     'ClientResponseSchema',
     'CreateClientRequestSchema',
     'HealthCheckResponseSchema',
+    'LogInRequestSchema',
     'PricingPlanListResponseSchema',
     'PricingPlanResponseSchema',
     'RefreshTokenRequestSchema',
