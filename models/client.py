@@ -2,12 +2,24 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
+from sqlalchemy import Index, text
 
 if TYPE_CHECKING:
     from models.projects import Project
 
 class Client(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'clients'
+
+    __table_args__ = (
+        Index(
+            "uq_clients_email_not_deleted",
+            "email",
+            unique=True,
+            postgresql_where=text("deleted_at IS NULL"),
+        ),
+    )
+
+
     name: Mapped[str] = mapped_column(
         String(32),
         nullable=False,

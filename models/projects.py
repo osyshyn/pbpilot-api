@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
 from enum import StrEnum
 from typing import TYPE_CHECKING
+from sqlalchemy import Index, text
 
 if TYPE_CHECKING:
     from models.client import Client
@@ -20,10 +21,17 @@ class Project(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'projects'
 
 
+    __table_args__ = (
+        Index(
+            "ix_projects_client_not_deleted",
+            "client_id",
+            postgresql_where=text("deleted_at IS NULL"),
+        ),
+    )
+
     client_id: Mapped[int] = mapped_column(
         ForeignKey("clients.id", ondelete="CASCADE"),
         nullable=False,
-        index=True
     )
 
     # General information
@@ -52,6 +60,15 @@ class Project(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
 
 class ProjectProperty(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'project_properties'
+
+    __table_args__ = (
+        Index(
+            "ix_project_properties_project_not_deleted",
+            "project_id",
+            postgresql_where=text("deleted_at IS NULL"),
+        ),
+    )
+
 
     address: Mapped[str] = mapped_column(
         String(255),
@@ -105,6 +122,11 @@ class PropertyStructure(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         CheckConstraint(
             "type != 'MULTI_STRUCTURE'",
             name="ck_project_property_no_multi_structure"
+        ),
+        Index(
+            "ix_property_structures_property_not_deleted",
+            "property_id",
+            postgresql_where=text("deleted_at IS NULL"),
         ),
     )
     address: Mapped[str] = mapped_column(
