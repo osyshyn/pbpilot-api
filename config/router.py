@@ -12,6 +12,7 @@ from endpoints import (
     auth_router,
     main_router,
     pricing_plan_router,
+    project_router,
     user_router,
 )
 from endpoints.client import client_router
@@ -39,6 +40,9 @@ def initialize_routers() -> APIRouter:
     )
     main_api_router.include_router(
         client_router, prefix='/client', tags=['client']
+    )
+    main_api_router.include_router(
+        project_router, prefix='/project', tags=['project']
     )
 
     return main_api_router
