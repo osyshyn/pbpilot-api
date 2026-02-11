@@ -9,6 +9,7 @@ from .client import (
     ClientEmailAlreadyRegisteredException,
     ClientNotFoundException,
 )
+from .project import ProjectNotFoundException
 from .user import (
     EmailAlreadyRegisteredException,
     UserHasNoPermissionPermission,
@@ -22,6 +23,7 @@ __all__ = [
     'EmailAlreadyRegisteredException',
     'NoFiltersException',
     'NoUpdateDataException',
+    'ProjectNotFoundException',
     'RefreshTokenException',
     'UserHasNoPermissionPermission',
     'UserIsNotActiveException',
