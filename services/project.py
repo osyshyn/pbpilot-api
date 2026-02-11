@@ -28,16 +28,18 @@ class ProjectService(BaseService):
         client = await self._client_dao.get_by_id(data.client_id)
         if not client:
             raise ClientNotFoundException
-        project = await self._project_dao.create_with_properties(
+        created_project = await self._project_dao.create_with_properties(
             client_id=data.client_id,
             project_name=data.project_name,
             property_manager_name=data.property_manager,
             properties_data=data.properties,
         )
         await self._session.commit()
-        project = await self._project_dao.get_by_id_with_relations(project.id)
+        project = await self._project_dao.get_by_id_with_relations(
+            created_project.id
+        )
         if not project:
-            raise RuntimeError('Project was not found after create')
+            raise ProjectNotFoundException
         return project
 
     async def get_project_by_id(self, project_id: int) -> Project:

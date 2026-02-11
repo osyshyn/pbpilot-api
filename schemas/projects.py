@@ -56,18 +56,12 @@ class CreatePropertyRequestSchema(BaseModelSchema):
         BuildingTypeEnum,
         Field(
             description='Type of the property',
-            examples=[
-                BuildingTypeEnum.SINGLE_FAMILY
-            ]
+            examples=[BuildingTypeEnum.SINGLE_FAMILY],
         ),
     ]
     number_of_units: Annotated[
         int,
-        Field(
-            description='Number of units',
-            examples=[1],
-            ge=0
-        ),
+        Field(description='Number of units', examples=[1], ge=0),
     ]
     owner_lcc_name: Annotated[
         str | None,
@@ -75,7 +69,7 @@ class CreatePropertyRequestSchema(BaseModelSchema):
             default=None,
             description='Owner LCC name',
             examples=['John Doe'],
-            max_length=255
+            max_length=255,
         ),
     ]
     year_of_construction: Annotated[
@@ -92,7 +86,7 @@ class CreatePropertyRequestSchema(BaseModelSchema):
             default=None,
             description='Parcel number',
             examples=['12345678'],
-            max_length=255
+            max_length=255,
         ),
     ]
     registration_number: Annotated[
@@ -101,14 +95,14 @@ class CreatePropertyRequestSchema(BaseModelSchema):
             default=None,
             description='Rental registration number',
             examples=['12345678'],
-            max_length=255
+            max_length=255,
         ),
     ]
     structures: Annotated[
         list[CreateStructureRequestSchema],
         Field(
             default_factory=list,
-              description='Structures (only when type is MULTI_STRUCTURE)'
+            description='Structures (only when type is MULTI_STRUCTURE)',
         ),
     ]
 
@@ -147,7 +141,7 @@ class CreateProjectRequestSchema(BaseModelSchema):
             default=None,
             description='Property manager name',
             examples=['John Doe'],
-            max_length=255
+            max_length=255,
         ),
     ]
     properties: Annotated[
