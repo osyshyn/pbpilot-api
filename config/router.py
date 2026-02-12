@@ -13,7 +13,7 @@ from endpoints import (
     main_router,
     pricing_plan_router,
     project_router,
-    user_router,
+    user_router, debug_router,
 )
 from endpoints.client import client_router
 
@@ -44,6 +44,10 @@ def initialize_routers() -> APIRouter:
     main_api_router.include_router(
         project_router, prefix='/project', tags=['project']
     )
+    if settings.ENV in {'dev', 'local'}:
+        main_api_router.include_router(
+            debug_router, prefix='/debug', tags=['debug']
+        )
 
     return main_api_router
 
