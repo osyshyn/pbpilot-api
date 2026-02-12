@@ -116,3 +116,13 @@ class UserDAO(BaseDAO):
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def activate_user_by_email(self, email: str) -> User | None:
+        stmt = (
+            update(User)
+            .where(User.email == email)
+            .values(is_active=True, deleted_at=None)
+            .returning(User)
+        )
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
