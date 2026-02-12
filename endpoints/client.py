@@ -15,13 +15,14 @@ from services.client import ClientService
 
 logger = logging.getLogger(__name__)
 
-client_router = APIRouter()  # TODO: add dep for admin in router not
+client_router = APIRouter(
+    dependencies=[Depends(get_admin_user_from_token)],
+)
 
 
 @client_router.get(
     path='/',
     summary='Get all clients',
-    dependencies=[Depends(get_admin_user_from_token)],
 )
 async def get_all_clients(
     pagination: Annotated[PaginationParams, Depends()],
@@ -43,7 +44,6 @@ async def get_all_clients(
 @client_router.post(
     path='/',
     summary='Create new client',
-    dependencies=[Depends(get_admin_user_from_token)],
 )
 async def create_client(
     client_data: CreateClientRequestSchema,
@@ -59,7 +59,6 @@ async def create_client(
 @client_router.patch(
     path='/{client_id}',
     summary='Update client',
-    dependencies=[Depends(get_admin_user_from_token)],
 )
 async def update_client(
     client_id: int,
@@ -78,7 +77,6 @@ async def update_client(
 @client_router.get(
     path='/{client_id}',
     summary='Get client by id',
-    dependencies=[Depends(get_admin_user_from_token)],
 )
 async def get_client_by_id(
     client_id: int,
@@ -92,7 +90,6 @@ async def get_client_by_id(
 @client_router.delete(
     path='/{client_id}',
     summary='Delete client by id',
-    dependencies=[Depends(get_admin_user_from_token)],
 )
 async def delete_client_by_email(
     client_id: int,
