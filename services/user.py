@@ -129,8 +129,10 @@ class UserService(BaseService):
         return user
 
 
-    async def activate_user_by_id(self, user_id: int) -> User:
-        user: User | None = await self._user_dao.activate_user_by_id(user_id)
+    async def activate_user_by_email(self, user_email: str) -> User:
+        user: User | None = await self._user_dao.activate_user_by_email(
+            email=user_email
+        )
         if not user:
             raise UserNotFoundByIdException
         await self._session.commit()

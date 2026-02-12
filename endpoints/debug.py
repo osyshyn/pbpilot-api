@@ -20,12 +20,15 @@ debug_router = APIRouter()
 
 
 @debug_router.post(
-    path='/activate_user/{user_id}',
+    path='/activate_user/{user_email}',
     description='Activate user by id'
 )
 async def activate_user(
-        user_id: int,
+        user_email: str,
         user_service: Annotated[UserService, Depends(get_service(UserService))],
 ) -> UserResponseSchema:
-    return UserResponseSchema.model_validate(await user_service.activate_user_by_id(user_id=user_id))
-
+    return UserResponseSchema.model_validate(
+        await user_service.activate_user_by_email(
+            user_email=user_email
+        )
+    )
