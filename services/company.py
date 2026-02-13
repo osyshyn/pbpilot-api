@@ -38,7 +38,7 @@ class CompanyService(BaseService):
                 logo_key=company_data.logo_key,
                 tax_state=company_data.tax_state,
                 tax_percentage=company_data.tax_percentage,
-                schedule_data=company_data.schedule,
+                schedule_data=company_data.schedule, # TODO: Consider moving from pydantic to dto
             )
         except IntegrityError:
             raise CompanyAlreadyExistsException from None
