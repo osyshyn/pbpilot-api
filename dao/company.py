@@ -7,6 +7,5 @@ class CompanyDAO(BaseDAO):
 
     async def create(
         self,
-        *,
     ) -> Company:
         pass
