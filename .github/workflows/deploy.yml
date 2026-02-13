@@ -41,7 +41,6 @@ jobs:
       - name: Run database migrations
         env:
           ENV: ${{ env.ENV_MODE }}
-          DB_URL: ${{ github.ref == 'refs/heads/main' && secrets.DB_URL_PROD || secrets.DB_URL_DEV }}
         run: uv run alembic -c models/alembic.ini upgrade head
 
       - name: Install AWS SAM CLI
