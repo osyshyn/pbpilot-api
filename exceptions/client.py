@@ -12,7 +12,7 @@ class ClientEmailAlreadyRegisteredException(ClientException):
         """Initialize ClientEmailAlreadyRegisteredException with a default message."""
         super().__init__(
             status_code=409,
-            detail=('Client with this email already registered'),
+            detail='Client with this email already registered',
         )
 
 
