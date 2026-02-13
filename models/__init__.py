@@ -2,6 +2,7 @@ from .blacklist_token import BlacklistToken
 from .client import Client
 from .pricing_plan import PricingPlan
 from .projects import Project, ProjectProperty, PropertyStructure
+from .company import Company, CompanySchedule
 from .user import User
 
 __all__ = [
@@ -12,4 +13,6 @@ __all__ = [
     'ProjectProperty',
     'PropertyStructure',
     'User',
+    'Company',
+    'CompanySchedule',
 ]
