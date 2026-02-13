@@ -5,6 +5,7 @@ from .pricing_plan import pricing_plan_router
 from .project import project_router
 from .user import user_router
 from .debug import debug_router
+from .company import company_router
 __all__ = [
     'auth_router',
     'client_router',
@@ -12,4 +13,5 @@ __all__ = [
     'pricing_plan_router',
     'project_router',
     'user_router',
+    'company_router',
 ]
