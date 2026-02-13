@@ -4,6 +4,11 @@ from .clients import (
     CreateClientRequestSchema,
     UpdateClientRequestSchema,
 )
+from .company import (
+    CompanyResponseSchema,
+    CreateCompanyRequestSchema,
+    CreateCompanyScheduleItemRequestSchema,
+)
 from .main import HealthCheckResponseSchema
 from .pricing_plan import (
     PricingPlanListResponseSchema,
@@ -18,7 +23,10 @@ from .user import UserResponseSchema
 
 __all__ = [
     'ClientResponseSchema',
+    'CompanyResponseSchema',
     'CreateClientRequestSchema',
+    'CreateCompanyRequestSchema',
+    'CreateCompanyScheduleItemRequestSchema',
     'CreateProjectRequestSchema',
     'HealthCheckResponseSchema',
     'LogInRequestSchema',

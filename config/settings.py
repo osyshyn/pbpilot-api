@@ -116,6 +116,31 @@ class LoggingSettings(BaseSettings):
     )
 
 
+class AwsSettings(BaseSettings):
+    """Settings for AWS services (S3, etc.).
+
+    All settings are prefixed with 'AWS_' in environment variables.
+    In production, ACCESS_KEY_ID and SECRET_ACCESS_KEY may be None
+    if using IAM roles.
+
+    Attributes:
+        ACCESS_KEY_ID: AWS access key ID (optional in production).
+        SECRET_ACCESS_KEY: AWS secret access key (optional in production).
+        REGION: AWS region (default: us-east-1).
+        BUCKET_NAME: Name of the S3 bucket for file storage.
+
+    """
+
+    model_config = SettingsConfigDict(
+        env_prefix='AWS_', env_file=env_file, extra='ignore'
+    )
+
+    ACCESS_KEY_ID: str | None = None
+    SECRET_ACCESS_KEY: str | None = None
+    REGION: str = 'us-east-1'
+    BUCKET_NAME: str
+
+
 class Settings(BaseSettings):
     """Main application settings class.
 
@@ -161,6 +186,7 @@ class Settings(BaseSettings):
         default_factory=DatabaseSettings
     )
     logging_settings: LoggingSettings = Field(default_factory=LoggingSettings)
+    aws_settings: AwsSettings = Field(default_factory=AwsSettings)  # type: ignore
 
     @classmethod
     @cache
