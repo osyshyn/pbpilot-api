@@ -98,6 +98,20 @@ class CreateCompanyRequestSchema(BaseModelSchema):
             ],
         ),
     ]
+    tax_state: Annotated[
+        str,
+        Field(
+            description='State of the country',
+            examples=['Washington'],
+        ),
+    ]
+    tax_percentage: Annotated[
+        float,
+        Field(
+            description='Tax percentage',
+            examples=[0.15],
+        ),
+    ]
 
 
 class CompanyScheduleItemResponseSchema(BaseModelSchema):
