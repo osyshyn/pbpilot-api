@@ -6,7 +6,7 @@ from core import BaseService
 from dao import CompanyDAO
 from exceptions import CompanyAlreadyExistsNotFoundException
 from models import Company
-from schemas import CreateClientRequestSchema
+from schemas import CreateCompanyRequestSchema
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class CompanyService(BaseService):
         self._company_dao = company_dao or CompanyDAO(db_session)
 
     async def create_company(
-            self, company_data: CreateClientRequestSchema
+            self, company_data: CreateCompanyRequestSchema
     ) -> Company:
         try:
             company = await self._company_dao.create(
