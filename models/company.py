@@ -53,6 +53,13 @@ class Company(BaseIdMixin, BaseTimeStampMixin):
         nullable=True,
         comment='S3 key for image',
     )
+    tax_state: Mapped[str] = mapped_column(
+        String(32),
+        nullable=False
+    )
+    tax_percentage: Mapped[float] = mapped_column(
+        nullable=False
+    )
 
     # TODO: Implement taxes per state, STATE - TAX in %, add tax behaviour to the project
     def __repr__(self) -> str:
