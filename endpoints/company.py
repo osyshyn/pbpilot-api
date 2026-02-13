@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends
 
 from core import get_service
 from schemas import CreateCompanyRequestSchema
+from services import CompanyService
 
 logger = logging.getLogger(__name__)
 
