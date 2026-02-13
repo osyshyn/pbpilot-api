@@ -5,13 +5,6 @@ from pydantic import Field, model_validator
 from core import BaseModelSchema
 from models.projects import BuildingTypeEnum
 
-
-def _structure_type_not_multi(value: BuildingTypeEnum) -> BuildingTypeEnum:
-    if value == BuildingTypeEnum.MULTI_STRUCTURE:
-        raise ValueError('Structure type cannot be MULTI_STRUCTURE')
-    return value
-
-
 class CreateStructureRequestSchema(BaseModelSchema):
     """Schema for creating a structure under a MULTI_STRUCTURE property."""
 
@@ -36,7 +29,8 @@ class CreateStructureRequestSchema(BaseModelSchema):
 
     @model_validator(mode='after')
     def validate_structure_type(self) -> Self:
-        _structure_type_not_multi(self.structure_type)
+        if self.structure_type == BuildingTypeEnum.MULTI_STRUCTURE:
+            raise ValueError('Structure type cannot be MULTI_STRUCTURE')
         return self
 
 
