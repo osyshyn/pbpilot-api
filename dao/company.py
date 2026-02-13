@@ -40,7 +40,6 @@ class CompanyDAO(BaseDAO):
                 day_of_week=item.day_of_week,
                 start_time=item.start_time,
                 end_time=item.end_time,
-                is_day_off=item.is_day_off,
             )
             self._session.add(schedule)
 

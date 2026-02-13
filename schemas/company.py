@@ -7,7 +7,7 @@ from core import BaseModelSchema
 
 
 class CreateCompanyScheduleItemRequestSchema(BaseModelSchema):
-    """One schedule entry: working hours for a weekday."""
+    """One schedule entry: working hours for a weekday. Only working days."""
 
     day_of_week: Annotated[
         int,
@@ -18,44 +18,25 @@ class CreateCompanyScheduleItemRequestSchema(BaseModelSchema):
             le=6,
         ),
     ]
-    is_day_off: Annotated[
-        bool,
-        Field(
-            default=False,
-            description='Whether this day is a day off',
-        ),
-    ]
     start_time: Annotated[
-        time | None,
+        time,
         Field(
-            default=None,
-            description='Work start time (required when not day off)',
+            description='Work start time',
             examples=['09:00'],
         ),
     ]
     end_time: Annotated[
-        time | None,
+        time,
         Field(
-            default=None,
-            description='Work end time (required when not day off)',
+            description='Work end time',
             examples=['18:00'],
         ),
     ]
 
     @model_validator(mode='after')
     def validate_working_hours(self) -> Self:
-        if self.is_day_off:
-            if self.start_time is not None or self.end_time is not None:
-                raise ValueError(
-                    'start_time and end_time must be null when is_day_off is True'
-                )
-        else:
-            if self.start_time is None or self.end_time is None:
-                raise ValueError(
-                    'start_time and end_time are required when is_day_off is False'
-                )
-            if self.start_time >= self.end_time:
-                raise ValueError('start_time must be before end_time')
+        if self.start_time >= self.end_time:
+            raise ValueError('start_time must be before end_time')
         return self
 
 
@@ -110,17 +91,15 @@ class CreateCompanyRequestSchema(BaseModelSchema):
     schedule: Annotated[
         list[CreateCompanyScheduleItemRequestSchema],
         Field(
-            description='Working hours per weekday (0=Mon .. 6=Sun), one entry per day',
+            description='Working days only (0=Mon .. 6=Sun). Days not in list are off.',
             min_length=1,
             examples=[
                 [
-                    {'day_of_week': 0, 'start_time': '09:00', 'end_time': '18:00', 'is_day_off': False},
-                    {'day_of_week': 1, 'start_time': '09:00', 'end_time': '18:00', 'is_day_off': False},
-                    {'day_of_week': 2, 'start_time': '09:00', 'end_time': '18:00', 'is_day_off': False},
-                    {'day_of_week': 3, 'start_time': '09:00', 'end_time': '18:00', 'is_day_off': False},
-                    {'day_of_week': 4, 'start_time': '09:00', 'end_time': '18:00', 'is_day_off': False},
-                    {'day_of_week': 5, 'start_time': None, 'end_time': None, 'is_day_off': True},
-                    {'day_of_week': 6, 'start_time': None, 'end_time': None, 'is_day_off': True},
+                    {'day_of_week': 0, 'start_time': '09:00', 'end_time': '18:00'},
+                    {'day_of_week': 1, 'start_time': '09:00', 'end_time': '18:00'},
+                    {'day_of_week': 2, 'start_time': '09:00', 'end_time': '18:00'},
+                    {'day_of_week': 3, 'start_time': '09:00', 'end_time': '18:00'},
+                    {'day_of_week': 4, 'start_time': '09:00', 'end_time': '18:00'},
                 ],
             ],
         ),
@@ -153,9 +132,8 @@ class CompanyScheduleItemResponseSchema(BaseModelSchema):
 
     id: int
     day_of_week: int
-    start_time: time | None
-    end_time: time | None
-    is_day_off: bool
+    start_time: time
+    end_time: time
 
 
 class CompanyResponseSchema(BaseModelSchema):

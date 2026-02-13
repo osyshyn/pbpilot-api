@@ -2,7 +2,7 @@ import enum
 from datetime import time
 from typing import List, Optional
 
-from sqlalchemy import String, Integer, Time, ForeignKey, Boolean
+from sqlalchemy import String, Integer, Time, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import BaseIdMixin, BaseTimeStampMixin
@@ -81,26 +81,12 @@ class CompanySchedule(BaseIdMixin):
         nullable=False
     )
 
-    start_time: Mapped[Optional[time]] = mapped_column(
-        Time,
-        nullable=True
-    )
-    end_time: Mapped[Optional[time]] = mapped_column(
-        Time,
-        nullable=True
-    )
-
-    is_day_off: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False
-    )
+    start_time: Mapped[time] = mapped_column(Time, nullable=False)
+    end_time: Mapped[time] = mapped_column(Time, nullable=False)
 
     company: Mapped["Company"] = relationship(
         back_populates="schedule"
     )
 
-    def _get_status(self) -> str:
-        return "Off" if self.is_day_off else f"{self.start_time}-{self.end_time}"
-
     def __repr__(self) -> str:
-        return f"<Schedule(company={self.company_id}, day={self.day_of_week}, {self._get_status()})>"
+        return f"<Schedule(company={self.company_id}, day={self.day_of_week}, {self.start_time}-{self.end_time})>"
