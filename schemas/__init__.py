@@ -4,6 +4,11 @@ from .clients import (
     CreateClientRequestSchema,
     UpdateClientRequestSchema,
 )
+from .company import (
+    CompanyResponseSchema,
+    CreateCompanyRequestSchema,
+    CreateCompanyScheduleItemRequestSchema,
+)
 from .main import HealthCheckResponseSchema
 from .pricing_plan import (
     PricingPlanListResponseSchema,
@@ -15,15 +20,13 @@ from .projects import (
 )
 from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
-from .company import (
-    CompanyResponseSchema,
-    CreateCompanyRequestSchema,
-    CreateCompanyScheduleItemRequestSchema,
-)
 
 __all__ = [
     'ClientResponseSchema',
+    'CompanyResponseSchema',
     'CreateClientRequestSchema',
+    'CreateCompanyRequestSchema',
+    'CreateCompanyScheduleItemRequestSchema',
     'CreateProjectRequestSchema',
     'HealthCheckResponseSchema',
     'LogInRequestSchema',
@@ -36,7 +39,4 @@ __all__ = [
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
     'UserResponseSchema',
-    'CompanyResponseSchema',
-    'CreateCompanyRequestSchema',
-    'CreateCompanyScheduleItemRequestSchema',
 ]

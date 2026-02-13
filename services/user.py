@@ -128,7 +128,6 @@ class UserService(BaseService):
         await self._session.commit()
         return user
 
-
     async def activate_user_by_email(self, user_email: str) -> User:
         user: User | None = await self._user_dao.activate_user_by_email(
             email=user_email

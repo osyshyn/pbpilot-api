@@ -5,6 +5,7 @@ from pydantic import Field, model_validator
 from core import BaseModelSchema
 from models.projects import BuildingTypeEnum
 
+
 class CreateStructureRequestSchema(BaseModelSchema):
     """Schema for creating a structure under a MULTI_STRUCTURE property."""
 

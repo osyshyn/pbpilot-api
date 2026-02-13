@@ -40,7 +40,6 @@ class CreateCompanyScheduleItemRequestSchema(BaseModelSchema):
         return self
 
 
-
 class CreateCompanyRequestSchema(BaseModelSchema):
     """Schema for creating a new company."""
 
@@ -95,11 +94,31 @@ class CreateCompanyRequestSchema(BaseModelSchema):
             min_length=1,
             examples=[
                 [
-                    {'day_of_week': 0, 'start_time': '09:00', 'end_time': '18:00'},
-                    {'day_of_week': 1, 'start_time': '09:00', 'end_time': '18:00'},
-                    {'day_of_week': 2, 'start_time': '09:00', 'end_time': '18:00'},
-                    {'day_of_week': 3, 'start_time': '09:00', 'end_time': '18:00'},
-                    {'day_of_week': 4, 'start_time': '09:00', 'end_time': '18:00'},
+                    {
+                        'day_of_week': 0,
+                        'start_time': '09:00',
+                        'end_time': '18:00',
+                    },
+                    {
+                        'day_of_week': 1,
+                        'start_time': '09:00',
+                        'end_time': '18:00',
+                    },
+                    {
+                        'day_of_week': 2,
+                        'start_time': '09:00',
+                        'end_time': '18:00',
+                    },
+                    {
+                        'day_of_week': 3,
+                        'start_time': '09:00',
+                        'end_time': '18:00',
+                    },
+                    {
+                        'day_of_week': 4,
+                        'start_time': '09:00',
+                        'end_time': '18:00',
+                    },
                 ],
             ],
         ),
@@ -123,7 +142,9 @@ class CreateCompanyRequestSchema(BaseModelSchema):
     def validate_schedule_unique_days(self) -> Self:
         days = [s.day_of_week for s in self.schedule]
         if len(days) != len(set(days)):
-            raise ValueError('Each day_of_week must appear at most once in schedule')
+            raise ValueError(
+                'Each day_of_week must appear at most once in schedule'
+            )
         return self
 
 

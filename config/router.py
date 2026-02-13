@@ -10,12 +10,12 @@ from config.database import engine
 from config.settings import Settings
 from endpoints import (
     auth_router,
+    company_router,
+    debug_router,
     main_router,
     pricing_plan_router,
     project_router,
     user_router,
-    debug_router,
-    company_router,
 )
 from endpoints.client import client_router
 
