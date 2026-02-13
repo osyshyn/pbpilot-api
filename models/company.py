@@ -45,7 +45,8 @@ class Company(BaseIdMixin, BaseTimeStampMixin):
 
     schedule: Mapped[List["CompanySchedule"]] = relationship(
         back_populates="company",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="CompanySchedule.day_of_week",
     )
 
     logo_key: Mapped[str | None] = mapped_column(

@@ -4,7 +4,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from core import get_service
-from schemas import CreateCompanyRequestSchema
+from schemas.company import (
+    CompanyResponseSchema,
+    CreateCompanyRequestSchema,
+)
 from services import CompanyService
 
 logger = logging.getLogger(__name__)
@@ -17,10 +20,24 @@ company_router = APIRouter()
     summary='Create a new company',
 )
 async def create_company(
-        company_data: CreateCompanyRequestSchema,
-        project_service: Annotated[
-            CompanyService, Depends(get_service(CompanyService))
-        ]
-        # TODO: Add avatar
-): # TODO: Respose model
-    await project_service.create_company(company_data=company_data)
+    company_data: CreateCompanyRequestSchema,
+    company_service: Annotated[
+        CompanyService, Depends(get_service(CompanyService))
+    ],
+) -> CompanyResponseSchema:
+    company = await company_service.create_company(company_data=company_data)
+    return CompanyResponseSchema.model_validate(company)
+
+
+@company_router.get(
+    path='/{company_id}',
+    summary='Get company by id',
+)
+async def get_company_by_id(
+    company_id: int,
+    company_service: Annotated[
+        CompanyService, Depends(get_service(CompanyService))
+    ],
+) -> CompanyResponseSchema:
+    company = await company_service.get_company_by_id(company_id=company_id)
+    return CompanyResponseSchema.model_validate(company)

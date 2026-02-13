@@ -15,7 +15,10 @@ from .user import (
     UserHasNoPermissionPermission,
     UserIsNotActiveException,
 )
-from .company import CompanyAlreadyExistsNotFoundException
+from .company import (
+    CompanyAlreadyExistsException,
+    CompanyNotFoundException,
+)
 
 __all__ = [
     'AccessTokenExpiredException',
@@ -29,5 +32,6 @@ __all__ = [
     'UserHasNoPermissionPermission',
     'UserIsNotActiveException',
     'WrongCredentialsException',
-    'CompanyAlreadyExistsNotFoundException',
+    'CompanyAlreadyExistsException',
+    'CompanyNotFoundException',
 ]

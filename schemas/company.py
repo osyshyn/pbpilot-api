@@ -1,7 +1,7 @@
 from datetime import time
-from typing import Annotated
+from typing import Annotated, Self
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from core import BaseModelSchema
 
@@ -18,22 +18,45 @@ class CreateCompanyScheduleItemRequestSchema(BaseModelSchema):
             le=6,
         ),
     ]
+    is_day_off: Annotated[
+        bool,
+        Field(
+            default=False,
+            description='Whether this day is a day off',
+        ),
+    ]
     start_time: Annotated[
         time | None,
         Field(
             default=None,
-            description='Work start time for this day',
-            examples=['09:00:00'],
+            description='Work start time (required when not day off)',
+            examples=['09:00'],
         ),
     ]
     end_time: Annotated[
         time | None,
         Field(
             default=None,
-            description='Work end time for this day',
-            examples=['18:00:00'],
+            description='Work end time (required when not day off)',
+            examples=['18:00'],
         ),
     ]
+
+    @model_validator(mode='after')
+    def validate_working_hours(self) -> Self:
+        if self.is_day_off:
+            if self.start_time is not None or self.end_time is not None:
+                raise ValueError(
+                    'start_time and end_time must be null when is_day_off is True'
+                )
+        else:
+            if self.start_time is None or self.end_time is None:
+                raise ValueError(
+                    'start_time and end_time are required when is_day_off is False'
+                )
+            if self.start_time >= self.end_time:
+                raise ValueError('start_time must be before end_time')
+        return self
 
 
 
@@ -76,24 +99,28 @@ class CreateCompanyRequestSchema(BaseModelSchema):
             max_length=50,
         ),
     ]
+    logo_key: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='S3 key for company logo',
+            max_length=512,
+        ),
+    ]
     schedule: Annotated[
         list[CreateCompanyScheduleItemRequestSchema],
         Field(
-            description='Working hours per weekday (0=Mon .. 6=Sun)',
+            description='Working hours per weekday (0=Mon .. 6=Sun), one entry per day',
+            min_length=1,
             examples=[
                 [
-                    {
-                        'day_of_week': 0,
-                        'start_time': '09:00',
-                        'end_time': '18:00',
-                        'is_day_off': False,
-                        },
-                    {
-                        'day_of_week': 6,
-                        'start_time': None,
-                        'end_time': None,
-                        'is_day_off': True,
-                        },
+                    {'day_of_week': 0, 'start_time': '09:00', 'end_time': '18:00', 'is_day_off': False},
+                    {'day_of_week': 1, 'start_time': '09:00', 'end_time': '18:00', 'is_day_off': False},
+                    {'day_of_week': 2, 'start_time': '09:00', 'end_time': '18:00', 'is_day_off': False},
+                    {'day_of_week': 3, 'start_time': '09:00', 'end_time': '18:00', 'is_day_off': False},
+                    {'day_of_week': 4, 'start_time': '09:00', 'end_time': '18:00', 'is_day_off': False},
+                    {'day_of_week': 5, 'start_time': None, 'end_time': None, 'is_day_off': True},
+                    {'day_of_week': 6, 'start_time': None, 'end_time': None, 'is_day_off': True},
                 ],
             ],
         ),
@@ -112,6 +139,13 @@ class CreateCompanyRequestSchema(BaseModelSchema):
             examples=[0.15],
         ),
     ]
+
+    @model_validator(mode='after')
+    def validate_schedule_unique_days(self) -> Self:
+        days = [s.day_of_week for s in self.schedule]
+        if len(days) != len(set(days)):
+            raise ValueError('Each day_of_week must appear at most once in schedule')
+        return self
 
 
 class CompanyScheduleItemResponseSchema(BaseModelSchema):
@@ -133,4 +167,6 @@ class CompanyResponseSchema(BaseModelSchema):
     address: str
     timezone: str
     logo_key: str | None
+    tax_state: str
+    tax_percentage: float
     schedule: list[CompanyScheduleItemResponseSchema] = []
