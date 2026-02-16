@@ -10,3 +10,8 @@ class OngoingProjectDTO(BaseDTO):
     scheduled: int = 0
     need_scheduled: int = 0
     completed_this_week: int = 0
+
+@dataclass(slots=True)
+class NeedScheduledDTO(BaseDTO):
+    project_names: list[str]
+    amount: int = 0
