@@ -1,0 +1,12 @@
+from dataclasses import dataclass
+from datetime import datetime as dt
+
+from core.dto import BaseDTO
+
+
+@dataclass(slots=True)
+class OngoingProjectDTO(BaseDTO):
+    amount: int = 0
+    scheduled: int = 0
+    need_scheduled: int = 0
+    completed_this_week: int = 0

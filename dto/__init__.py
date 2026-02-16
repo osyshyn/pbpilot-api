@@ -1,3 +1,3 @@
 from .auth import AccessTokenDTO
-
-__all__ = ['AccessTokenDTO']
+from .project import OngoingProjectDTO
+__all__ = ['AccessTokenDTO', 'OngoingProjectDTO']
