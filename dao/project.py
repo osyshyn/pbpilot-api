@@ -142,3 +142,14 @@ class ProjectDAO(BaseDAO):
 
         result = await self.session.execute(stmt)
         return result.scalar_one()
+
+    async def get_names_of_need_scheduling_projects(self) -> list[str]:
+        stmt = (
+            select(Project.name)
+            .where(
+                Project.is_active == True,
+                Project.scheduled_at.is_(None),
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
