@@ -231,8 +231,25 @@ class _NeedSchedulingResponseSchema(BaseModelSchema):
 
 
 class _UnassignedProjectResponseSchema(BaseModelSchema):
-    amount: int
-    project_names: list[str]
+    amount: Annotated[
+        int,
+        Field(
+            description='Amount',
+            examples=[3]
+        ),
+    ]
+
+    project_names: Annotated[
+        list[str],
+        Field(
+            description='Project names',
+            examples=[
+                '8123 Canton Ridge',
+                'Lincoln bridge'
+            ],
+        )
+    ]
+
 
 
 class _RentalProjectResponseSchema(BaseModelSchema):
