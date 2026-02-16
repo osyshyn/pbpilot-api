@@ -7,7 +7,7 @@ from dao import ClientDAO, ProjectDAO
 from exceptions import ClientNotFoundException, ProjectNotFoundException
 from models import Project
 from schemas.projects import CreateProjectRequestSchema
-from dto import OngoingProjectDTO, NeedScheduledDTO
+from dto import OngoingProjectDTO, NeedScheduledDTO, UnassignedJobsDTO, ReadyToFinalizeDTO
 
 logger = logging.getLogger(__name__)
 
@@ -79,4 +79,12 @@ class ProjectService(BaseService):
         need_scheduling_dto = NeedScheduledDTO(
             amount=need_scheduling,
             project_names=await self._project_dao.get_names_of_need_scheduling_projects()
+        )
+        unassigned_jobs_dto = UnassignedJobsDTO(
+            amount=await self._project_dao.get_amount_of_need_unassigned_projects(),
+            project_names=await self._project_dao.get_names_of_unassigned_projects(),
+        )
+        ready_to_finalize_dto = ReadyToFinalizeDTO(
+            amount=await self._project_dao.get_amount_of_ready_to_finalize_projects(),
+            project_names= await self._project_dao.get_names_of_ready_to_finalize_projects(),
         )
