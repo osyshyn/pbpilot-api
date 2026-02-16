@@ -17,7 +17,7 @@ class NeedScheduledDTO(BaseDTO):
     amount: int = 0
 
 @dataclass(slots=True)
-class UnscheduledProjectDTO(BaseDTO):
+class UnassignedJobsDTO(BaseDTO):
     project_names: list[str]
     amount: int = 0
 
