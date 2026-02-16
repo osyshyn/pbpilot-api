@@ -179,22 +179,50 @@ class ProjectResponseSchema(BaseModelSchema):
 
 
 class _OngoingProjectResponseSchema(BaseModelSchema):
-    amount: int
-    scheduled: int
-    need_scheduled: int
-    completed_this_week: int
+    amount: Annotated[
+        int,
+        Field(
+            description='Amount',
+            examples=[21]
+        ),
+    ]
+    scheduled: Annotated[
+        int,
+        Field(
+            description='Scheduled',
+            examples=[12]
+        ),
+    ]
+    need_scheduled: Annotated[
+        int,
+        Field(
+            description='Need scheduled',
+            examples=[5]
+        ),
+    ]
+    completed_this_week: Annotated[
+        int,
+        Field(
+            description='Completed this week',
+            examples=[7]
+        ),
+    ]
+
 
 class _NeedSchedulingResponseSchema(BaseModelSchema):
     amount: int
     project_names: list[str]
 
+
 class _UnassignedProjectResponseSchema(BaseModelSchema):
     amount: int
     project_names: list[str]
 
+
 class _RentalProjectResponseSchema(BaseModelSchema):
     amount: int
     project_names: list[str]
+
 
 class ProjectDashboardResponseSchema(BaseModelSchema):
     ongoing_project: _OngoingProjectResponseSchema
