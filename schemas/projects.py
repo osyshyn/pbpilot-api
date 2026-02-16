@@ -176,3 +176,28 @@ class ProjectResponseSchema(BaseModelSchema):
     project_name: str
     property_manager_name: str | None
     properties: list[ProjectPropertyResponseSchema] = []
+
+
+class _OngoingProjectResponseSchema(BaseModelSchema):
+    amount: int
+    scheduled: int
+    need_scheduled: int
+    completed_this_week: int
+
+class _NeedSchedulingResponseSchema(BaseModelSchema):
+    amount: int
+    project_names: list[str]
+
+class _UnassignedProjectResponseSchema(BaseModelSchema):
+    amount: int
+    project_names: list[str]
+
+class _RentalProjectResponseSchema(BaseModelSchema):
+    amount: int
+    project_names: list[str]
+
+class ProjectDashboardResponseSchema(BaseModelSchema):
+    ongoing_project: _OngoingProjectResponseSchema
+    need_scheduling: _NeedSchedulingResponseSchema
+    unassigned_jobs: _UnassignedProjectResponseSchema
+    ready_for_finalize: _RentalProjectResponseSchema
