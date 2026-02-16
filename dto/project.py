@@ -15,3 +15,13 @@ class OngoingProjectDTO(BaseDTO):
 class NeedScheduledDTO(BaseDTO):
     project_names: list[str]
     amount: int = 0
+
+@dataclass(slots=True)
+class UnscheduledProjectDTO(BaseDTO):
+    project_names: list[str]
+    amount: int = 0
+
+@dataclass(slots=True)
+class ReadyToFinalizeDTO(BaseDTO):
+    project_names: list[str]
+    amount: int = 0
