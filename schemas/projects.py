@@ -210,8 +210,24 @@ class _OngoingProjectResponseSchema(BaseModelSchema):
 
 
 class _NeedSchedulingResponseSchema(BaseModelSchema):
-    amount: int
-    project_names: list[str]
+    amount: Annotated[
+        int,
+        Field(
+            description='Amount',
+            examples=[6]
+        ),
+    ]
+    project_names: Annotated[
+        list[str],
+        Field(
+            description='Project names',
+            examples=[
+                'Westbrook Family Housing',
+                '8123 Canton Ridge',
+                'Maple Street Duplex'
+            ],
+        )
+    ]
 
 
 class _UnassignedProjectResponseSchema(BaseModelSchema):
