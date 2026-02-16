@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends
 from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_admin_user_from_token
+from models import User
 from schemas.projects import CreateProjectRequestSchema, ProjectResponseSchema
 from services.project import ProjectService
 
@@ -82,3 +83,17 @@ async def get_all_projects(
         size=pagination.size,
         pages=pages,
     )
+
+
+
+@project_router.get(
+    path='/dashboard',
+    summary='Get dashboard data',
+)
+async def get_project_dashboard(
+        admin_user: Annotated[User, Depends(get_admin_user_from_token)],
+        project_service: Annotated[
+            ProjectService, Depends(get_service(ProjectService))
+        ],
+) ->ProjectDashboardResponseSchema:
+    pass
