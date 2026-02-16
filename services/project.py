@@ -7,17 +7,18 @@ from dao import ClientDAO, ProjectDAO
 from exceptions import ClientNotFoundException, ProjectNotFoundException
 from models import Project
 from schemas.projects import CreateProjectRequestSchema
+from dto import OngoingProjectDTO
 
 logger = logging.getLogger(__name__)
 
 
 class ProjectService(BaseService):
     def __init__(
-        self,
-        db_session: AsyncSession,
-        *,
-        project_dao: ProjectDAO | None = None,
-        client_dao: ClientDAO | None = None,
+            self,
+            db_session: AsyncSession,
+            *,
+            project_dao: ProjectDAO | None = None,
+            client_dao: ClientDAO | None = None,
     ):
         super().__init__(db_session)
         self._project_dao = project_dao or ProjectDAO(db_session)
@@ -64,3 +65,14 @@ class ProjectService(BaseService):
     ) -> tuple[list[Project], int]:
         """Get all active projects with pagination."""
         return await self._project_dao.get_all(page=page, limit=size)
+
+    async def get_projects_dashboard(
+            self
+    ):
+        ongoing_project_dto = OngoingProjectDTO(
+            amount=await self._project_dao.get_ongoing_project_amount(),
+            scheduled=await self._project_dao.get_scheduled_project_amount(),
+            need_scheduled=await self._project_dao.get_unscheduled_projects_amount(),
+            completed_this_week=await self._project_dao.get_completed_last_week_amount(),
+        )
+

@@ -1,12 +1,11 @@
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta, timezone
 
-from sqlalchemy import select, update
+from sqlalchemy import select, update, func
 from sqlalchemy.orm import selectinload
 
 from core.dao import BaseDAO
 from models import Project, ProjectProperty, PropertyStructure
 from schemas.projects import CreatePropertyRequestSchema
-
 
 class ProjectDAO(BaseDAO):
     """DAO for Project model."""
@@ -94,3 +93,52 @@ class ProjectDAO(BaseDAO):
             )
         )
         return await self.paginate(query=stmt, page=page, limit=limit)
+
+
+    async def get_ongoing_project_amount(self) -> int:
+        stmt = (
+            select(func.count(Project.id))
+            .where(
+                Project.is_active == True,  # noqa: E712
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
+    async def get_scheduled_project_amount(self) -> int:
+        stmt = (
+            select(func.count(Project.id))
+            .where(
+                Project.is_active == True,  # noqa: E712
+                Project.scheduled_at.isnot(None)
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
+    async def get_unscheduled_projects_amount(self) -> int:
+        stmt = (
+            select(func.count(Project.id))
+            .where(
+                Project.is_active == True,  # noqa: E712
+                Project.scheduled_at.is_(None)
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
+    async def get_completed_last_week_amount(self) -> int:
+        now = datetime.now(timezone.utc)
+        week_ago = now - timedelta(days=7)
+
+        stmt = (
+            select(func.count(Project.id))
+            .where(
+                Project.is_active == True,
+                Project.completed_at.isnot(None),
+                Project.completed_at >= week_ago,
+            )
+        )
+
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
