@@ -253,8 +253,25 @@ class _UnassignedProjectResponseSchema(BaseModelSchema):
 
 
 class _RentalProjectResponseSchema(BaseModelSchema):
-    amount: int
-    project_names: list[str]
+    amount: Annotated[
+        int,
+        Field(
+            description='Amount',
+            examples=[3]
+        ),
+    ]
+
+    project_names: Annotated[
+        list[str],
+        Field(
+            description='Project names',
+            examples=[
+                '9632 Canton Ridge',
+                'Oakridge Townhomes'
+            ],
+        )
+    ]
+
 
 
 class ProjectDashboardResponseSchema(BaseModelSchema):
