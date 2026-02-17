@@ -4,6 +4,7 @@ from .pricing_plan import PricingPlanService
 from .project import ProjectService
 from .user import UserService
 from .admin import AdminService
+from .email import EmailService
 __all__ = [
     'AuthService',
     'CompanyService',
@@ -11,4 +12,5 @@ __all__ = [
     'ProjectService',
     'UserService',
     'AdminService',
+    'EmailService',
 ]

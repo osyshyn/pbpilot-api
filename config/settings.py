@@ -140,6 +140,31 @@ class AwsSettings(BaseSettings):
     REGION: str = 'us-east-1'
     BUCKET_NAME: str
 
+class EmailSettings(BaseSettings):
+    """Settings for email sending.
+
+    All settings are prefixed with 'EMAIL_' in environment variables.
+
+    Attributes:
+        ADMIN_EMAIL: Admin email address for sending emails.
+        SMTP_HOST: SMTP server host (optional, defaults to localhost).
+        SMTP_PORT: SMTP server port (optional, defaults to 587).
+        SMTP_USER: SMTP username (optional).
+        SMTP_PASSWORD: SMTP password (optional).
+        USE_TLS: Whether to use TLS (optional, defaults to True).
+
+    """
+
+    model_config = SettingsConfigDict(
+        env_prefix='EMAIL_', env_file=env_file, extra='ignore'
+    )
+
+    SMTP_HOST: str = 'localhost'
+    SMTP_PORT: int = 587
+    SMTP_USER: str | None = None
+    SMTP_PASSWORD: str | None = None
+    USE_TLS: bool = True
+
 
 class Settings(BaseSettings):
     """Main application settings class.
@@ -187,6 +212,7 @@ class Settings(BaseSettings):
     )
     logging_settings: LoggingSettings = Field(default_factory=LoggingSettings)
     aws_settings: AwsSettings = Field(default_factory=AwsSettings)  # type: ignore
+    email_settings: EmailSettings = Field(default_factory=EmailSettings)
 
     @classmethod
     @cache
