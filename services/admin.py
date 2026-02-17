@@ -10,9 +10,10 @@ from dao import UserDAO
 from exceptions import (
     EmailAlreadyRegisteredException,
 )
+from exceptions.user import UserNotFoundByIdException
 from models.user import MarketingSourceEnum, User, UserRoleEnum
 from schemas import (
-    CreateUserByAdminRequestSchema,
+    CreateUserByAdminRequestSchema, AssignFreeReportsRequestSchema,
 )
 from services.email import EmailService
 from services.jwt.hasher import Hasher
@@ -24,12 +25,12 @@ class AdminService(BaseService):
     _PASSWORD_LENGTH = 15
 
     def __init__(
-        self,
-        db_session: AsyncSession,
-        *,
-        user_dao: UserDAO | None = None,
-        hash_service: Hasher | None = None,
-        email_service: EmailService | None = None,
+            self,
+            db_session: AsyncSession,
+            *,
+            user_dao: UserDAO | None = None,
+            hash_service: Hasher | None = None,
+            email_service: EmailService | None = None,
     ):
         super().__init__(db_session)
         self._hash_service = hash_service or Hasher()
@@ -39,7 +40,7 @@ class AdminService(BaseService):
     @staticmethod
     def _generate_random_password() -> str:
         alphabet = (
-            string.ascii_letters + string.digits + '!@#$%^&*()-_=+[]{}<>?'
+                string.ascii_letters + string.digits + '!@#$%^&*()-_=+[]{}<>?'
         )
         return ''.join(
             secrets.choice(alphabet)
@@ -47,7 +48,7 @@ class AdminService(BaseService):
         )
 
     async def create_user(
-        self, user_data: CreateUserByAdminRequestSchema
+            self, user_data: CreateUserByAdminRequestSchema
     ) -> User:
         email: str = user_data.email
         password: str = self._generate_random_password()
@@ -73,4 +74,18 @@ class AdminService(BaseService):
             email=email,
             password=password,
         )
+        return user
+
+    async def assign_free_reports(
+            self,
+            user_id: int,
+            reports_data: AssignFreeReportsRequestSchema,
+    ):
+        user: User | None= await self._user_dao.assign_free_reports_by_id(
+            user_id,
+            reports_data.reports_count
+        )
+        if not user:
+            raise UserNotFoundByIdException
+        await self._session.commit()
         return user

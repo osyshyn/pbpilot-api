@@ -126,3 +126,12 @@ class UserDAO(BaseDAO):
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def assign_free_reports_by_id(self, user_id: int, reports_count: int) -> User | None:
+        stmt = (
+            update(User)
+            .where(User.id == user_id)
+            .values(free_reports_count=reports_count)
+        )
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()

@@ -7,7 +7,7 @@ from core import get_service
 from dependencies import get_admin_user_from_token
 from schemas import (
     CreateUserByAdminRequestSchema,
-    SignUpResponseSchema,
+    SignUpResponseSchema, AssignFreeReportsRequestSchema,
 )
 from services import AdminService
 
@@ -29,3 +29,14 @@ async def create_user(
     return SignUpResponseSchema.model_validate(
         await admin_service.create_user(user_data=user_data)
     )
+
+@admin_router.patch(
+    path='/{user_id}',
+    summary='Assign free reports',
+)
+async def assign_free_reports(
+        user_id: int,
+        reports_data: AssignFreeReportsRequestSchema,
+        admin_service: Annotated[AdminService, Depends(get_service(AdminService))],
+):
+    pass
