@@ -1,9 +1,15 @@
 from dataclasses import asdict, dataclass
 import logging
 from dataclasses import is_dataclass, fields
-from typing import Any, Type, TypeVar, get_origin, get_args
 from pydantic import BaseModel
-
+from typing import (
+    Any,
+    Type,
+    TypeVar,
+    get_origin,
+    get_args,
+    Union,
+)
 T = TypeVar("T", bound=BaseModel)
 
 
@@ -25,28 +31,13 @@ class BaseDTO:
         """
         return asdict(self)
 
-
 class DTOToSchemaConverter:
-    """
-    Universal, safe converter from dataclass DTOs to Pydantic schemas.
 
-    Features:
-    - Maps only matching field names
-    - Recursively converts nested DTOs
-    - Supports list fields
-    - Optional strict mode
-    - Structured logging
-    """
-
-    def __init__(self, strict: bool = False):
-        """
-        :param strict: If True, raises error when schema field
-                       is missing in DTO.
-        """
+    def __init__(self, strict: bool = False) -> None:
         self.strict = strict
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    def convert(self, dto: Any, schema_cls: Type[T]) -> T:
+    def convert(self, dto: Any, schema_cls: Type[T]) -> T | None:
         if dto is None:
             self.logger.debug("Received None DTO, returning None.")
             return None
@@ -68,7 +59,7 @@ class DTOToSchemaConverter:
             for f in fields(dto)
         }
 
-        data = {}
+        data: dict[str, Any] = {}
 
         for field_name, schema_field in schema_fields.items():
 
@@ -78,11 +69,6 @@ class DTOToSchemaConverter:
                         f"Field '{field_name}' missing in DTO "
                         f"{dto.__class__.__name__}"
                     )
-                self.logger.debug(
-                    "Skipping missing field '%s' in DTO %s",
-                    field_name,
-                    dto.__class__.__name__,
-                )
                 continue
 
             value = dto_field_map[field_name]
@@ -92,13 +78,20 @@ class DTOToSchemaConverter:
                 continue
 
             field_type = schema_field.annotation
-            origin = get_origin(field_type)
+            resolved_type = self._resolve_optional(field_type)
+            origin = get_origin(resolved_type)
 
-            # Handle list fields
+            # ---- LIST HANDLING ----
             if origin is list:
-                item_type = get_args(field_type)[0]
+                item_type = get_args(resolved_type)[0]
 
-                if value and is_dataclass(value[0]):
+                if (
+                    isinstance(value, list)
+                    and value
+                    and is_dataclass(value[0])
+                    and isinstance(item_type, type)
+                    and issubclass(item_type, BaseModel)
+                ):
                     data[field_name] = [
                         self.convert(item, item_type)
                         for item in value
@@ -106,11 +99,15 @@ class DTOToSchemaConverter:
                 else:
                     data[field_name] = value
 
-            # Handle nested DTO
-            elif is_dataclass(value):
-                data[field_name] = self.convert(value, field_type)
+            # ---- NESTED DTO ----
+            elif (
+                is_dataclass(value)
+                and isinstance(resolved_type, type)
+                and issubclass(resolved_type, BaseModel)
+            ):
+                data[field_name] = self.convert(value, resolved_type)
 
-            # Primitive value
+            # ---- PRIMITIVE ----
             else:
                 data[field_name] = value
 
@@ -121,3 +118,17 @@ class DTOToSchemaConverter:
         )
 
         return schema_cls(**data)
+
+    @staticmethod
+    def _resolve_optional(field_type: Any) -> Any:
+        """
+        Resolves Optional[T] or Union[T, None] to T.
+        """
+        origin = get_origin(field_type)
+
+        if origin is Union:
+            args = [arg for arg in get_args(field_type) if arg is not type(None)]
+            if len(args) == 1:
+                return args[0]
+
+        return field_type
