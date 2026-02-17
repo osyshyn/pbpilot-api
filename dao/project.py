@@ -102,7 +102,7 @@ class ProjectDAO(BaseDAO):
         )
         return await self.paginate(query=stmt, page=page, limit=limit)
 
-    async def get_projects_dashboard(self) -> ProjectDashboardDTO:
+    async def get_projects_dashboard(self, user_id: int) -> ProjectDashboardDTO:
         # now = datetime.now(timezone.utc)
         # week_ago = now - timedelta(days=7)
         # stats_stmt = select(
