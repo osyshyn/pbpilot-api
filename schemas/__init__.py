@@ -21,7 +21,7 @@ from .projects import (
 )
 from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
-
+from .admin import CreateUserByAdminRequestSchema
 __all__ = [
     'ClientResponseSchema',
     'CompanyResponseSchema',
@@ -41,4 +41,5 @@ __all__ = [
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
     'UserResponseSchema',
+    'CreateUserByAdminRequestSchema',
 ]
