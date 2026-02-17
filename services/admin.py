@@ -14,6 +14,7 @@ from models import Client
 from models.user import UserRoleEnum, User, MarketingSourceEnum
 from schemas import CreateClientRequestSchema, UpdateClientRequestSchema, \
     CreateUserByAdminRequestSchema
+from services import EmailService
 from services.jwt.hasher import Hasher
 import secrets
 import string
@@ -30,11 +31,13 @@ class AdminService(BaseService):
             *,
             user_dao: UserDAO | None = None,
             hash_service: Hasher | None = None,
-
+            email_service: EmailService | None = None
     ):
         super().__init__(db_session)
         self._hash_service = hash_service or Hasher()
         self._user_dao = user_dao or UserDAO(db_session)
+        self._email_service = email_service or EmailService()
+
 
     @staticmethod
     def _generate_random_password() -> str:
@@ -49,16 +52,18 @@ class AdminService(BaseService):
             self,
             user_data: CreateUserByAdminRequestSchema
     ):
+        email: str = user_data.email
+        password: str = self._generate_random_password()
         try:
             # User created from admin doesn't need to call with an owner,
             # so we can create it with active status
             user: User = await self._user_dao.create(
                 name=user_data.name,
                 surname=user_data.surname,
-                email=user_data.email,
+                email=email,
                 role=UserRoleEnum.SOLO_OPERATOR,
                 password=self._hash_service.hash_password(
-                    self._generate_random_password(),
+                    password,
                 ),
                 phone_number=user_data.phone_number,
                 is_active=True,
@@ -67,4 +72,8 @@ class AdminService(BaseService):
         except IntegrityError:
             raise EmailAlreadyRegisteredException from None
         await self._session.commit()
+        await self._email_service.send_registration_email(
+            email=email,
+            password=password,
+        )
         return user

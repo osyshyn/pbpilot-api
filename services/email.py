@@ -4,7 +4,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from config.settings import EmailSettings, Settings
+from config.settings import Settings
 
 settings = Settings.load()
 logger = logging.getLogger(__name__)
@@ -21,10 +21,22 @@ class EmailService:
             smtp_password: str | None = None,
     ) -> None:
         self._use_tls = use_tls or settings.USE_TLS
-        self._smtp_host =  smtp_host or settings.SMTP_HOST
-        self._smtp_port =  smtp_port or settings.SMTP_PORT
+        self._smtp_host = smtp_host or settings.SMTP_HOST
+        self._smtp_port = smtp_port or settings.SMTP_PORT
         self._smtp_user = smtp_user or settings.SMTP_USER
         self._smtp_password = smtp_password or settings.SMTP_PASSWORD
+
+    async def send_registration_email(self, email: str, password: str):
+        try:
+            await self._send_email(
+                to_email=email,
+                subject='New account',
+                body=f'Your password : {password}',
+            )
+            logger.info('Password sent to %s', email)
+        except Exception:
+            logger.exception('Failed to send password to %s', email)
+            raise
 
     async def _send_email(
             self,
