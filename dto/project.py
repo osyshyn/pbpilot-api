@@ -28,7 +28,7 @@ class ReadyToFinalizeDTO(BaseDTO):
 
 @dataclass(slots=True)
 class ProjectDashboardDTO(BaseDTO):
-    ongoing: OngoingProjectDTO
-    need_schedule: NeedScheduledDTO
-    unassigned: UnassignedJobsDTO
-    ready_to_finalize: ReadyToFinalizeDTO
+    ongoing_project: OngoingProjectDTO
+    need_scheduling: NeedScheduledDTO
+    unassigned_jobs: UnassignedJobsDTO
+    ready_for_finalize: ReadyToFinalizeDTO

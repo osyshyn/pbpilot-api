@@ -96,95 +96,7 @@ class ProjectDAO(BaseDAO):
         )
         return await self.paginate(query=stmt, page=page, limit=limit)
 
-
-    async def get_ongoing_project_amount(self) -> int:
-        stmt = (
-            select(func.count(Project.id))
-            .where(
-                Project.is_active == True,  # noqa: E712
-            )
-        )
-        result = await self.session.execute(stmt)
-        return result.scalar_one()
-
-    async def get_scheduled_project_amount(self) -> int:
-        stmt = (
-            select(func.count(Project.id))
-            .where(
-                Project.is_active == True,  # noqa: E712
-                Project.scheduled_at.isnot(None)
-            )
-        )
-        result = await self.session.execute(stmt)
-        return result.scalar_one()
-
-    async def get_unscheduled_projects_amount(self) -> int:
-        stmt = (
-            select(func.count(Project.id))
-            .where(
-                Project.is_active == True,  # noqa: E712
-                Project.scheduled_at.is_(None)
-            )
-        )
-        result = await self.session.execute(stmt)
-        return result.scalar_one()
-
-    async def get_completed_last_week_amount(self) -> int:
-        now = datetime.now(timezone.utc)
-        week_ago = now - timedelta(days=7)
-
-        stmt = (
-            select(func.count(Project.id))
-            .where(
-                Project.is_active == True,
-                Project.completed_at.isnot(None),
-                Project.completed_at >= week_ago,
-            )
-        )
-
-        result = await self.session.execute(stmt)
-        return result.scalar_one()
-
-    async def get_names_of_need_scheduling_projects(self) -> list[str]:
-        stmt = (
-            select(Project.name)
-            .where(
-                Project.is_active == True,
-                Project.scheduled_at.is_(None),
-            )
-        )
-        result = await self.session.execute(stmt)
-        return result.scalars().all()
-
-    async def get_amount_of_need_unassigned_projects(self) -> int:
-        stmt = (
-            select(func.count(Project.id))
-            .where(
-                Project.is_active == True,  # noqa: E712
-                Project.assigned_at.is_(None)
-            )
-        )
-        result = await self.session.execute(stmt)
-        return result.scalar_one()
-
-    async def get_names_of_unassigned_projects(self) -> list[str]:
-        stmt = (
-            select(Project.name)
-            .where(
-                Project.is_active == True,
-                Project.scheduled_at.is_(None),
-            )
-        )
-        result = await self.session.execute(stmt)
-        return result.scalars().all()
-
-    async def get_amount_of_ready_to_finalize_projects(self) -> int:
-        pass
-
-    async def get_names_of_ready_to_finalize_projects(self) -> list[str]:
-        pass
-
-    async def get_projects_dashboard(self):
+    async def get_projects_dashboard(self) -> ProjectDashboardDTO:
         now = datetime.now(timezone.utc)
         week_ago = now - timedelta(days=7)
         stats_stmt = select(
@@ -241,26 +153,23 @@ class ProjectDAO(BaseDAO):
             if completed_at is not None and scheduled_at is not None:
                 ready_to_finalize_names.append(name)
 
-        project_dashboard_dto = ProjectDashboardDTO(
-            ongoing=OngoingProjectDTO(
-                amount=stats.ongoing,
+        return ProjectDashboardDTO(
+            ongoing_project=OngoingProjectDTO(
+                amount=stats.ongoing_project,
                 scheduled=stats.scheduled,
                 need_scheduled=stats.unscheduled,
                 completed_this_week=stats.completed_last_week,
             ),
-            need_schedule=NeedScheduledDTO(
+            need_scheduling=NeedScheduledDTO(
                 amount=stats.unscheduled,
                 project_names=need_scheduling_names,
             ),
-            unassigned=UnassignedJobsDTO(
-                amount=stats.unassigned,
+            unassigned_jobs=UnassignedJobsDTO(
+                amount=stats.unassigned_jobs,
                 project_names=unassigned_names,
             ),
-            ready_to_finalize=ReadyToFinalizeDTO(
-                amount=stats.ready_to_finalize,
+            ready_for_finalize=ReadyToFinalizeDTO(
+                amount=stats.ready_for_finalize,
                 project_names=ready_to_finalize_names,
             )
-        )
-        return (
-            project_dashboard_dto
         )

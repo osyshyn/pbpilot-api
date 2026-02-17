@@ -7,7 +7,8 @@ from dao import ClientDAO, ProjectDAO
 from exceptions import ClientNotFoundException, ProjectNotFoundException
 from models import Project
 from schemas.projects import CreateProjectRequestSchema
-from dto import OngoingProjectDTO, NeedScheduledDTO, UnassignedJobsDTO, ReadyToFinalizeDTO
+from dto import OngoingProjectDTO, NeedScheduledDTO, UnassignedJobsDTO, \
+    ReadyToFinalizeDTO, ProjectDashboardDTO
 
 logger = logging.getLogger(__name__)
 
@@ -69,22 +70,4 @@ class ProjectService(BaseService):
     async def get_projects_dashboard(
             self
     ):
-        need_scheduling: int = await self._project_dao.get_unscheduled_projects_amount()
-        ongoing_project_dto = OngoingProjectDTO(
-            amount=await self._project_dao.get_ongoing_project_amount(),
-            scheduled=await self._project_dao.get_scheduled_project_amount(),
-            need_scheduled=need_scheduling,
-            completed_this_week=await self._project_dao.get_completed_last_week_amount(),
-        )
-        need_scheduling_dto = NeedScheduledDTO(
-            amount=need_scheduling,
-            project_names=await self._project_dao.get_names_of_need_scheduling_projects()
-        )
-        unassigned_jobs_dto = UnassignedJobsDTO(
-            amount=await self._project_dao.get_amount_of_need_unassigned_projects(),
-            project_names=await self._project_dao.get_names_of_unassigned_projects(),
-        )
-        ready_to_finalize_dto = ReadyToFinalizeDTO(
-            amount=await self._project_dao.get_amount_of_ready_to_finalize_projects(),
-            project_names= await self._project_dao.get_names_of_ready_to_finalize_projects(),
-        )
+        dashboard: ProjectDashboardDTO = await self._project_dao.get_projects_dashboard()
