@@ -1,3 +1,4 @@
+from .admin import CreateUserByAdminRequestSchema
 from .auth import LogInRequestSchema, SignUpRequestSchema, SignUpResponseSchema
 from .clients import (
     ClientResponseSchema,
@@ -21,7 +22,7 @@ from .projects import (
 )
 from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
-from .admin import CreateUserByAdminRequestSchema
+
 __all__ = [
     'ClientResponseSchema',
     'CompanyResponseSchema',
@@ -29,6 +30,7 @@ __all__ = [
     'CreateCompanyRequestSchema',
     'CreateCompanyScheduleItemRequestSchema',
     'CreateProjectRequestSchema',
+    'CreateUserByAdminRequestSchema',
     'HealthCheckResponseSchema',
     'LogInRequestSchema',
     'PricingPlanListResponseSchema',
@@ -41,5 +43,4 @@ __all__ = [
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
     'UserResponseSchema',
-    'CreateUserByAdminRequestSchema',
 ]

@@ -1,11 +1,7 @@
-import logging
-from dataclasses import asdict, dataclass, fields, is_dataclass
+from dataclasses import asdict, dataclass
 from typing import (
     Any,
     TypeVar,
-    Union,
-    get_args,
-    get_origin,
 )
 
 from pydantic import BaseModel

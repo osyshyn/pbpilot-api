@@ -140,6 +140,7 @@ class AwsSettings(BaseSettings):
     REGION: str = 'us-east-1'
     BUCKET_NAME: str
 
+
 class EmailSettings(BaseSettings):
     """Settings for email sending.
 

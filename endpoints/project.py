@@ -29,9 +29,7 @@ async def get_project_dashboard(
         ProjectService, Depends(get_service(ProjectService))
     ],
 ) -> ProjectDashboardResponseSchema:
-    dashboard_dto = await project_service.get_projects_dashboard(
-        admin_user.id
-    )
+    dashboard_dto = await project_service.get_projects_dashboard(admin_user.id)
     return ProjectDashboardResponseSchema.model_validate(dashboard_dto)
 
 

@@ -12,19 +12,21 @@ logger = logging.getLogger(__name__)
 
 class EmailService:
     def __init__(
-            self,
-            *,
-            use_tls: bool | None = None,
-            smtp_host: str | None = None,
-            smtp_port: str | None = None,
-            smtp_user: str | None = None,
-            smtp_password: str | None = None,
+        self,
+        *,
+        use_tls: bool | None = None,
+        smtp_host: str | None = None,
+        smtp_port: str | None = None,
+        smtp_user: str | None = None,
+        smtp_password: str | None = None,
     ) -> None:
         self._use_tls = use_tls or settings.email_settings.USE_TLS
         self._smtp_host = smtp_host or settings.email_settings.SMTP_HOST
         self._smtp_port = smtp_port or settings.email_settings.SMTP_PORT
         self._smtp_user = smtp_user or settings.email_settings.SMTP_USER
-        self._smtp_password = smtp_password or settings.email_settings.SMTP_PASSWORD
+        self._smtp_password = (
+            smtp_password or settings.email_settings.SMTP_PASSWORD
+        )
 
     async def send_registration_email(self, email: str, password: str) -> None:
         try:
@@ -39,10 +41,10 @@ class EmailService:
             raise
 
     async def _send_email(
-            self,
-            to_email: str,
-            subject: str,
-            body: str,
+        self,
+        to_email: str,
+        subject: str,
+        body: str,
     ) -> None:
         """Send an email.
 
@@ -56,7 +58,7 @@ class EmailService:
 
         """
         msg = MIMEMultipart()
-        msg['From'] = self._smtp_user
+        msg['From'] = self._smtp_user  # type: ignore
         msg['To'] = to_email
         msg['Subject'] = subject
 
@@ -80,16 +82,13 @@ class EmailService:
 
         """
         with smtplib.SMTP(
-                self._smtp_host,
-                self._smtp_port,
+            self._smtp_host,
+            self._smtp_port,  # type: ignore
         ) as server:
             if self._use_tls:
                 server.starttls()
 
-            if (
-                    self._smtp_user
-                    and self._smtp_password
-            ):
+            if self._smtp_user and self._smtp_password:
                 server.login(
                     self._smtp_user,
                     self._smtp_password,

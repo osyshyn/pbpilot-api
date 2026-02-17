@@ -9,13 +9,14 @@ from admins import ADMIN_VIEWS
 from config.database import engine
 from config.settings import Settings
 from endpoints import (
+    admin_router,
     auth_router,
     company_router,
     debug_router,
     main_router,
     pricing_plan_router,
     project_router,
-    user_router, admin_router,
+    user_router,
 )
 from endpoints.client import client_router
 

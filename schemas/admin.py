@@ -1,8 +1,6 @@
-from typing import Annotated, Self
+from typing import Annotated
 
 from pydantic import BaseModel, EmailStr, Field
-
-
 
 
 class CreateUserByAdminRequestSchema(BaseModel):
@@ -48,4 +46,3 @@ class CreateUserByAdminRequestSchema(BaseModel):
             examples=['+1 234 567 8901', '12345678900'],
         ),
     ]
-
