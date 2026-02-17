@@ -46,3 +46,14 @@ class CreateUserByAdminRequestSchema(BaseModel):
             examples=['+1 234 567 8901', '12345678900'],
         ),
     ]
+
+class AssignFreeReportsRequestSchema(BaseModel):
+    report_amount: Annotated[
+        int,
+        Field(
+            min_length=1,
+            max_length=100,
+            description='Number of free reports to assign',
+            examples=[10],
+        )
+    ]

@@ -1,4 +1,4 @@
-from .admin import CreateUserByAdminRequestSchema
+from .admin import CreateUserByAdminRequestSchema, AssignFreeReportsRequestSchema
 from .auth import LogInRequestSchema, SignUpRequestSchema, SignUpResponseSchema
 from .clients import (
     ClientResponseSchema,
@@ -43,4 +43,5 @@ __all__ = [
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
     'UserResponseSchema',
+    'AssignFreeReportsRequestSchema',
 ]
