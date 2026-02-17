@@ -18,6 +18,7 @@ from schemas import (
 )
 from services.email import EmailService
 from services.jwt.hasher import Hasher
+from core.pagination import PaginationParams
 
 logger = logging.getLogger(__name__)
 
@@ -89,3 +90,11 @@ class AdminService(BaseService):
             raise UserNotFoundByIdException
         await self._session.commit()
         return user
+
+    async def get_users(
+        self,
+        pagination: PaginationParams,
+    ) -> tuple[list[User], int]:
+        return await self._user_dao.get_all(
+            page=pagination.page, limit=pagination.size
+        )

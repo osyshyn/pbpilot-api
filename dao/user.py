@@ -59,6 +59,22 @@ class UserDAO(BaseDAO):
         await self._session.refresh(user)
         return user
 
+    async def get_all(
+        self, page: int, limit: int
+    ) -> tuple[list[User], int]:
+        """Get all users with pagination.
+
+        Args:
+            page: Page number.
+            limit: Page size.
+
+        Returns:
+            tuple[list[User], int]: List of users and total count.
+
+        """
+        query = select(User)
+        return await self.paginate(query=query, page=page, limit=limit)
+
     async def get_by_id(self, user_id: int) -> User | None:
         """Get user by id.
 
