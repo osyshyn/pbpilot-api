@@ -176,3 +176,77 @@ class ProjectResponseSchema(BaseModelSchema):
     project_name: str
     property_manager_name: str | None
     properties: list[ProjectPropertyResponseSchema] = []
+
+
+class _OngoingProjectResponseSchema(BaseModelSchema):
+    amount: Annotated[
+        int,
+        Field(description='Amount', examples=[21]),
+    ]
+    scheduled: Annotated[
+        int,
+        Field(description='Scheduled', examples=[12]),
+    ]
+    need_scheduled: Annotated[
+        int,
+        Field(description='Need scheduled', examples=[5]),
+    ]
+    completed_this_week: Annotated[
+        int,
+        Field(description='Completed this week', examples=[7]),
+    ]
+
+
+class _NeedSchedulingResponseSchema(BaseModelSchema):
+    amount: Annotated[
+        int,
+        Field(description='Amount', examples=[6]),
+    ]
+    project_names: Annotated[
+        list[str],
+        Field(
+            description='Project names',
+            examples=[
+                'Westbrook Family Housing',
+                '8123 Canton Ridge',
+                'Maple Street Duplex',
+            ],
+        ),
+    ]
+
+
+class _UnassignedProjectResponseSchema(BaseModelSchema):
+    amount: Annotated[
+        int,
+        Field(description='Amount', examples=[3]),
+    ]
+
+    project_names: Annotated[
+        list[str],
+        Field(
+            description='Project names',
+            examples=['8123 Canton Ridge', 'Lincoln bridge'],
+        ),
+    ]
+
+
+class _RentalProjectResponseSchema(BaseModelSchema):
+    amount: Annotated[
+        int,
+        Field(description='Amount', examples=[3]),
+    ]
+
+    project_names: Annotated[
+        list[str],
+        Field(
+            description='Project names',
+            examples=['9632 Canton Ridge', 'Oakridge Townhomes'],
+        ),
+    ]
+
+
+class ProjectDashboardResponseSchema(BaseModelSchema):
+    ongoing_project: _OngoingProjectResponseSchema
+    need_scheduling: _NeedSchedulingResponseSchema
+    unassigned_jobs: _UnassignedProjectResponseSchema
+    ready_for_finalize: _RentalProjectResponseSchema

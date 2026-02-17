@@ -4,6 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import BaseService
 from dao import ClientDAO, ProjectDAO
+from dto import (
+    ProjectDashboardDTO,
+)
 from exceptions import ClientNotFoundException, ProjectNotFoundException
 from models import Project
 from schemas.projects import CreateProjectRequestSchema
@@ -64,3 +67,6 @@ class ProjectService(BaseService):
     ) -> tuple[list[Project], int]:
         """Get all active projects with pagination."""
         return await self._project_dao.get_all(page=page, limit=size)
+
+    async def get_projects_dashboard(self) -> ProjectDashboardDTO:
+        return await self._project_dao.get_projects_dashboard()

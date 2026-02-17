@@ -1,0 +1,37 @@
+from dataclasses import dataclass
+
+from core.dto import BaseDTO
+
+
+@dataclass(slots=True)
+class OngoingProjectDTO(BaseDTO):
+    amount: int = 0
+    scheduled: int = 0
+    need_scheduled: int = 0
+    completed_this_week: int = 0
+
+
+@dataclass(slots=True)
+class NeedScheduledDTO(BaseDTO):
+    project_names: list[str]
+    amount: int = 0
+
+
+@dataclass(slots=True)
+class UnassignedJobsDTO(BaseDTO):
+    project_names: list[str]
+    amount: int = 0
+
+
+@dataclass(slots=True)
+class ReadyToFinalizeDTO(BaseDTO):
+    project_names: list[str]
+    amount: int = 0
+
+
+@dataclass(slots=True)
+class ProjectDashboardDTO(BaseDTO):
+    ongoing_project: OngoingProjectDTO
+    need_scheduling: NeedScheduledDTO
+    unassigned_jobs: UnassignedJobsDTO
+    ready_for_finalize: ReadyToFinalizeDTO

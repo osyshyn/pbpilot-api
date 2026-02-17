@@ -6,12 +6,31 @@ from fastapi import APIRouter, Depends
 from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_admin_user_from_token
-from schemas.projects import CreateProjectRequestSchema, ProjectResponseSchema
+from models import User
+from schemas.projects import (
+    CreateProjectRequestSchema,
+    ProjectDashboardResponseSchema,
+    ProjectResponseSchema,
+)
 from services.project import ProjectService
 
 logger = logging.getLogger(__name__)
 
 project_router = APIRouter()
+
+
+@project_router.get(
+    path='/dashboard',
+    summary='Get dashboard data',
+)
+async def get_project_dashboard(
+    admin_user: Annotated[User, Depends(get_admin_user_from_token)],
+    project_service: Annotated[
+        ProjectService, Depends(get_service(ProjectService))
+    ],
+) -> ProjectDashboardResponseSchema:
+    dashboard_dto = await project_service.get_projects_dashboard()
+    return ProjectDashboardResponseSchema.model_validate(dashboard_dto)
 
 
 @project_router.post(

@@ -16,6 +16,7 @@ from .pricing_plan import (
 )
 from .projects import (
     CreateProjectRequestSchema,
+    ProjectDashboardResponseSchema,
     ProjectResponseSchema,
 )
 from .token import RefreshTokenRequestSchema, TokenResponseSchemas
@@ -32,6 +33,7 @@ __all__ = [
     'LogInRequestSchema',
     'PricingPlanListResponseSchema',
     'PricingPlanResponseSchema',
+    'ProjectDashboardResponseSchema',
     'ProjectResponseSchema',
     'RefreshTokenRequestSchema',
     'SignUpRequestSchema',
