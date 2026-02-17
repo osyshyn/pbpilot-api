@@ -14,7 +14,7 @@ from models import Client
 from models.user import UserRoleEnum, User, MarketingSourceEnum
 from schemas import CreateClientRequestSchema, UpdateClientRequestSchema, \
     CreateUserByAdminRequestSchema
-from services import EmailService
+from services.email import EmailService
 from services.jwt.hasher import Hasher
 import secrets
 import string
