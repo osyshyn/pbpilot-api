@@ -4,6 +4,7 @@ from .project import (
     NeedScheduledDTO,
     UnassignedJobsDTO,
     ReadyToFinalizeDTO,
+    ProjectDashboardDTO,
 )
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     'NeedScheduledDTO',
     'UnassignedJobsDTO',
     'ReadyToFinalizeDTO',
+    'ProjectDashboardDTO',
 ]

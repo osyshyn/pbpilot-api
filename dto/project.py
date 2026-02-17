@@ -25,3 +25,10 @@ class UnassignedJobsDTO(BaseDTO):
 class ReadyToFinalizeDTO(BaseDTO):
     project_names: list[str]
     amount: int = 0
+
+@dataclass(slots=True)
+class ProjectDashboardDTO(BaseDTO):
+    ongoing: OngoingProjectDTO
+    need_schedule: NeedScheduledDTO
+    unassigned: UnassignedJobsDTO
+    ready_to_finalize: ReadyToFinalizeDTO
