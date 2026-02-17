@@ -9,6 +9,7 @@ from admins import ADMIN_VIEWS
 from config.database import engine
 from config.settings import Settings
 from endpoints import (
+    admin_router,
     auth_router,
     company_router,
     debug_router,
@@ -49,7 +50,9 @@ def initialize_routers() -> APIRouter:
     main_api_router.include_router(
         company_router, prefix='/company', tags=['company']
     )
-
+    main_api_router.include_router(
+        admin_router, prefix='/admin', tags=['admin']
+    )
     if settings.ENV in {'dev', 'local'}:
         main_api_router.include_router(
             debug_router, prefix='/debug', tags=['debug']

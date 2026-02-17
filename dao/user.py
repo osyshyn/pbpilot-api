@@ -59,6 +59,22 @@ class UserDAO(BaseDAO):
         await self._session.refresh(user)
         return user
 
+    async def get_all(
+        self, page: int, limit: int
+    ) -> tuple[list[User], int]:
+        """Get all users with pagination.
+
+        Args:
+            page: Page number.
+            limit: Page size.
+
+        Returns:
+            tuple[list[User], int]: List of users and total count.
+
+        """
+        query = select(User)
+        return await self.paginate(query=query, page=page, limit=limit)
+
     async def get_by_id(self, user_id: int) -> User | None:
         """Get user by id.
 
@@ -122,6 +138,18 @@ class UserDAO(BaseDAO):
             update(User)
             .where(User.email == email)
             .values(is_active=True, deleted_at=None)
+            .returning(User)
+        )
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def assign_free_reports_by_id(
+        self, user_id: int, reports_count: int
+    ) -> User | None:
+        stmt = (
+            update(User)
+            .where(User.id == user_id)
+            .values(free_reports_count=reports_count)
             .returning(User)
         )
         result = await self._session.execute(stmt)

@@ -68,5 +68,5 @@ class ProjectService(BaseService):
         """Get all active projects with pagination."""
         return await self._project_dao.get_all(page=page, limit=size)
 
-    async def get_projects_dashboard(self,user_id: int) -> ProjectDashboardDTO:
+    async def get_projects_dashboard(self, user_id: int) -> ProjectDashboardDTO:
         return await self._project_dao.get_projects_dashboard(user_id=user_id)

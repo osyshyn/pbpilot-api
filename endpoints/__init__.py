@@ -1,3 +1,4 @@
+from .admin import admin_router
 from .auth import auth_router
 from .client import client_router
 from .company import company_router
@@ -8,6 +9,7 @@ from .project import project_router
 from .user import user_router
 
 __all__ = [
+    'admin_router',
     'auth_router',
     'client_router',
     'company_router',
