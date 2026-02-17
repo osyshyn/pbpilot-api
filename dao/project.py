@@ -4,6 +4,8 @@ from sqlalchemy import select, update, func
 from sqlalchemy.orm import selectinload
 
 from core.dao import BaseDAO
+from dto import ProjectDashboardDTO, ReadyToFinalizeDTO, UnassignedJobsDTO, \
+    NeedScheduledDTO, OngoingProjectDTO
 from models import Project, ProjectProperty, PropertyStructure
 from schemas.projects import CreatePropertyRequestSchema
 
@@ -181,3 +183,84 @@ class ProjectDAO(BaseDAO):
 
     async def get_names_of_ready_to_finalize_projects(self) -> list[str]:
         pass
+
+    async def get_projects_dashboard(self):
+        now = datetime.now(timezone.utc)
+        week_ago = now - timedelta(days=7)
+        stats_stmt = select(
+            func.count(Project.id).label("ongoing"),
+            func.count(Project.id)
+            .filter(Project.scheduled_at.isnot(None))
+            .label("scheduled"),
+            func.count(Project.id)
+            .filter(Project.scheduled_at.is_(None))
+            .label("unscheduled"),
+            func.count(Project.id)
+            .filter(Project.assigned_at.is_(None))
+            .label("unassigned"),
+            func.count(Project.id)
+            .filter(
+                Project.completed_at.isnot(None),
+                Project.completed_at >= week_ago,
+            )
+            .label("completed_last_week"),
+            func.count(Project.id)
+            .filter(
+                Project.completed_at.isnot(None),
+                Project.scheduled_at.isnot(None),
+            )
+            .label("ready_to_finalize"),
+        ).where(
+            Project.is_active == True  # noqa
+        )
+
+        stats_result = await self.session.execute(stats_stmt)
+        stats = stats_result.one()
+
+        names_stmt = select(
+            Project.name,
+            Project.scheduled_at,
+            Project.assigned_at,
+            Project.completed_at,
+        ).where(
+            Project.is_active == True
+        )
+
+        names_result = await self.session.execute(names_stmt)
+        projects = names_result.all()
+
+        need_scheduling_names = []
+        unassigned_names = []
+        ready_to_finalize_names = []
+
+        for name, scheduled_at, assigned_at, completed_at in projects:
+            if scheduled_at is None:
+                need_scheduling_names.append(name)
+            if assigned_at is None:
+                unassigned_names.append(name)
+            if completed_at is not None and scheduled_at is not None:
+                ready_to_finalize_names.append(name)
+
+        project_dashboard_dto = ProjectDashboardDTO(
+            ongoing=OngoingProjectDTO(
+                amount=stats.ongoing,
+                scheduled=stats.scheduled,
+                need_scheduled=stats.unscheduled,
+                completed_this_week=stats.completed_last_week,
+            ),
+            need_schedule=NeedScheduledDTO(
+                amount=stats.unscheduled,
+                project_names=need_scheduling_names,
+            ),
+            unassigned=UnassignedJobsDTO(
+                amount=stats.unassigned,
+                project_names=unassigned_names,
+            ),
+            ready_to_finalize=ReadyToFinalizeDTO(
+                amount=stats.ready_to_finalize,
+                project_names=ready_to_finalize_names,
+            )
+        )
+        return (
+            project_dashboard_dto
+        )
