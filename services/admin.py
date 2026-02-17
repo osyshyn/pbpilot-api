@@ -80,10 +80,10 @@ class AdminService(BaseService):
             self,
             user_id: int,
             reports_data: AssignFreeReportsRequestSchema,
-    ):
+    ) -> User:
         user: User | None= await self._user_dao.assign_free_reports_by_id(
             user_id,
-            reports_data.reports_count
+            reports_data.report_amount
         )
         if not user:
             raise UserNotFoundByIdException

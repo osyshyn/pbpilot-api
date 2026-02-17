@@ -2,6 +2,8 @@ from typing import Annotated
 
 from pydantic import BaseModel, EmailStr, Field
 
+from core import BaseModelSchema
+
 
 class CreateUserByAdminRequestSchema(BaseModel):
     name: Annotated[
@@ -51,9 +53,13 @@ class AssignFreeReportsRequestSchema(BaseModel):
     report_amount: Annotated[
         int,
         Field(
-            min_length=1,
-            max_length=100,
+            ge=1,
+            le=100,
             description='Number of free reports to assign',
             examples=[10],
         )
     ]
+
+class AssignFreeReportsResponseSchema(BaseModelSchema):
+    email: EmailStr
+    free_reports_count: int

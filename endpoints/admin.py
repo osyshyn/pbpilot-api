@@ -8,6 +8,7 @@ from dependencies import get_admin_user_from_token
 from schemas import (
     CreateUserByAdminRequestSchema,
     SignUpResponseSchema, AssignFreeReportsRequestSchema,
+    AssignFreeReportsResponseSchema,
 )
 from services import AdminService
 
@@ -19,24 +20,32 @@ admin_router = APIRouter(
 
 
 @admin_router.post(
-    path='/',
+    path='/user/',
     summary='Create new user',
 )
 async def create_user(
-    user_data: CreateUserByAdminRequestSchema,
-    admin_service: Annotated[AdminService, Depends(get_service(AdminService))],
+        user_data: CreateUserByAdminRequestSchema,
+        admin_service: Annotated[
+            AdminService, Depends(get_service(AdminService))],
 ) -> SignUpResponseSchema:
     return SignUpResponseSchema.model_validate(
         await admin_service.create_user(user_data=user_data)
     )
 
+
 @admin_router.patch(
-    path='/{user_id}',
+    path='/user/{user_id}',
     summary='Assign free reports',
 )
 async def assign_free_reports(
         user_id: int,
         reports_data: AssignFreeReportsRequestSchema,
-        admin_service: Annotated[AdminService, Depends(get_service(AdminService))],
-):
-    pass
+        admin_service: Annotated[
+            AdminService, Depends(get_service(AdminService))],
+) -> AssignFreeReportsResponseSchema:
+    return AssignFreeReportsResponseSchema.model_validate(
+        await admin_service.assign_free_reports(
+            user_id=user_id,
+            reports_data=reports_data
+        )
+    )

@@ -132,6 +132,7 @@ class UserDAO(BaseDAO):
             update(User)
             .where(User.id == user_id)
             .values(free_reports_count=reports_count)
+            .returning(User)
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
