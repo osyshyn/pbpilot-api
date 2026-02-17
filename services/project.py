@@ -69,5 +69,5 @@ class ProjectService(BaseService):
 
     async def get_projects_dashboard(
             self
-    ):
-        dashboard: ProjectDashboardDTO = await self._project_dao.get_projects_dashboard()
+    ) -> ProjectDashboardDTO:
+        return await self._project_dao.get_projects_dashboard()
