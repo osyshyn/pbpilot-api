@@ -1,13 +1,19 @@
-from datetime import UTC, datetime, timedelta, timezone
+from datetime import UTC, datetime
 
-from sqlalchemy import select, update, func
+from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
 
 from core.dao import BaseDAO
-from dto import ProjectDashboardDTO, ReadyToFinalizeDTO, UnassignedJobsDTO, \
-    NeedScheduledDTO, OngoingProjectDTO
+from dto import (
+    NeedScheduledDTO,
+    OngoingProjectDTO,
+    ProjectDashboardDTO,
+    ReadyToFinalizeDTO,
+    UnassignedJobsDTO,
+)
 from models import Project, ProjectProperty, PropertyStructure
 from schemas.projects import CreatePropertyRequestSchema
+
 
 class ProjectDAO(BaseDAO):
     """DAO for Project model."""
@@ -123,7 +129,7 @@ class ProjectDAO(BaseDAO):
         #     )
         #     .label("ready_to_finalize"),
         # ).where(
-        #     Project.is_active == True  # noqa
+        #     Project.is_active == True
         # )
         #
         # stats_result = await self.session.execute(stats_stmt)
@@ -192,5 +198,5 @@ class ProjectDAO(BaseDAO):
             ready_for_finalize=ReadyToFinalizeDTO(
                 amount=5,
                 project_names=['Project 7', 'Project 8'],
-            )
+            ),
         )

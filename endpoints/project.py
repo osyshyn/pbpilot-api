@@ -7,8 +7,11 @@ from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_admin_user_from_token
 from models import User
-from schemas.projects import CreateProjectRequestSchema, ProjectResponseSchema, \
-    ProjectDashboardResponseSchema
+from schemas.projects import (
+    CreateProjectRequestSchema,
+    ProjectDashboardResponseSchema,
+    ProjectResponseSchema,
+)
 from services.project import ProjectService
 
 logger = logging.getLogger(__name__)
@@ -21,13 +24,14 @@ project_router = APIRouter()
     summary='Get dashboard data',
 )
 async def get_project_dashboard(
-        admin_user: Annotated[User, Depends(get_admin_user_from_token)],
-        project_service: Annotated[
-            ProjectService, Depends(get_service(ProjectService))
-        ],
-) ->ProjectDashboardResponseSchema:
+    admin_user: Annotated[User, Depends(get_admin_user_from_token)],
+    project_service: Annotated[
+        ProjectService, Depends(get_service(ProjectService))
+    ],
+) -> ProjectDashboardResponseSchema:
     dashboard_dto = await project_service.get_projects_dashboard()
     return ProjectDashboardResponseSchema.model_validate(dashboard_dto)
+
 
 @project_router.post(
     path='/',
@@ -97,6 +101,3 @@ async def get_all_projects(
         size=pagination.size,
         pages=pages,
     )
-
-
-
