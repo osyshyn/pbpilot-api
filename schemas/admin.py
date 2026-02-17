@@ -49,6 +49,7 @@ class CreateUserByAdminRequestSchema(BaseModel):
         ),
     ]
 
+
 class AssignFreeReportsRequestSchema(BaseModel):
     report_amount: Annotated[
         int,
@@ -57,8 +58,9 @@ class AssignFreeReportsRequestSchema(BaseModel):
             le=100,
             description='Number of free reports to assign',
             examples=[10],
-        )
+        ),
     ]
+
 
 class AssignFreeReportsResponseSchema(BaseModelSchema):
     email: EmailStr

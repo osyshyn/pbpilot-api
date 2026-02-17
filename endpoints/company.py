@@ -33,7 +33,7 @@ async def create_company(
 @company_router.get(
     path='/{company_id}',
     summary='Get company by id',
-    dependencies=[Depends(get_admin_user_from_token)]
+    dependencies=[Depends(get_admin_user_from_token)],
 )
 async def get_company_by_id(
     company_id: int,
