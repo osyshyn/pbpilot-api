@@ -44,13 +44,13 @@ async def get_all_clients(
     dependencies=[Depends(get_admin_user_from_token)],
 )
 async def create_equipment(
-    equipment_data: CreateEquipmentRequestSchema,
+    equipment_data: list[CreateEquipmentRequestSchema],
     equipment_service: Annotated[
         EquipmentService, Depends(get_service(EquipmentService))
     ],
 ) -> EquipmentResponseSchema:
     return EquipmentResponseSchema.model_validate(
-        await equipment_service.create_new_equipment(
+        await equipment_service.create_new_equipments(
             equipment_data=equipment_data
         )
     )
