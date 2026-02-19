@@ -6,7 +6,7 @@ from .inspector import InspectorService
 from .pricing_plan import PricingPlanService
 from .project import ProjectService
 from .user import UserService
-
+from .equipment import EquipmentService
 __all__ = [
     'AdminService',
     'AuthService',
@@ -16,4 +16,5 @@ __all__ = [
     'PricingPlanService',
     'ProjectService',
     'UserService',
+    'EquipmentService',
 ]
