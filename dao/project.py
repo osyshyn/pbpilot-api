@@ -12,6 +12,7 @@ from dto import (
     UnassignedJobsDTO,
 )
 from models import Project, ProjectProperty, PropertyStructure
+from models.projects import ProjectStatusEnum
 from schemas.projects import CreatePropertyRequestSchema
 
 
@@ -24,6 +25,7 @@ class ProjectDAO(BaseDAO):
         client_id: int,
         project_name: str,
         property_manager_name: str | None = None,
+        status: ProjectStatusEnum,
         properties_data: list[CreatePropertyRequestSchema],
     ) -> Project:
         """Create a project with properties and structures."""
@@ -31,6 +33,7 @@ class ProjectDAO(BaseDAO):
             client_id=client_id,
             project_name=project_name,
             property_manager_name=property_manager_name,
+            status=status,
         )
         self._session.add(project)
         await self._session.flush()

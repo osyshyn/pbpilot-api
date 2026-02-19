@@ -9,6 +9,7 @@ from dto import (
 )
 from exceptions import ClientNotFoundException, ProjectNotFoundException
 from models import Project
+from models.projects import ProjectStatusEnum
 from schemas.projects import CreateProjectRequestSchema
 
 logger = logging.getLogger(__name__)
@@ -36,6 +37,7 @@ class ProjectService(BaseService):
             project_name=data.project_name,
             property_manager_name=data.property_manager,
             properties_data=data.properties,
+            status=ProjectStatusEnum.IN_PROGRESS
         )
         await self._session.commit()
         project = await self._project_dao.get_by_id_with_relations(

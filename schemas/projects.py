@@ -3,7 +3,7 @@ from typing import Annotated, Self
 from pydantic import Field, model_validator
 
 from core import BaseModelSchema
-from models.projects import BuildingTypeEnum
+from models.projects import BuildingTypeEnum, ProjectStatusEnum
 
 
 class CreateStructureRequestSchema(BaseModelSchema):
@@ -174,6 +174,7 @@ class ProjectResponseSchema(BaseModelSchema):
     id: int
     client_id: int
     project_name: str
+    status: ProjectStatusEnum
     property_manager_name: str | None
     properties: list[ProjectPropertyResponseSchema] = []
 
