@@ -43,9 +43,9 @@ class InspectorDAO(BaseDAO):
         query = select(Inspector)
         return await self.paginate(query=query, page=page, limit=limit)
 
-    async def get_by_id(self, client_id: int) -> Inspector | None:
+    async def get_by_id(self, inspector_id: int) -> Inspector | None:
         stmt = select(Inspector).where(
-            Inspector.id == client_id, Inspector.is_active == True
+            Inspector.id == inspector_id, Inspector.is_active == True
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
