@@ -5,7 +5,7 @@ from .inspector import InspectorDAO
 from .pricing_plan import PricingPlanDAO
 from .project import ProjectDAO
 from .user import UserDAO
-
+from .equipment import EquipmentDAO
 __all__ = [
     'BlacklistTokenDAO',
     'ClientDAO',
@@ -14,4 +14,5 @@ __all__ = [
     'PricingPlanDAO',
     'ProjectDAO',
     'UserDAO',
+    'EquipmentDAO',
 ]
