@@ -1,6 +1,7 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Index, String, text
+from sqlalchemy import TIMESTAMP, Index, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
@@ -46,6 +47,11 @@ class Client(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     projects: Mapped[list['Project']] = relationship(
         back_populates='client',
         cascade='all, delete-orphan',
+    )
+
+    last_activity: Mapped[datetime | None] = mapped_column(
+        TIMESTAMP(timezone=True),
+        nullable=True,
     )
 
     @property

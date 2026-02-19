@@ -9,6 +9,7 @@ from dto import (
 )
 from exceptions import ClientNotFoundException, ProjectNotFoundException
 from models import Project
+from models.projects import ProjectStatusEnum
 from schemas.projects import CreateProjectRequestSchema
 
 logger = logging.getLogger(__name__)
@@ -26,16 +27,23 @@ class ProjectService(BaseService):
         self._project_dao = project_dao or ProjectDAO(db_session)
         self._client_dao = client_dao or ClientDAO(db_session)
 
+    async def search_by_name(self, project_name: str) -> list[Project]:
+        return await self._project_dao.search_by_name(
+            project_name=project_name,
+        )
+
     async def create_project(self, data: CreateProjectRequestSchema) -> Project:
         """Create a project with properties and structures."""
         client = await self._client_dao.get_by_id(data.client_id)
         if not client:
             raise ClientNotFoundException
+        await self._client_dao.update_last_activity(client_id=client.id)
         created_project = await self._project_dao.create_with_properties(
             client_id=data.client_id,
             project_name=data.project_name,
             property_manager_name=data.property_manager,
             properties_data=data.properties,
+            status=ProjectStatusEnum.IN_PROGRESS,
         )
         await self._session.commit()
         project = await self._project_dao.get_by_id_with_relations(

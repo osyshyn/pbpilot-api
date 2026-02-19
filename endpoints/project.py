@@ -1,7 +1,7 @@
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
@@ -17,6 +17,26 @@ from services.project import ProjectService
 logger = logging.getLogger(__name__)
 
 project_router = APIRouter()
+
+
+@project_router.get(
+    path='/search',
+    description='Search projects by name',
+)
+async def search_projects(
+    admin_user: Annotated[User, Depends(get_admin_user_from_token)],
+    project_service: Annotated[
+        ProjectService, Depends(get_service(ProjectService))
+    ],
+    project_name: str = Query(
+        description='Project name for search',
+        examples=['test project'],
+    ),
+) -> list[ProjectResponseSchema]:
+    return [
+        ProjectResponseSchema.model_validate(project)
+        for project in await project_service.search_by_name(project_name)
+    ]
 
 
 @project_router.get(

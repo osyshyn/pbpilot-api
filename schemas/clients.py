@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated
 
 from pydantic import Field
@@ -161,3 +162,4 @@ class ClientResponseSchema(_BaseClientSchema):
             examples=[15],
         ),
     ]
+    last_activity: datetime | None

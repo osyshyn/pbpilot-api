@@ -18,6 +18,14 @@ class BuildingTypeEnum(StrEnum):
     COMMERCIAL = 'COMMERCIAL'
 
 
+class ProjectStatusEnum(StrEnum):
+    COMPLETED = 'COMPLETED'
+    IN_PROGRESS = 'IN_PROGRESS'
+    AWAITING_LAB_RESULTS = 'AWAITING_LAB_RESULTS'
+    OVERDUE = 'OVERDUE'
+    READY_TO_GENERATE = 'READY_TO_GENERATE'
+
+
 class Project(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'projects'
 
@@ -46,6 +54,11 @@ class Project(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     properties: Mapped[list['ProjectProperty']] = relationship(
         back_populates='project',
         cascade='all, delete-orphan',
+    )
+
+    status: Mapped[ProjectStatusEnum] = mapped_column(
+        Enum(ProjectStatusEnum, name='project_status_enum', create_type=False),
+        nullable=False,
     )
 
     def __repr__(self) -> str:
