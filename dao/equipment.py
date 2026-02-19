@@ -1,17 +1,13 @@
-from datetime import date
-
 from sqlalchemy import select
 
 from core.dao import BaseDAO
 from dto import CreateEquipmentDTO
 from models import Equipment
-from models.equipment import OperationModeEnum
 
 
 class EquipmentDAO(BaseDAO):
     async def create_bulk(
-            self,
-            equipments: list[CreateEquipmentDTO]
+        self, equipments: list[CreateEquipmentDTO]
     ) -> list[Equipment]:
         db_equipments: list[Equipment] = [
             Equipment(
@@ -30,7 +26,7 @@ class EquipmentDAO(BaseDAO):
         return db_equipments
 
     async def get_all(
-            self, page: int, limit: int
+        self, page: int, limit: int
     ) -> tuple[list[Equipment], int]:
         query = select(Equipment)
         return await self.paginate(query=query, page=page, limit=limit)

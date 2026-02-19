@@ -12,6 +12,5 @@ class CreateEquipmentDTO(BaseDTO):
     model: str
     serial_number: str
     mode: OperationModeEnum
-    date_of_radioactive_source: date | None = None,
+    date_of_radioactive_source: date | None = None
     training_certificate_key: str | None = None
-

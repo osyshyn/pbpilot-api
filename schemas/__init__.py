@@ -14,6 +14,7 @@ from .company import (
     CreateCompanyRequestSchema,
     CreateCompanyScheduleItemRequestSchema,
 )
+from .equipment import CreateEquipmentRequestSchema, EquipmentResponseSchema
 from .inspector import CreateInspectorRequestSchema, InspectorResponseSchema
 from .main import HealthCheckResponseSchema
 from .pricing_plan import (
@@ -27,7 +28,7 @@ from .projects import (
 )
 from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
-from .equipment import CreateEquipmentRequestSchema, EquipmentResponseSchema
+
 __all__ = [
     'AssignFreeReportsRequestSchema',
     'AssignFreeReportsResponseSchema',
@@ -36,9 +37,11 @@ __all__ = [
     'CreateClientRequestSchema',
     'CreateCompanyRequestSchema',
     'CreateCompanyScheduleItemRequestSchema',
+    'CreateEquipmentRequestSchema',
     'CreateInspectorRequestSchema',
     'CreateProjectRequestSchema',
     'CreateUserByAdminRequestSchema',
+    'EquipmentResponseSchema',
     'HealthCheckResponseSchema',
     'InspectorResponseSchema',
     'LogInRequestSchema',
@@ -52,6 +55,4 @@ __all__ = [
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
     'UserResponseSchema',
-    'CreateEquipmentRequestSchema',
-    'EquipmentResponseSchema',
 ]
