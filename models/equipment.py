@@ -1,14 +1,16 @@
-from datetime import datetime, date
+from datetime import date
 from enum import StrEnum
 
-from sqlalchemy import TIMESTAMP, Index, String, text, Enum, Date
+from sqlalchemy import Date, Enum, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
 
+
 class OperationModeEnum(StrEnum):
-    X_RAY_TUBE = "X_RAY_TUBE"
-    RADIOACTIVE_ISOTOPE = "RADIOACTIVE_ISOTOPE"
+    X_RAY_TUBE = 'X_RAY_TUBE'
+    RADIOACTIVE_ISOTOPE = 'RADIOACTIVE_ISOTOPE'
+
 
 class Equipment(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'equipments'
@@ -44,7 +46,5 @@ class Equipment(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         comment='S3 key for image',
     )
 
-
     def __repr__(self) -> str:
         return f'<Equipment {self.name}>'
-

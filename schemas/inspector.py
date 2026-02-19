@@ -1,11 +1,10 @@
-from datetime import datetime, date
-from typing import Annotated, Self
+from datetime import date
+from typing import Annotated
 
-from pydantic import Field, model_validator, EmailStr
+from pydantic import EmailStr, Field
 
 from core import BaseModelSchema
 from models.inspector import LicenseTypeEnum
-from models.projects import BuildingTypeEnum, ProjectStatusEnum
 
 
 class CreateInspectorRequestSchema(BaseModelSchema):
@@ -57,12 +56,13 @@ class CreateInspectorRequestSchema(BaseModelSchema):
             min_length=1,
             max_length=32,
             description='LICE number',
-            examples=["License #1"]
-        )
+            examples=['License #1'],
+        ),
     ]
     licence_type: LicenseTypeEnum
     issue_date: date
     expiration_date: date
+
 
 class InspectorResponseSchema(BaseModelSchema):
     id: int

@@ -1,11 +1,10 @@
-from datetime import datetime, date
+from datetime import date
 from enum import StrEnum
 
-from sqlalchemy import TIMESTAMP, Index, String, text, Enum
+from sqlalchemy import Enum, Index, String, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
-
 
 
 class LicenseTypeEnum(StrEnum):
@@ -48,15 +47,14 @@ class Inspector(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     )
 
     license_number: Mapped[str] = mapped_column(
-        String(255),
-        comment="License number of the inspector"
+        String(255), comment='License number of the inspector'
     )
 
     licence_type: Mapped[LicenseTypeEnum] = mapped_column(
         Enum(
             LicenseTypeEnum,
             name='inspector_licence_type_enum',
-            create_type=False
+            create_type=False,
         ),
     )
     issue_date: Mapped[date]

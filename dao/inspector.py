@@ -11,16 +11,16 @@ class InspectorDAO(BaseDAO):
     """DAO for User model."""
 
     async def create(
-            self,
-            *,
-            name: str,
-            surname: str,
-            email: str,
-            phone_number: str | None = None,
-            license_number: str,
-            licence_type: LicenseTypeEnum,
-            issue_date: date,
-            expiration_date: date,
+        self,
+        *,
+        name: str,
+        surname: str,
+        email: str,
+        phone_number: str | None = None,
+        license_number: str,
+        licence_type: LicenseTypeEnum,
+        issue_date: date,
+        expiration_date: date,
     ) -> Inspector:
         inspector = Inspector(
             name=name,
@@ -37,7 +37,9 @@ class InspectorDAO(BaseDAO):
         await self._session.refresh(inspector)
         return inspector
 
-    async def get_all(self, page: int, limit: int) -> tuple[list[Inspector], int]:
+    async def get_all(
+        self, page: int, limit: int
+    ) -> tuple[list[Inspector], int]:
         query = select(Inspector)
         return await self.paginate(query=query, page=page, limit=limit)
 
