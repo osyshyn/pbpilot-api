@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import select, update
+from sqlalchemy import select, update, func
 
 from core.dao import BaseDAO
 from models import Client
@@ -119,3 +119,11 @@ class ClientDAO(BaseDAO):
         """
         stmt = select(Client).where(Client.is_active == True)  # noqa: E712
         return await self.paginate(query=stmt, page=page, limit=limit)
+
+    async def update_last_activity(self, client_id: int) -> None:
+        stmt = (
+            update(Client)
+            .where(Client.id == client_id)
+            .values(last_activity=func.now())
+        )
+        await self._session.execute(stmt)

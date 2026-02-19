@@ -17,11 +17,11 @@ logger = logging.getLogger(__name__)
 
 class ProjectService(BaseService):
     def __init__(
-        self,
-        db_session: AsyncSession,
-        *,
-        project_dao: ProjectDAO | None = None,
-        client_dao: ClientDAO | None = None,
+            self,
+            db_session: AsyncSession,
+            *,
+            project_dao: ProjectDAO | None = None,
+            client_dao: ClientDAO | None = None,
     ):
         super().__init__(db_session)
         self._project_dao = project_dao or ProjectDAO(db_session)
@@ -32,6 +32,9 @@ class ProjectService(BaseService):
         client = await self._client_dao.get_by_id(data.client_id)
         if not client:
             raise ClientNotFoundException
+        await self._client_dao.update_last_activity(
+            client_id=client.id
+        )
         created_project = await self._project_dao.create_with_properties(
             client_id=data.client_id,
             project_name=data.project_name,
@@ -63,9 +66,9 @@ class ProjectService(BaseService):
         return project
 
     async def get_all_projects(
-        self,
-        page: int,
-        size: int,
+            self,
+            page: int,
+            size: int,
     ) -> tuple[list[Project], int]:
         """Get all active projects with pagination."""
         return await self._project_dao.get_all(page=page, limit=size)
