@@ -49,7 +49,7 @@ class CreateEquipmentRequestSchema(BaseModelSchema):
         )
     ]
 
-class CreateEquipmentResponseSchema(BaseModelSchema):
+class EquipmentResponseSchema(BaseModelSchema):
     name: str
     manufacturer: str
     model: str

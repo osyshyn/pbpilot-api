@@ -8,9 +8,10 @@ from .main import main_router
 from .pricing_plan import pricing_plan_router
 from .project import project_router
 from .user import user_router
-
+from .equimpent import equipment_router
 __all__ = [
     'admin_router',
+    'equipment_router',
     'auth_router',
     'client_router',
     'company_router',
