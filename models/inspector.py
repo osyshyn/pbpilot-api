@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from enum import StrEnum
 
 from sqlalchemy import TIMESTAMP, Index, String, text, Enum
@@ -59,16 +59,8 @@ class Inspector(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
             create_type=False
         ),
     )
-    issue_date: Mapped[datetime] = mapped_column(
-        TIMESTAMP(
-            timezone=True
-        )
-    )
-    expiration_date: Mapped[datetime] = mapped_column(
-        TIMESTAMP(
-            timezone=True
-        )
-    )
+    issue_date: Mapped[date]
+    expiration_date: Mapped[date]
 
     license_image_key: Mapped[str | None] = mapped_column(
         String(512),
