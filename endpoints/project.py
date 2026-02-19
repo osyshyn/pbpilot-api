@@ -28,13 +28,15 @@ async def search_projects(
         project_service: Annotated[
             ProjectService, Depends(get_service(ProjectService))
         ],
-        project_name: str | None = Query(
-            None,
+        project_name: str = Query(
             description='Project name for search',
             examples=['test project'],
         ),
-) -> ProjectResponseSchema:
-    pass
+) -> list[ProjectResponseSchema]:
+    return [
+        ProjectResponseSchema.model_validate(project)
+        for project in await project_service.search_by_name(project_name)
+    ]
 
 
 @project_router.get(

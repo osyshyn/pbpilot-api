@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from sqlalchemy import select, update
+from sqlalchemy import select, update, or_, func
 from sqlalchemy.orm import selectinload
 
 from core.dao import BaseDAO
@@ -18,6 +18,8 @@ from schemas.projects import CreatePropertyRequestSchema
 
 class ProjectDAO(BaseDAO):
     """DAO for Project model."""
+
+    _PROJECT_SEARCH_LIMIT = 15
 
     async def create_with_properties(
         self,
@@ -205,3 +207,22 @@ class ProjectDAO(BaseDAO):
                 project_names=['Project 7', 'Project 8'],
             ),
         )
+
+
+    async def search_by_name(self, project_name:str) -> list[Project]:
+        _SEARCH_PATTERN = f'%{project_name}%'
+        stmt = select(Project).where(
+            Project.is_active == True,  # noqa: E712
+            Project.project_name.ilike(_SEARCH_PATTERN)
+        ).options(
+                selectinload(Project.properties).selectinload(
+                    ProjectProperty.structures
+                ),
+            )
+
+        stmt = stmt.order_by(
+            Project.created_at.desc(), Project.id.desc()
+        ).limit(ProjectDAO._PROJECT_SEARCH_LIMIT)
+        result = await self._session.execute(stmt)
+        return list(result.scalars().all())
+

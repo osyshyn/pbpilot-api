@@ -27,6 +27,14 @@ class ProjectService(BaseService):
         self._project_dao = project_dao or ProjectDAO(db_session)
         self._client_dao = client_dao or ClientDAO(db_session)
 
+    async def search_by_name(
+            self,
+            project_name: str
+    ) -> list[Project]:
+        return await self._project_dao.search_by_name(
+            project_name=project_name,
+        )
+
     async def create_project(self, data: CreateProjectRequestSchema) -> Project:
         """Create a project with properties and structures."""
         client = await self._client_dao.get_by_id(data.client_id)
