@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import BaseService
+from core.pagination import PaginationParams
 from dao import UserDAO
 from exceptions import (
     EmailAlreadyRegisteredException,
@@ -18,7 +19,6 @@ from schemas import (
 )
 from services.email import EmailService
 from services.jwt.hasher import Hasher
-from core.pagination import PaginationParams
 
 logger = logging.getLogger(__name__)
 

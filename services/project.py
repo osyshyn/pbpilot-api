@@ -17,20 +17,17 @@ logger = logging.getLogger(__name__)
 
 class ProjectService(BaseService):
     def __init__(
-            self,
-            db_session: AsyncSession,
-            *,
-            project_dao: ProjectDAO | None = None,
-            client_dao: ClientDAO | None = None,
+        self,
+        db_session: AsyncSession,
+        *,
+        project_dao: ProjectDAO | None = None,
+        client_dao: ClientDAO | None = None,
     ):
         super().__init__(db_session)
         self._project_dao = project_dao or ProjectDAO(db_session)
         self._client_dao = client_dao or ClientDAO(db_session)
 
-    async def search_by_name(
-            self,
-            project_name: str
-    ) -> list[Project]:
+    async def search_by_name(self, project_name: str) -> list[Project]:
         return await self._project_dao.search_by_name(
             project_name=project_name,
         )
@@ -40,15 +37,13 @@ class ProjectService(BaseService):
         client = await self._client_dao.get_by_id(data.client_id)
         if not client:
             raise ClientNotFoundException
-        await self._client_dao.update_last_activity(
-            client_id=client.id
-        )
+        await self._client_dao.update_last_activity(client_id=client.id)
         created_project = await self._project_dao.create_with_properties(
             client_id=data.client_id,
             project_name=data.project_name,
             property_manager_name=data.property_manager,
             properties_data=data.properties,
-            status=ProjectStatusEnum.IN_PROGRESS
+            status=ProjectStatusEnum.IN_PROGRESS,
         )
         await self._session.commit()
         project = await self._project_dao.get_by_id_with_relations(
@@ -74,9 +69,9 @@ class ProjectService(BaseService):
         return project
 
     async def get_all_projects(
-            self,
-            page: int,
-            size: int,
+        self,
+        page: int,
+        size: int,
     ) -> tuple[list[Project], int]:
         """Get all active projects with pagination."""
         return await self._project_dao.get_all(page=page, limit=size)

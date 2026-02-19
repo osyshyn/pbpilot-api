@@ -57,12 +57,8 @@ class Project(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     )
 
     status: Mapped[ProjectStatusEnum] = mapped_column(
-        Enum(
-            ProjectStatusEnum,
-            name='project_status_enum',
-            create_type=False
-        ),
-        nullable=False
+        Enum(ProjectStatusEnum, name='project_status_enum', create_type=False),
+        nullable=False,
     )
 
     def __repr__(self) -> str:

@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import select, update, func
+from sqlalchemy import func, select, update
 
 from core.dao import BaseDAO
 from models import Client

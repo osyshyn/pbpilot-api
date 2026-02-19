@@ -163,4 +163,3 @@ class ClientResponseSchema(_BaseClientSchema):
         ),
     ]
     last_activity: datetime | None
-
