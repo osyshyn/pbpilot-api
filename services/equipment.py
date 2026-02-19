@@ -42,7 +42,10 @@ class EquipmentService(BaseService):
             )
             for equipment in equipment_data
         ]
-        return await self._equipment_dao.create_bulk(equipments=equipments_dto)
+        equipments: list[Equipment]=  await self._equipment_dao.create_bulk(equipments=equipments_dto)
+        await self._session.commit()
+        return equipments
+
 
     async def get_equipment_by_id(self, equipment_id: int) -> Equipment:
         equipment: Equipment | None = await self._equipment_dao.get_by_id(
