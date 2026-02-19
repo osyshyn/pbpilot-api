@@ -5,7 +5,7 @@ from .pricing_plan import PricingPlan
 from .projects import Project, ProjectProperty, PropertyStructure
 from .user import User
 from .inspector import Inspector
-
+from .equipment import Equipment
 __all__ = [
     'BlacklistToken',
     'Client',
@@ -17,4 +17,5 @@ __all__ = [
     'PropertyStructure',
     'User',
     'Inspector',
+    'Equipment',
 ]
