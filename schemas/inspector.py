@@ -55,7 +55,7 @@ class CreateInspectorRequestSchema(BaseModelSchema):
         str,
         Field(
             min_length=1,
-            max_digits=32,
+            max_length=32,
             description='LICE number',
             examples=["License #1"]
         )

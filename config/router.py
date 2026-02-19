@@ -16,7 +16,7 @@ from endpoints import (
     main_router,
     pricing_plan_router,
     project_router,
-    user_router,
+    user_router, inspector_router,
 )
 from endpoints.client import client_router
 
@@ -52,6 +52,9 @@ def initialize_routers() -> APIRouter:
     )
     main_api_router.include_router(
         admin_router, prefix='/admin', tags=['admin']
+    )
+    main_api_router.include_router(
+        inspector_router, prefix='/inspector', tags=['inspector']
     )
     if settings.ENV in {'dev', 'local'}:
         main_api_router.include_router(
