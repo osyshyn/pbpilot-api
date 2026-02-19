@@ -30,7 +30,7 @@ class EquipmentService(BaseService):
     async def create_new_equipments(
             self,
             equipment_data: list[CreateEquipmentRequestSchema],
-    ) -> Equipment:
+    ) -> list[Equipment]:
         equipments_dto: list[CreateEquipmentDTO] = [
             CreateEquipmentDTO(
                 name=equipment.name,
@@ -42,18 +42,7 @@ class EquipmentService(BaseService):
             )
             for equipment in equipment_data
         ]
-
-        # equipment: Equipment = await self._equipment_dao.create(
-        #     name=equipment_data.name,
-        #     manufacturer=equipment_data.manufacturer,
-        #     model=equipment_data.model,
-        #     serial_number=equipment_data.serial_number,
-        #     mode=equipment_data.mode,
-        #     date_of_radioactive_source=equipment_data.date_of_radioactive_source,
-        #     training_certificate_key=equipment_data.training_certificate_key,
-        # )
-        # await self._session.commit()
-        # return equipment
+        return await self._equipment_dao.create_bulk(equipments=equipments_dto)
 
     async def get_equipment_by_id(self, equipment_id: int) -> Equipment:
         equipment: Equipment | None = await self._equipment_dao.get_by_id(

@@ -3,36 +3,31 @@ from datetime import date
 from sqlalchemy import select
 
 from core.dao import BaseDAO
+from dto import CreateEquipmentDTO
 from models import Equipment
 from models.equipment import OperationModeEnum
 
 
 class EquipmentDAO(BaseDAO):
-    async def create(
+    async def create_bulk(
             self,
-            *,
-            name: str,
-            manufacturer: str,
-            model: str,
-            serial_number: str,
-            mode: OperationModeEnum,
-            date_of_radioactive_source: date | None = None,
-            training_certificate_key: str | None = None,
-
-    ) -> Equipment:
-        equipment = Equipment(
-            name=name,
-            manufacturer=manufacturer,
-            model=model,
-            serial_number=serial_number,
-            mode=mode,
-            date_of_radioactive_source=date_of_radioactive_source,
-            training_certificate_key=training_certificate_key,
-        )
-        self._session.add(equipment)
+            equipments: list[CreateEquipmentDTO]
+    ) -> list[Equipment]:
+        db_equipments: list[Equipment] = [
+            Equipment(
+                name=equipment.name,
+                manufacturer=equipment.manufacturer,
+                model=equipment.model,
+                serial_number=equipment.serial_number,
+                mode=equipment.mode,
+                date_of_radioactive_source=equipment.date_of_radioactive_source,
+                training_certificate_key=equipment.training_certificate_key,
+            )
+            for equipment in equipments
+        ]
+        self._session.add_all(db_equipments)
         await self._session.flush()
-        await self._session.refresh(equipment)
-        return equipment
+        return db_equipments
 
     async def get_all(
             self, page: int, limit: int
