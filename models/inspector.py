@@ -80,3 +80,6 @@ class Inspector(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     def full_name(self) -> str:
         """Return the full name of the client."""
         return f'{self.name} {self.surname}'
+
+    def __repr__(self) -> str:
+        return f'<Inspetor {self.full_name}>'
