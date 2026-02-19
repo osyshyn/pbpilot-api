@@ -50,14 +50,12 @@ async def create_equipment(
             EquipmentService, Depends(get_service(EquipmentService))
         ],
 ) -> list[EquipmentResponseSchema]:
-    equipments: list[Equipment] = await equipment_service.create_new_equipments(
-        equipment_data=equipment_data
-    )
-    for equipment in equipments:
-        EquipmentResponseSchema.model_validate(
-            equipment
+    return [
+        EquipmentResponseSchema.model_validate(equipment)
+        for equipment in await equipment_service.create_new_equipments(
+            equipment_data=equipment_data
         )
-    return equipments
+    ]
 
 
 @equipment_router.get(
