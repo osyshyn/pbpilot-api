@@ -51,6 +51,8 @@ class EquipmentService(BaseService):
         equipment: Equipment | None = await self._equipment_dao.get_by_id(
             equipment_id=equipment_id
         )
+        if not equipment:
+            raise ValueError("ChangeItLater")
         return equipment
 
     async def get_all_equipments(
