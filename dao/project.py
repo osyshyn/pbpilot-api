@@ -31,7 +31,7 @@ class ProjectDAO(BaseDAO):
         properties_data: list[CreatePropertyRequestSchema],
     ) -> Project:
         """Create a project with properties and structures."""
-        project = Project(
+        project = Project( #TODO: Rewrite optimize this
             client_id=client_id,
             project_name=project_name,
             property_manager_name=property_manager_name,
