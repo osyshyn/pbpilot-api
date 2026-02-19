@@ -26,7 +26,7 @@ from .projects import (
 )
 from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
-
+from .inspector import CreateInspectorRequestSchema, InspectorResponseSchema
 __all__ = [
     'AssignFreeReportsRequestSchema',
     'AssignFreeReportsResponseSchema',
@@ -49,4 +49,6 @@ __all__ = [
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
     'UserResponseSchema',
+    'CreateInspectorRequestSchema',
+    'InspectorResponseSchema',
 ]
