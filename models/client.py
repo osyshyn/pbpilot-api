@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
-
-from sqlalchemy import Index, String, text
+from datetime import datetime
+from sqlalchemy import Index, String, text, TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
@@ -48,6 +48,10 @@ class Client(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         cascade='all, delete-orphan',
     )
 
+    last_activity: Mapped[datetime | None] = mapped_column(
+        TIMESTAMP(timezone=True),
+        nullable=True,
+    )
     @property
     def full_name(self) -> str:
         """Return the full name of the client."""
