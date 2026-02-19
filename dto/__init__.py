@@ -6,7 +6,7 @@ from .project import (
     ReadyToFinalizeDTO,
     UnassignedJobsDTO,
 )
-
+from .equimpent import CreateEquipmentDTO
 __all__ = [
     'AccessTokenDTO',
     'NeedScheduledDTO',
@@ -14,4 +14,5 @@ __all__ = [
     'ProjectDashboardDTO',
     'ReadyToFinalizeDTO',
     'UnassignedJobsDTO',
+    'CreateEquipmentDTO',
 ]
