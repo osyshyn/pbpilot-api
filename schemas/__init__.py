@@ -27,7 +27,7 @@ from .projects import (
 )
 from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
-
+from .equipment import CreateEquipmentRequestSchema, CreateEquipmentResponseSchema
 __all__ = [
     'AssignFreeReportsRequestSchema',
     'AssignFreeReportsResponseSchema',
@@ -52,4 +52,6 @@ __all__ = [
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
     'UserResponseSchema',
+    'CreateEquipmentRequestSchema',
+    'CreateEquipmentResponseSchema',
 ]
