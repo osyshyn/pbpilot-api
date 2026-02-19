@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated, Self
 
 from pydantic import Field, model_validator
@@ -177,6 +178,7 @@ class ProjectResponseSchema(BaseModelSchema):
     status: ProjectStatusEnum
     property_manager_name: str | None
     properties: list[ProjectPropertyResponseSchema] = []
+    created_at: datetime
 
 
 class _OngoingProjectResponseSchema(BaseModelSchema):

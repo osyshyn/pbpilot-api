@@ -13,6 +13,7 @@ from endpoints import (
     auth_router,
     company_router,
     debug_router,
+    inspector_router,
     main_router,
     pricing_plan_router,
     project_router,
@@ -52,6 +53,9 @@ def initialize_routers() -> APIRouter:
     )
     main_api_router.include_router(
         admin_router, prefix='/admin', tags=['admin']
+    )
+    main_api_router.include_router(
+        inspector_router, prefix='/inspector', tags=['inspector']
     )
     if settings.ENV in {'dev', 'local'}:
         main_api_router.include_router(
