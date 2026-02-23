@@ -7,6 +7,7 @@ from .project import (
     ReadyToFinalizeDTO,
     UnassignedJobsDTO,
 )
+from .aws import UploadFileDTO
 
 __all__ = [
     'AccessTokenDTO',
@@ -16,4 +17,5 @@ __all__ = [
     'ProjectDashboardDTO',
     'ReadyToFinalizeDTO',
     'UnassignedJobsDTO',
+    'UploadFileDTO',
 ]
