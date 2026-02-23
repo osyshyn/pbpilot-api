@@ -1,13 +1,16 @@
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 
 from core import get_service
+from core.constants import INSPECTOR_LICENSE_PREFIX
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_admin_user_from_token
+from dto import UploadFileDTO
 from schemas import CreateInspectorRequestSchema, InspectorResponseSchema
 from services import InspectorService
+from services.aws import FileUploadService
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +22,7 @@ inspector_router = APIRouter()
     summary='Get all inspectors',
     dependencies=[Depends(get_admin_user_from_token)],
 )
-async def get_all_clients(
+async def get_all_inspectors(
     pagination: Annotated[PaginationParams, Depends()],
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
@@ -45,10 +48,18 @@ async def get_all_clients(
 )
 async def create_inspector(
     inspector_data: CreateInspectorRequestSchema,
+    files: Annotated[UploadFile, File()],
+    upload_file_service: Annotated[
+        FileUploadService, Depends(get_service(FileUploadService))
+    ],
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
     ],
 ) -> InspectorResponseSchema:
+    files: list[UploadFileDTO] = await upload_file_service.upload_files(
+        files=files,
+        prefix=INSPECTOR_LICENSE_PREFIX
+    )
     return InspectorResponseSchema.model_validate(
         await inspector_service.create_new_inspector(
             inspector_data=inspector_data
