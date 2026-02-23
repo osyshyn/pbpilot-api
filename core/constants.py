@@ -38,3 +38,8 @@ FILE_TYPE_TO_CATEGORY: dict[str, str] = dict.fromkeys(
 MIME_TO_EXTENSION: dict[str, str] = {
     mime_type: extension for extension, mime_type in MIME_TYPES.items()
 }
+# <---------------->
+# Keys for S3
+INSPECTOR_LICENSE_PREFIX: str = 'inspectors/licenses'
+
+# <---------------->
