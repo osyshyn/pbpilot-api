@@ -1,5 +1,3 @@
-"""Mixin class for file-related actions and validations."""
-
 import mimetypes
 
 from core.constants import (

@@ -1,5 +1,3 @@
-"""Base AWS actions class for managing boto3 sessions and clients."""
-
 from typing import Any
 
 import boto3

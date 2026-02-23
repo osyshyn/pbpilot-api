@@ -1,5 +1,3 @@
-"""S3 actions for file upload and management."""
-
 import uuid
 from datetime import UTC, datetime
 from typing import Any, BinaryIO
@@ -10,35 +8,6 @@ from services.aws.base import AWSActions
 from services.aws.mixins import FileActionMixin
 
 settings = Settings.load()
-
-
-def generate_storage_key(prefix: str, file_extension: str) -> str:
-    """Generate a unique storage key with date-based path structure.
-
-    Creates a storage key with the format:
-    {prefix}/{year}/{month:02d}/{day:02d}/{uuid}{extension}
-
-    This structure helps organize files by date and ensures uniqueness
-    through UUID generation.
-
-    Args:
-        prefix: Storage prefix (e.g., 'drawings', 'images').
-        file_extension: File extension with dot (e.g., '.pdf', '.jpg').
-
-    Returns:
-        Storage key string in the format described above.
-
-    Example:
-        >>> generate_storage_key('drawings', '.pdf')
-        'drawings/2024/01/15/550e8400-e29b-41d4-a716-446655440000.pdf'
-
-    """
-    now = datetime.now(UTC)
-    return (
-        f'{prefix}/{now.year}/{now.month:02d}/{now.day:02d}/'
-        f'{uuid.uuid4()}{file_extension}'
-    )
-
 
 class S3Actions(AWSActions, FileActionMixin):
     """S3 service actions for file upload, download, and management.
@@ -262,3 +231,11 @@ class S3Actions(AWSActions, FileActionMixin):
 
         """
         return MIME_TO_EXTENSION.get(content_type, '.bin')
+
+    @staticmethod
+    def generate_storage_key(prefix: str, file_extension: str) -> str:
+        now = datetime.now(UTC)
+        return (
+            f'{prefix}/{now.year}/{now.month:02d}/{now.day:02d}/'
+            f'{uuid.uuid4()}{file_extension}'
+        )
