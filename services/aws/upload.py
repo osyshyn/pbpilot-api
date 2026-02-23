@@ -14,11 +14,17 @@ class FileUploadService:
 
     async def upload_files(
         self,
-        files: list[UploadFile],
+        files: list[UploadFile] | UploadFile,
         prefix: str,
     ) -> list[UploadFileDTO]:
-        results = []
-        for file in files:
+        normalized_files: list[UploadFile] = files if isinstance(
+            files,
+            list
+        ) else [
+            files
+        ]
+        results: list[UploadFileDTO] = []
+        for file in normalized_files:
             if not file.filename:
                 raise EmptyFileNameException
             content = await file.read()
