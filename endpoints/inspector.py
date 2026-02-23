@@ -62,7 +62,8 @@ async def create_inspector(
     )
     return InspectorResponseSchema.model_validate(
         await inspector_service.create_new_inspector(
-            inspector_data=inspector_data
+            inspector_schema=inspector_data,
+            license_files=files,
         )
     )
 
