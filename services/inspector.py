@@ -34,7 +34,7 @@ class InspectorService(BaseService):
     ) -> Inspector:
         license_file: UploadFileDTO = license_files if isinstance(license_files, UploadFileDTO) else license_files[0]
         try:
-            inspector_data: CreateInspectorDTO = CreateInspectorDTO(
+            inspector_data: CreateInspectorDTO = CreateInspectorDTO( #TODO: User mapper here
                 name=inspector_schema.name,
                 surname=inspector_schema.surname,
                 email=inspector_schema.email,
