@@ -78,7 +78,7 @@ class S3Actions(AWSActions, FileActionMixin):
         resolved_prefix = prefix or self.get_category_prefix(category)
         file_extension = self._get_file_extension(file_type)
 
-        key = generate_storage_key(
+        key = self.generate_storage_key(
             prefix=resolved_prefix,
             file_extension=file_extension,
         )
@@ -154,7 +154,7 @@ class S3Actions(AWSActions, FileActionMixin):
         resolved_prefix = prefix or self.get_category_prefix(category)
         file_extension = self._get_file_extension(file_type)
 
-        key = generate_storage_key(
+        key = self.generate_storage_key(
             prefix=resolved_prefix,
             file_extension=file_extension,
         )
