@@ -49,12 +49,10 @@ async def get_all_inspectors(
 async def create_inspector(
     inspector_data: CreateInspectorRequestSchema,
     files: Annotated[UploadFile, File()],
-    upload_file_service: Annotated[
-        FileUploadService, Depends(get_service(FileUploadService))
-    ],
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
     ],
+    upload_file_service: FileUploadService = Depends(FileUploadService),
 ) -> InspectorResponseSchema:
     files: list[UploadFileDTO] = await upload_file_service.upload_files(
         files=files,
