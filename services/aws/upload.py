@@ -2,6 +2,7 @@ from io import BytesIO
 
 from fastapi import UploadFile
 
+from dto import UploadFileDTO
 from exceptions import EmptyFileException, EmptyFileNameException
 from services.aws import S3Actions
 
@@ -15,7 +16,7 @@ class FileUploadService:
         self,
         files: list[UploadFile],
         prefix: str,
-    ) -> list[tuple[str, str]]:
+    ) -> list[UploadFileDTO]:
         results = []
         for file in files:
             if not file.filename:
@@ -31,5 +32,10 @@ class FileUploadService:
                 declared_content_type=file.content_type,
                 prefix=prefix,
             )
-            results.append((key, content_type))
+            results.append(
+                UploadFileDTO(
+                    key=key,
+                    file_type=content_type,
+                )
+            )
         return results
