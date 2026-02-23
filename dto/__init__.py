@@ -8,7 +8,7 @@ from .project import (
     UnassignedJobsDTO,
 )
 from .aws import UploadFileDTO
-
+from .inspector import CreateInspectorDTO
 __all__ = [
     'AccessTokenDTO',
     'CreateEquipmentDTO',
@@ -18,4 +18,5 @@ __all__ = [
     'ReadyToFinalizeDTO',
     'UnassignedJobsDTO',
     'UploadFileDTO',
+    'CreateInspectorDTO',
 ]
