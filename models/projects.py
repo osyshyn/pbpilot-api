@@ -8,6 +8,7 @@ from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
 
 if TYPE_CHECKING:
     from models.client import Client
+    from models.jobs import Job
 
 
 class BuildingTypeEnum(StrEnum):
@@ -107,6 +108,11 @@ class ProjectProperty(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     project: Mapped['Project'] = relationship(back_populates='properties')
 
     structures: Mapped[list['PropertyStructure']] = relationship(
+        back_populates='property',
+        cascade='all, delete-orphan',
+    )
+
+    jobs: Mapped[list['Job']] = relationship(
         back_populates='property',
         cascade='all, delete-orphan',
     )

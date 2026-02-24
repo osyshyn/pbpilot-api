@@ -14,7 +14,8 @@ from .company import (
     CompanyNotFoundException,
 )
 from .file import IncorrectFileSizeException, UnknownFiletypeException
-from .project import ProjectNotFoundException
+from .job import JobNotFoundException
+from .project import ProjectNotFoundException, ProjectPropertyNotFoundException
 from .user import (
     EmailAlreadyRegisteredException,
     UserHasNoPermissionPermission,
@@ -29,9 +30,11 @@ __all__ = [
     'CompanyNotFoundException',
     'EmailAlreadyRegisteredException',
     'IncorrectFileSizeException',
+    'JobNotFoundException',
     'NoFiltersException',
     'NoUpdateDataException',
     'ProjectNotFoundException',
+    'ProjectPropertyNotFoundException',
     'RefreshTokenException',
     'UnknownFiletypeException',
     'UserHasNoPermissionPermission',

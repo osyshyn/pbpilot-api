@@ -15,6 +15,7 @@ from endpoints import (
     debug_router,
     equipment_router,
     inspector_router,
+    job_router,
     main_router,
     pricing_plan_router,
     project_router,
@@ -60,6 +61,9 @@ def initialize_routers() -> APIRouter:
     )
     main_api_router.include_router(
         equipment_router, prefix='/equipment', tags=['equipment']
+    )
+    main_api_router.include_router(
+        job_router, prefix='/job', tags=['job']
     )
     if settings.ENV in {'dev', 'local'}:
         main_api_router.include_router(
