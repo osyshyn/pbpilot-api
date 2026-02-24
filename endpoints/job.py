@@ -6,7 +6,11 @@ from fastapi import APIRouter, Depends
 from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_admin_user_from_token
-from schemas import CreateJobRequestSchema, JobResponseSchema
+from schemas import (
+    CreateJobRequestSchema,
+    JobDetailsResponseSchema,
+    JobResponseSchema,
+)
 from services.job import JobService
 
 logger = logging.getLogger(__name__)
@@ -61,6 +65,19 @@ async def get_job_by_id(
     return JobResponseSchema.model_validate(job)
 
 
+@job_router.get(
+    path='/{job_id}/details',
+    summary='Get job details by id',
+    dependencies=[Depends(get_admin_user_from_token)],
+)
+async def get_job_details(
+    job_id: int,
+    job_service: Annotated[JobService, Depends(get_service(JobService))],
+) -> JobDetailsResponseSchema:
+    details_dto = await job_service.get_job_details(job_id=job_id)
+    return JobDetailsResponseSchema.model_validate(details_dto)
+
+
 @job_router.delete(
     path='/{job_id}',
     summary='Delete job by id',
@@ -72,4 +89,3 @@ async def delete_job_by_id(
 ) -> JobResponseSchema:
     job = await job_service.delete_job_by_id(job_id=job_id)
     return JobResponseSchema.model_validate(job)
-

@@ -1,5 +1,11 @@
 from .auth import AccessTokenDTO
 from .equimpent import CreateEquipmentDTO
+from .job import (
+    JobDetailsDTO,
+    JobInfoDTO,
+    JobInspectionProgressDTO,
+    JobPropertyDetailsDTO,
+)
 from .project import (
     NeedScheduledDTO,
     OngoingProjectDTO,
@@ -11,6 +17,10 @@ from .project import (
 __all__ = [
     'AccessTokenDTO',
     'CreateEquipmentDTO',
+    'JobDetailsDTO',
+    'JobInfoDTO',
+    'JobInspectionProgressDTO',
+    'JobPropertyDetailsDTO',
     'NeedScheduledDTO',
     'OngoingProjectDTO',
     'ProjectDashboardDTO',
