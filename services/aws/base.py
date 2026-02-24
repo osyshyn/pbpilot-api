@@ -25,7 +25,7 @@ class AWSActions:
         In production, uses IAM role credentials (no explicit keys needed).
 
         """
-        if settings.ENV == 'dev':
+        if settings.ENV in 'local':
             self.session = boto3.Session(
                 aws_access_key_id=settings.aws_settings.ACCESS_KEY_ID,
                 aws_secret_access_key=settings.aws_settings.SECRET_ACCESS_KEY,
