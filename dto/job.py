@@ -50,4 +50,3 @@ class JobDetailsDTO(BaseDTO):
     property: JobPropertyDetailsDTO
     progress: JobInspectionProgressDTO
     notes: str | None
-

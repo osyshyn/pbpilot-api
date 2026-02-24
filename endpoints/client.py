@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 
 from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
-from dependencies import get_admin_user_from_token, get_current_user
+from dependencies import get_current_user
 from schemas import (
     ClientResponseSchema,
     CreateClientRequestSchema,

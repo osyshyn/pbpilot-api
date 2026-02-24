@@ -1,4 +1,5 @@
 import logging
+from dataclasses import MISSING
 from dataclasses import fields as dataclass_fields
 from typing import Any, TypeVar
 
@@ -45,7 +46,7 @@ class SchemaMapper:
         missing_required = {
             f.name
             for f in dataclass_fields(dto_class)  # type: ignore[arg-type]
-            if f.default is f.default_factory is MISSING  # type: ignore[attr-defined]
+            if f.default is f.default_factory is MISSING
             and f.name not in filtered
         }
 

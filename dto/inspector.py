@@ -16,9 +16,3 @@ class CreateInspectorDTO(BaseDTO):
     expiration_date: date
     license_image_key: str
     phone_number: str | None = None
-
-
-
-
-
-

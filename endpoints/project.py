@@ -79,8 +79,9 @@ async def get_project_by_id(
         ProjectService, Depends(get_service(ProjectService))
     ],
 ) -> ProjectResponseSchema:
-    project = await project_service.get_project_by_id(project_id=project_id)
-    return ProjectResponseSchema.model_validate(project)
+    return ProjectResponseSchema.model_validate(
+        await project_service.get_project_by_id(project_id=project_id)
+    )
 
 
 @project_router.delete(
