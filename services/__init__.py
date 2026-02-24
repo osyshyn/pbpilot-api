@@ -4,6 +4,7 @@ from .company import CompanyService
 from .email import EmailService
 from .equipment import EquipmentService
 from .inspector import InspectorService
+from .job import JobService
 from .pricing_plan import PricingPlanService
 from .project import ProjectService
 from .user import UserService
@@ -15,6 +16,7 @@ __all__ = [
     'EmailService',
     'EquipmentService',
     'InspectorService',
+    'JobService',
     'PricingPlanService',
     'ProjectService',
     'UserService',

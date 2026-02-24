@@ -1,4 +1,6 @@
-from sqlalchemy import select
+from datetime import UTC, datetime
+
+from sqlalchemy import select, update
 
 from core.dao import BaseDAO
 from models import Job
@@ -34,6 +36,14 @@ class JobDAO(BaseDAO):
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def get_all(
+        self,
+        page: int,
+        limit: int,
+    ) -> tuple[list[Job], int]:
+        stmt = select(Job).where(Job.is_active == True)  # noqa: E712
+        return await self.paginate(query=stmt, page=page, limit=limit)
+
     async def get_all_by_property_id(self, property_id: int) -> list[Job]:
         stmt = select(Job).where(
             Job.property_id == property_id,
@@ -49,4 +59,14 @@ class JobDAO(BaseDAO):
         )
         result = await self._session.execute(stmt)
         return list(result.scalars().all())
+
+    async def delete_by_id(self, job_id: int) -> Job | None:
+        stmt = (
+            update(Job)
+            .where(Job.id == job_id, Job.is_active == True)  # noqa: E712
+            .values(is_active=False, deleted_at=datetime.now(UTC))
+            .returning(Job)
+        )
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
 
