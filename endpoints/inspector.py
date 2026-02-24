@@ -47,21 +47,24 @@ async def get_all_inspectors(
     dependencies=[Depends(get_admin_user_from_token)],
 )
 async def create_inspector(
-    inspector_data: CreateInspectorRequestSchema,
+    inspector_data: Annotated[
+        CreateInspectorRequestSchema,
+        Depends(CreateInspectorRequestSchema.from_form),
+    ],
     files: Annotated[UploadFile, File()],
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
     ],
     upload_file_service: FileUploadService = Depends(FileUploadService),
 ) -> InspectorResponseSchema:
-    files: list[UploadFileDTO] = await upload_file_service.upload_files(
+    uploaded_files: list[UploadFileDTO] = await upload_file_service.upload_files(
         files=files,
         prefix=INSPECTOR_LICENSE_PREFIX
     )
     return InspectorResponseSchema.model_validate(
         await inspector_service.create_new_inspector(
             inspector_schema=inspector_data,
-            license_files=files,
+            license_files=uploaded_files,
         )
     )
 

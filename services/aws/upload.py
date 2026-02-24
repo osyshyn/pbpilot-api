@@ -1,6 +1,6 @@
 from io import BytesIO
 
-from fastapi import UploadFile
+from fastapi import UploadFile, Depends
 
 from dto import UploadFileDTO
 from exceptions import EmptyFileException, EmptyFileNameException
@@ -9,8 +9,8 @@ from services.aws import S3Actions
 
 class FileUploadService:
     _EMPTY_FILE_SIZE: int = 0
-    def __init__(self, s3_actions: S3Actions) -> None:
-        self._s3 = s3_actions
+    def __init__(self) -> None:
+        self._s3: S3Actions = S3Actions()
 
     async def upload_files(
         self,

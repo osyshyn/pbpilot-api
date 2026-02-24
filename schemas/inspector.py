@@ -1,10 +1,11 @@
 from datetime import date
-from typing import Annotated
+from typing import Annotated, Self
 
 from pydantic import EmailStr, Field
 
 from core import BaseModelSchema
 from models.inspector import LicenseTypeEnum
+from fastapi import Form
 
 
 class CreateInspectorRequestSchema(BaseModelSchema):
@@ -63,6 +64,9 @@ class CreateInspectorRequestSchema(BaseModelSchema):
     issue_date: date
     expiration_date: date
 
+    @classmethod
+    def from_form(cls, data: str = Form(...)) -> 'CreateInspectorRequestSchema':
+        return cls.model_validate_json(data)
 
 class InspectorResponseSchema(BaseModelSchema):
     id: int
