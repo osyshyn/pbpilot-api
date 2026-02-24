@@ -38,6 +38,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --group dev
 
+      - name: Run mypy
+        run: uv run mypy --config-file pyproject.toml .
+
       - name: Run database migrations
         env:
           ENV: ${{ env.ENV_MODE }}

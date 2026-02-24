@@ -1,5 +1,7 @@
 from .auth import AccessTokenDTO
+from .aws import UploadFileDTO
 from .equimpent import CreateEquipmentDTO
+from .inspector import CreateInspectorDTO
 from .job import (
     JobDetailsDTO,
     JobInfoDTO,
@@ -13,11 +15,11 @@ from .project import (
     ReadyToFinalizeDTO,
     UnassignedJobsDTO,
 )
-from .aws import UploadFileDTO
-from .inspector import CreateInspectorDTO
+
 __all__ = [
     'AccessTokenDTO',
     'CreateEquipmentDTO',
+    'CreateInspectorDTO',
     'JobDetailsDTO',
     'JobInfoDTO',
     'JobInspectionProgressDTO',
@@ -28,5 +30,4 @@ __all__ = [
     'ReadyToFinalizeDTO',
     'UnassignedJobsDTO',
     'UploadFileDTO',
-    'CreateInspectorDTO',
 ]

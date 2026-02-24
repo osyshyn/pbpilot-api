@@ -13,22 +13,24 @@ from .company import (
     CompanyAlreadyExistsException,
     CompanyNotFoundException,
 )
-from .file import IncorrectFileSizeException, UnknownFiletypeException
+from .domain import (
+    BaseDomainFileException,
+    EmptyFileException,
+    EmptyFileNameException,
+    FileUploadException,
+    IncorrectFileSizeException,
+    UnknownFiletypeException,
+)
+from .file import (  # type: ignore
+    IncorrectFileSizeException,
+    UnknownFiletypeException,
+)
 from .job import JobNotFoundException
 from .project import ProjectNotFoundException, ProjectPropertyNotFoundException
 from .user import (
     EmailAlreadyRegisteredException,
     UserHasNoPermissionPermission,
     UserIsNotActiveException,
-)
-
-from .domain import (
-    BaseDomainFileException,
-    EmptyFileNameException,
-    EmptyFileException,
-    UnknownFiletypeException,
-    IncorrectFileSizeException,
-    FileUploadException,
 )
 
 __all__ = [

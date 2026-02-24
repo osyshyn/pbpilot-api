@@ -57,9 +57,10 @@ async def create_inspector(
     ],
     upload_file_service: FileUploadService = Depends(FileUploadService),
 ) -> InspectorResponseSchema:
-    uploaded_files: list[UploadFileDTO] = await upload_file_service.upload_files(
-        files=files,
-        prefix=INSPECTOR_LICENSE_PREFIX
+    uploaded_files: list[
+        UploadFileDTO
+    ] = await upload_file_service.upload_files(
+        files=files, prefix=INSPECTOR_LICENSE_PREFIX
     )
     return InspectorResponseSchema.model_validate(
         await inspector_service.create_new_inspector(
