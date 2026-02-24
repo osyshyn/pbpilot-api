@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 
 from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
-from dependencies import get_admin_user_from_token
+from dependencies import get_current_user
 from schemas import (
     CreateJobRequestSchema,
     JobDetailsResponseSchema,
@@ -21,7 +21,7 @@ job_router = APIRouter()
 @job_router.post(
     path='/',
     summary='Create job',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def create_job(
     job_data: CreateJobRequestSchema,
@@ -35,7 +35,7 @@ async def create_job(
 @job_router.get(
     path='/',
     summary='Get all jobs',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_all_jobs(
     pagination: Annotated[PaginationParams, Depends()],
@@ -55,7 +55,7 @@ async def get_all_jobs(
 @job_router.get(
     path='/{job_id}',
     summary='Get job by id',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_job_by_id(
     job_id: int,
@@ -68,7 +68,7 @@ async def get_job_by_id(
 @job_router.get(
     path='/{job_id}/details',
     summary='Get job details by id',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_job_details(
     job_id: int,
@@ -81,7 +81,7 @@ async def get_job_details(
 @job_router.delete(
     path='/{job_id}',
     summary='Delete job by id',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def delete_job_by_id(
     job_id: int,

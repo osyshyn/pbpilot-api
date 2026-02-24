@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 
 from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
-from dependencies import get_admin_user_from_token
+from dependencies import get_current_user
 from schemas import (
     AssignFreeReportsRequestSchema,
     AssignFreeReportsResponseSchema,
@@ -18,7 +18,7 @@ from services import AdminService
 logger = logging.getLogger(__name__)
 
 admin_router = APIRouter(
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 
 

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Query
 
 from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
-from dependencies import get_admin_user_from_token
+from dependencies import get_current_user
 from models import User
 from schemas.projects import (
     CreateProjectRequestSchema,
@@ -24,7 +24,7 @@ project_router = APIRouter()
     description='Search projects by name',
 )
 async def search_projects(
-    admin_user: Annotated[User, Depends(get_admin_user_from_token)],
+    admin_user: Annotated[User, Depends(get_current_user)],
     project_service: Annotated[
         ProjectService, Depends(get_service(ProjectService))
     ],
@@ -44,7 +44,7 @@ async def search_projects(
     summary='Get dashboard data',
 )
 async def get_project_dashboard(
-    admin_user: Annotated[User, Depends(get_admin_user_from_token)],
+    admin_user: Annotated[User, Depends(get_current_user)],
     project_service: Annotated[
         ProjectService, Depends(get_service(ProjectService))
     ],
@@ -56,7 +56,7 @@ async def get_project_dashboard(
 @project_router.post(
     path='/',
     summary='Create project',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def create_project(
     project_data: CreateProjectRequestSchema,
@@ -71,7 +71,7 @@ async def create_project(
 @project_router.get(
     path='/{project_id}',
     summary='Get project by id',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_project_by_id(
     project_id: int,
@@ -86,7 +86,7 @@ async def get_project_by_id(
 @project_router.delete(
     path='/{project_id}',
     summary='Delete project by id',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def delete_project_by_id(
     project_id: int,
@@ -101,7 +101,7 @@ async def delete_project_by_id(
 @project_router.get(
     path='/',
     summary='Get projects list',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_all_projects(
     pagination: Annotated[PaginationParams, Depends()],

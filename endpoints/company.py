@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from core import get_service
-from dependencies import get_admin_user_from_token
+from dependencies import get_current_user
 from schemas.company import (
     CompanyResponseSchema,
     CreateCompanyRequestSchema,
@@ -33,7 +33,7 @@ async def create_company(
 @company_router.get(
     path='/{company_id}',
     summary='Get company by id',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_company_by_id(
     company_id: int,

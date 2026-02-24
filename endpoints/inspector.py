@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, File, UploadFile
 from core import get_service
 from core.constants import INSPECTOR_LICENSE_PREFIX
 from core.pagination import PaginatedResponse, PaginationParams
-from dependencies import get_admin_user_from_token
+from dependencies import get_current_user
 from dto import UploadFileDTO
 from schemas import CreateInspectorRequestSchema, InspectorResponseSchema
 from services import InspectorService
@@ -20,7 +20,7 @@ inspector_router = APIRouter()
 @inspector_router.get(
     path='/',
     summary='Get all inspectors',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_all_inspectors(
     pagination: Annotated[PaginationParams, Depends()],
@@ -44,7 +44,7 @@ async def get_all_inspectors(
 @inspector_router.post(
     path='/',
     summary='Create a new inspector',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def create_inspector(
     inspector_data: Annotated[
@@ -72,7 +72,7 @@ async def create_inspector(
 @inspector_router.get(
     path='/{inspector_id}',
     summary='Get inspector by id',
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_company_by_id(
     inspector_id: int,
