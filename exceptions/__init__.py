@@ -22,6 +22,15 @@ from .user import (
     UserIsNotActiveException,
 )
 
+from .domain import (
+    BaseDomainFileException,
+    EmptyFileNameException,
+    EmptyFileException,
+    UnknownFiletypeException,
+    IncorrectFileSizeException,
+    FileUploadException,
+)
+
 __all__ = [
     'AccessTokenExpiredException',
     'ClientEmailAlreadyRegisteredException',
@@ -40,4 +49,11 @@ __all__ = [
     'UserHasNoPermissionPermission',
     'UserIsNotActiveException',
     'WrongCredentialsException',
+    ###
+    'BaseDomainFileException',
+    'EmptyFileNameException',
+    'EmptyFileException',
+    'UnknownFiletypeException',
+    'IncorrectFileSizeException',
+    'FileUploadException',
 ]

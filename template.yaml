@@ -22,6 +22,8 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - AmazonS3FullAccess
+        - S3CrudPolicy:
+              BucketName: pbpilot
       Environment:
         Variables:
           ENV: !Ref EnvMode

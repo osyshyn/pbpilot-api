@@ -3,6 +3,7 @@ from datetime import date
 from sqlalchemy import select
 
 from core.dao import BaseDAO
+from dto import CreateInspectorDTO
 from models import Inspector
 from models.inspector import LicenseTypeEnum
 
@@ -11,26 +12,20 @@ class InspectorDAO(BaseDAO):
     """DAO for User model."""
 
     async def create(
-        self,
-        *,
-        name: str,
-        surname: str,
-        email: str,
-        phone_number: str | None = None,
-        license_number: str,
-        licence_type: LicenseTypeEnum,
-        issue_date: date,
-        expiration_date: date,
+            self,
+            *,
+            inspector_data: CreateInspectorDTO,
     ) -> Inspector:
         inspector = Inspector(
-            name=name,
-            surname=surname,
-            email=email,
-            phone_number=phone_number,
-            license_number=license_number,
-            licence_type=licence_type,
-            issue_date=issue_date,
-            expiration_date=expiration_date,
+            name=inspector_data.name,
+            surname=inspector_data.surname,
+            email=inspector_data.email,
+            phone_number=inspector_data.phone_number,
+            license_number=inspector_data.license_number,
+            licence_type=inspector_data.licence_type,
+            issue_date=inspector_data.issue_date,
+            expiration_date=inspector_data.expiration_date,
+            license_image_key=inspector_data.license_image_key,
         )
         self._session.add(inspector)
         await self._session.flush()
@@ -38,7 +33,7 @@ class InspectorDAO(BaseDAO):
         return inspector
 
     async def get_all(
-        self, page: int, limit: int
+            self, page: int, limit: int
     ) -> tuple[list[Inspector], int]:
         query = select(Inspector)
         return await self.paginate(query=query, page=page, limit=limit)

@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core import BaseService
 from core.pagination import PaginationParams
 from dao import InspectorDAO
+from dto import UploadFileDTO, CreateInspectorDTO
 from exceptions import EmailAlreadyRegisteredException
 from exceptions.user import UserNotFoundByIdException
 from models import Inspector
@@ -28,18 +29,24 @@ class InspectorService(BaseService):
 
     async def create_new_inspector(
         self,
-        inspector_data: CreateInspectorRequestSchema,
+        license_files: list[UploadFileDTO] | UploadFileDTO,
+        inspector_schema: CreateInspectorRequestSchema,
     ) -> Inspector:
+        license_file: UploadFileDTO = license_files if isinstance(license_files, UploadFileDTO) else license_files[0]
         try:
+            inspector_data: CreateInspectorDTO = CreateInspectorDTO( #TODO: User mapper here
+                name=inspector_schema.name,
+                surname=inspector_schema.surname,
+                email=inspector_schema.email,
+                phone_number=inspector_schema.phone_number,
+                license_number=inspector_schema.license_number,
+                licence_type=inspector_schema.licence_type,
+                issue_date=inspector_schema.issue_date,
+                expiration_date=inspector_schema.expiration_date,
+                license_image_key=license_file.key,
+            )
             inspector: Inspector = await self._inspector_dao.create(
-                name=inspector_data.name,
-                surname=inspector_data.surname,
-                email=inspector_data.email,
-                phone_number=inspector_data.phone_number,
-                license_number=inspector_data.license_number,
-                licence_type=inspector_data.licence_type,
-                issue_date=inspector_data.issue_date,
-                expiration_date=inspector_data.expiration_date,
+                inspector_data=inspector_data
             )
         except IntegrityError:
             raise EmailAlreadyRegisteredException from None
