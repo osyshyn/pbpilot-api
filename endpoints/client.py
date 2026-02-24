@@ -16,7 +16,7 @@ from services.client import ClientService
 logger = logging.getLogger(__name__)
 
 client_router = APIRouter(
-    dependencies=[Depends(get_admin_user_from_token)],
+    dependencies=[Depends(get_manager_user_from_token)],
 )
 
 
