@@ -13,4 +13,3 @@ class JobNotFoundException(JobException):
             status_code=404,
             detail='Job was not found by given id.',
         )
-

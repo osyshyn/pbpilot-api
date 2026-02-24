@@ -62,9 +62,7 @@ def initialize_routers() -> APIRouter:
     main_api_router.include_router(
         equipment_router, prefix='/equipment', tags=['equipment']
     )
-    main_api_router.include_router(
-        job_router, prefix='/job', tags=['job']
-    )
+    main_api_router.include_router(job_router, prefix='/job', tags=['job'])
     if settings.ENV in {'dev', 'local'}:
         main_api_router.include_router(
             debug_router, prefix='/debug', tags=['debug']

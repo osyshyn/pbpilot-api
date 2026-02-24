@@ -1,9 +1,10 @@
 from datetime import UTC, datetime
 
 from sqlalchemy import select, update
+from sqlalchemy.orm import selectinload
 
 from core.dao import BaseDAO
-from models import Job
+from models import Job, Project, ProjectProperty
 
 
 class JobDAO(BaseDAO):
@@ -32,6 +33,23 @@ class JobDAO(BaseDAO):
         stmt = select(Job).where(
             Job.id == job_id,
             Job.is_active == True,  # noqa: E712
+        )
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def get_by_id_with_relations(self, job_id: int) -> Job | None:
+        stmt = (
+            select(Job)
+            .where(
+                Job.id == job_id,
+                Job.is_active == True,  # noqa: E712
+            )
+            .options(
+                selectinload(Job.property)
+                .selectinload(ProjectProperty.project)
+                .selectinload(Project.client),
+                selectinload(Job.inspector),
+            )
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
@@ -69,4 +87,3 @@ class JobDAO(BaseDAO):
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
-

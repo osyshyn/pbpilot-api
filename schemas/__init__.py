@@ -16,7 +16,11 @@ from .company import (
 )
 from .equipment import CreateEquipmentRequestSchema, EquipmentResponseSchema
 from .inspector import CreateInspectorRequestSchema, InspectorResponseSchema
-from .jobs import CreateJobRequestSchema, JobResponseSchema
+from .jobs import (
+    CreateJobRequestSchema,
+    JobDetailsResponseSchema,
+    JobResponseSchema,
+)
 from .main import HealthCheckResponseSchema
 from .pricing_plan import (
     PricingPlanListResponseSchema,
@@ -46,6 +50,7 @@ __all__ = [
     'EquipmentResponseSchema',
     'HealthCheckResponseSchema',
     'InspectorResponseSchema',
+    'JobDetailsResponseSchema',
     'JobResponseSchema',
     'LogInRequestSchema',
     'PricingPlanListResponseSchema',
