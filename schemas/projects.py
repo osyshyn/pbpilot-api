@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import Annotated, Self
 
-from pydantic import Field, model_validator
+from pydantic import EmailStr, Field, model_validator
 
-from core import BaseModelSchema
+from core import BaseModelSchema, BaseUpdateSchema
 from models.projects import BuildingTypeEnum, ProjectStatusEnum
 
 
@@ -143,6 +143,39 @@ class CreateProjectRequestSchema(BaseModelSchema):
     properties: Annotated[
         list[CreatePropertyRequestSchema],
         Field(description='List of properties', min_length=1),
+    ]
+
+
+class UpdateProjectRequestSchema(BaseUpdateSchema):
+    """Schema for updating project and its contact information."""
+
+    project_name: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Project name',
+            examples=['Updated project name'],
+            min_length=1,
+            max_length=255,
+        ),
+    ]
+    email: Annotated[
+        EmailStr | None,
+        Field(
+            default=None,
+            description='Contact email for the project',
+            examples=['project_contact@example.com'],
+        ),
+    ]
+    phone_number: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Contact phone number for the project',
+            examples=['+12345678901'],
+            min_length=3,
+            max_length=128,
+        ),
     ]
 
 

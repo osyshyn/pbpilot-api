@@ -30,6 +30,7 @@ from .projects import (
     CreateProjectRequestSchema,
     ProjectDashboardResponseSchema,
     ProjectResponseSchema,
+    UpdateProjectRequestSchema,
 )
 from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
@@ -62,5 +63,6 @@ __all__ = [
     'SignUpResponseSchema',
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
+    'UpdateProjectRequestSchema',
     'UserResponseSchema',
 ]

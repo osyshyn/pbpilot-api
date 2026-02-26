@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from typing import Any
 
 from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
@@ -78,6 +79,22 @@ class ProjectDAO(BaseDAO):
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def update_by_id(
+        self,
+        project_id: int,
+        update_data: dict[str, Any],
+    ) -> Project | None:
+        """Update project by id."""
+        project = await self.get_by_id_with_relations(project_id)
+        if not project:
+            return None
+        for key, value in update_data.items():
+            if hasattr(project, key):
+                setattr(project, key, value)
+        await self._session.flush()
+        await self._session.refresh(project)
+        return project
 
     async def delete_by_id(self, project_id: int) -> Project | None:
         """Soft delete project by id."""
