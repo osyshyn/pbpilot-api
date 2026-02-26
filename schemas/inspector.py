@@ -76,3 +76,44 @@ class InspectorResponseSchema(BaseModelSchema):
     expiration_date: date
     email: EmailStr
     phone_number: str
+
+
+class _InspectorListWithAmountResponseSchema(BaseModelSchema):
+    amount: Annotated[
+        int,
+        Field(
+            description='Total amount',
+            examples=[5],
+        ),
+    ]
+    inspector_names: Annotated[
+        list[str],
+        Field(
+            description='Full names of inspectors',
+            examples=[['John Doe', 'Jane Smith']],
+        ),
+    ]
+
+
+class _ReportsPendingResponseSchema(BaseModelSchema):
+    amount: Annotated[
+        int,
+        Field(
+            description='Number of pending reports',
+            examples=[3],
+        ),
+    ]
+    report_names: Annotated[
+        list[str],
+        Field(
+            description='Names of pending reports',
+            examples=[['Report 1', 'Report 2']],
+        ),
+    ]
+
+
+class InspectorDashboardResponseSchema(BaseModelSchema):
+    total_inspectors: _InspectorListWithAmountResponseSchema
+    on_site_today: _InspectorListWithAmountResponseSchema
+    available_now: _InspectorListWithAmountResponseSchema
+    reports_pending: _ReportsPendingResponseSchema
