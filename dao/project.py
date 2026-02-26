@@ -103,6 +103,7 @@ class ProjectDAO(BaseDAO):
         total_units = sum(prop.number_of_units for prop in project.properties)
 
         project_information = ProjectInformationDTO(
+            project_name=project.project_name,
             total_properties=total_properties,
             total_units=total_units,
             created_date=project.created_at,

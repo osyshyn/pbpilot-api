@@ -40,6 +40,7 @@ class ProjectDashboardDTO(BaseDTO):
 
 @dataclass(slots=True)
 class ProjectInformationDTO(BaseDTO):
+    project_name: str
     total_properties: int
     total_units: int
     created_date: datetime
