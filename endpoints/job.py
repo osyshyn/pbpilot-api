@@ -10,6 +10,7 @@ from schemas import (
     AssignInspectorRequestSchema,
     CreateJobRequestSchema,
     JobDetailsResponseSchema,
+    JobListItemResponseSchema,
     JobResponseSchema,
 )
 from services.job import JobService
@@ -62,7 +63,7 @@ async def get_job_by_id(
     job_id: int,
     job_service: Annotated[JobService, Depends(get_service(JobService))],
 ) -> JobResponseSchema:
-    job = await job_service.get_job_details(job_id=job_id)
+    job = await job_service.get_job_by_id(job_id=job_id)
     return JobResponseSchema.model_validate(job)
 
 
@@ -94,3 +95,51 @@ async def get_job_details(
 ) -> JobDetailsResponseSchema:
     details_dto = await job_service.get_job_details(job_id=job_id)
     return JobDetailsResponseSchema.model_validate(details_dto)
+
+
+@job_router.get(
+    path='/by-project/{project_id}',
+    summary='Get jobs by project id',
+    dependencies=[Depends(get_current_user)],
+)
+async def get_jobs_by_project(
+    project_id: int,
+    pagination: Annotated[PaginationParams, Depends()],
+    job_service: Annotated[JobService, Depends(get_service(JobService))],
+) -> PaginatedResponse[JobListItemResponseSchema]:
+    items, total = await job_service.get_jobs_by_project(
+        project_id=project_id,
+        pagination=pagination,
+    )
+    pages = (total + pagination.size - 1) // pagination.size
+    return PaginatedResponse(
+        items=[JobListItemResponseSchema.model_validate(item) for item in items],
+        total=total,
+        page=pagination.page,
+        size=pagination.size,
+        pages=pages,
+    )
+
+
+@job_router.get(
+    path='/by-inspector/{inspector_id}',
+    summary='Get jobs by inspector id',
+    dependencies=[Depends(get_current_user)],
+)
+async def get_jobs_by_inspector(
+    inspector_id: int,
+    pagination: Annotated[PaginationParams, Depends()],
+    job_service: Annotated[JobService, Depends(get_service(JobService))],
+) -> PaginatedResponse[JobListItemResponseSchema]:
+    items, total = await job_service.get_jobs_by_inspector(
+        inspector_id=inspector_id,
+        pagination=pagination,
+    )
+    pages = (total + pagination.size - 1) // pagination.size
+    return PaginatedResponse(
+        items=[JobListItemResponseSchema.model_validate(item) for item in items],
+        total=total,
+        page=pagination.page,
+        size=pagination.size,
+        pages=pages,
+    )
