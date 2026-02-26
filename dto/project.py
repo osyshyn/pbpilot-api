@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 from core.dto import BaseDTO
 
@@ -35,3 +36,39 @@ class ProjectDashboardDTO(BaseDTO):
     need_scheduling: NeedScheduledDTO
     unassigned_jobs: UnassignedJobsDTO
     ready_for_finalize: ReadyToFinalizeDTO
+
+
+@dataclass(slots=True)
+class ProjectInformationDTO(BaseDTO):
+    total_properties: int
+    total_units: int
+    created_date: datetime
+    last_updated: datetime
+
+
+@dataclass(slots=True)
+class ProjectContactDetailsDTO(BaseDTO):
+    client_fullname: str
+    client_phone: str | None
+    client_email: str
+
+
+@dataclass(slots=True)
+class ProjectLabResultDTO(BaseDTO):
+    laboratory_name: str
+    match_status: str
+    status: str
+
+
+@dataclass(slots=True)
+class ProjectReportDTO(BaseDTO):
+    report_name: str
+    creation_date: datetime
+
+
+@dataclass(slots=True)
+class ProjectDetailsDTO(BaseDTO):
+    project_information: ProjectInformationDTO
+    contact_details: ProjectContactDetailsDTO
+    lab_results: list[ProjectLabResultDTO]
+    reports: list[ProjectReportDTO]
