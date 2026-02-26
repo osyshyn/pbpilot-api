@@ -16,7 +16,10 @@ from exceptions import (
 )
 from models import Project
 from models.projects import ProjectStatusEnum
-from schemas.projects import CreateProjectRequestSchema, UpdateProjectRequestSchema
+from schemas.projects import (
+    CreateProjectRequestSchema,
+    UpdateProjectRequestSchema,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -71,12 +74,16 @@ class ProjectService(BaseService):
         client_update_fields: dict[str, Any] = {}
 
         if 'project_name' in update_data:
-            project_update_fields['project_name'] = update_data.pop('project_name')
+            project_update_fields['project_name'] = update_data.pop(
+                'project_name'
+            )
 
         if 'email' in update_data:
             client_update_fields['email'] = update_data.pop('email')
         if 'phone_number' in update_data:
-            client_update_fields['phone_number'] = update_data.pop('phone_number')
+            client_update_fields['phone_number'] = update_data.pop(
+                'phone_number'
+            )
 
         project = None
         if project_update_fields:
@@ -87,7 +94,9 @@ class ProjectService(BaseService):
             if not project:
                 raise ProjectNotFoundException
         else:
-            project = await self._project_dao.get_by_id_with_relations(project_id)
+            project = await self._project_dao.get_by_id_with_relations(
+                project_id
+            )
             if not project:
                 raise ProjectNotFoundException
 
@@ -103,7 +112,9 @@ class ProjectService(BaseService):
                 raise ClientNotFoundException
 
         await self._session.commit()
-        updated_project = await self._project_dao.get_by_id_with_relations(project_id)
+        updated_project = await self._project_dao.get_by_id_with_relations(
+            project_id
+        )
         if not updated_project:
             raise ProjectNotFoundException
         return updated_project

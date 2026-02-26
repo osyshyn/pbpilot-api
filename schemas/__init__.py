@@ -58,11 +58,11 @@ __all__ = [
     'PricingPlanResponseSchema',
     'ProjectDashboardResponseSchema',
     'ProjectResponseSchema',
-    'UpdateProjectRequestSchema',
     'RefreshTokenRequestSchema',
     'SignUpRequestSchema',
     'SignUpResponseSchema',
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
+    'UpdateProjectRequestSchema',
     'UserResponseSchema',
 ]
