@@ -43,6 +43,20 @@ class CreateJobRequestSchema(BaseModelSchema):
     ]
 
 
+class AssignInspectorRequestSchema(BaseModelSchema):
+    """Schema for assigning or unassigning inspector to a job."""
+
+    inspector_id: Annotated[
+        int | None,
+        Field(
+            default=None,
+            description='ID of assigned inspector (nullable to unassign)',
+            gt=0,
+            examples=[1],
+        ),
+    ]
+
+
 class JobResponseSchema(BaseModelSchema):
     id: int
     property_id: int

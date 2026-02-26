@@ -20,7 +20,7 @@ from exceptions import (
 from exceptions.user import UserNotFoundByIdException
 from models import Job
 from models.projects import ProjectProperty
-from schemas import CreateJobRequestSchema
+from schemas import AssignInspectorRequestSchema, CreateJobRequestSchema
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +58,32 @@ class JobService(BaseService):
             inspection_type=data.inspection_type.value,
             notes=data.notes,
         )
+        await self._session.commit()
+        return job
+
+    async def assign_inspector(
+        self,
+        job_id: int,
+        inspector_data: AssignInspectorRequestSchema,
+    ) -> Job:
+        job = await self._job_dao.get_by_id(job_id)
+        if not job:
+            raise JobNotFoundException
+
+        inspector_id = inspector_data.inspector_id
+
+        if inspector_id is not None:
+            inspector = await self._inspector_dao.get_by_id(inspector_id)
+            if not inspector or not inspector.is_active:
+                raise UserNotFoundByIdException
+
+        job = await self._job_dao.update_by_id(
+            job_id=job_id,
+            update_data={'inspector_id': inspector_id},
+        )
+        if not job:
+            raise JobNotFoundException
+
         await self._session.commit()
         return job
 

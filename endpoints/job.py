@@ -7,6 +7,7 @@ from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_current_user
 from schemas import (
+    AssignInspectorRequestSchema,
     CreateJobRequestSchema,
     JobDetailsResponseSchema,
     JobResponseSchema,
@@ -62,6 +63,23 @@ async def get_job_by_id(
     job_service: Annotated[JobService, Depends(get_service(JobService))],
 ) -> JobResponseSchema:
     job = await job_service.get_job_by_id(job_id=job_id)
+    return JobResponseSchema.model_validate(job)
+
+
+@job_router.patch(
+    path='/{job_id}/assign_inspector',
+    summary='Assign inspector to job',
+    dependencies=[Depends(get_current_user)],
+)
+async def assign_inspector_to_job(
+    job_id: int,
+    inspector_data: AssignInspectorRequestSchema,
+    job_service: Annotated[JobService, Depends(get_service(JobService))],
+) -> JobResponseSchema:
+    job = await job_service.assign_inspector(
+        job_id=job_id,
+        inspector_data=inspector_data,
+    )
     return JobResponseSchema.model_validate(job)
 
 

@@ -17,6 +17,7 @@ from .company import (
 from .equipment import CreateEquipmentRequestSchema, EquipmentResponseSchema
 from .inspector import CreateInspectorRequestSchema, InspectorResponseSchema
 from .jobs import (
+    AssignInspectorRequestSchema,
     CreateJobRequestSchema,
     JobDetailsResponseSchema,
     JobResponseSchema,
@@ -46,6 +47,7 @@ __all__ = [
     'CreateCompanyScheduleItemRequestSchema',
     'CreateEquipmentRequestSchema',
     'CreateInspectorRequestSchema',
+    'AssignInspectorRequestSchema',
     'CreateJobRequestSchema',
     'CreateProjectRequestSchema',
     'CreateUserByAdminRequestSchema',
