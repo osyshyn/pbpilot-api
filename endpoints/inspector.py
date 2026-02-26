@@ -13,6 +13,7 @@ from schemas import (
     CreateInspectorRequestSchema,
     InspectorDashboardResponseSchema,
     InspectorResponseSchema,
+    UpdateInspectorRequestSchema,
 )
 from services import InspectorService
 from services.aws import FileUploadService
@@ -105,4 +106,24 @@ async def get_company_by_id(
 ) -> InspectorResponseSchema:
     return InspectorResponseSchema.model_validate(
         await inspector_service.get_inspector_by_id(inspector_id=inspector_id)
+    )
+
+
+@inspector_router.patch(
+    path='/{inspector_id}',
+    summary='Update inspector',
+    dependencies=[Depends(get_current_user)],
+)
+async def update_inspector(
+    inspector_id: int,
+    inspector_update_data: UpdateInspectorRequestSchema,
+    inspector_service: Annotated[
+        InspectorService, Depends(get_service(InspectorService))
+    ],
+) -> InspectorResponseSchema:
+    return InspectorResponseSchema.model_validate(
+        await inspector_service.update_inspector(
+            inspector_id=inspector_id,
+            inspector_update_data=inspector_update_data,
+        )
     )

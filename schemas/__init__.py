@@ -19,6 +19,7 @@ from .inspector import (
     CreateInspectorRequestSchema,
     InspectorDashboardResponseSchema,
     InspectorResponseSchema,
+    UpdateInspectorRequestSchema,
 )
 from .jobs import (
     AssignInspectorRequestSchema,
@@ -74,6 +75,7 @@ __all__ = [
     'SignUpResponseSchema',
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
+    'UpdateInspectorRequestSchema',
     'UpdateProjectRequestSchema',
     'UserResponseSchema',
 ]
