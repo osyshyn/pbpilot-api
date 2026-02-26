@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core import BaseService
 from core.pagination import PaginationParams
 from dao import InspectorDAO
-from dto import CreateInspectorDTO, UploadFileDTO
+from dto import CreateInspectorDTO, InspectorDashboardDTO, UploadFileDTO
 from exceptions import EmailAlreadyRegisteredException
 from exceptions.user import UserNotFoundByIdException
 from models import Inspector
@@ -73,3 +73,9 @@ class InspectorService(BaseService):
         return await self._inspector_dao.get_all(
             page=pagination.page, limit=pagination.size
         )
+
+    async def get_inspectors_dashboard(
+        self,
+        user_id: int,
+    ) -> InspectorDashboardDTO:
+        return await self._inspector_dao.get_inspectors_dashboard(user_id=user_id)

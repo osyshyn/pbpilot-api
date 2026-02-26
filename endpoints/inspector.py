@@ -8,7 +8,12 @@ from core.constants import INSPECTOR_LICENSE_PREFIX
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_current_user
 from dto import UploadFileDTO
-from schemas import CreateInspectorRequestSchema, InspectorResponseSchema
+from models import User
+from schemas import (
+    CreateInspectorRequestSchema,
+    InspectorDashboardResponseSchema,
+    InspectorResponseSchema,
+)
 from services import InspectorService
 from services.aws import FileUploadService
 
@@ -68,6 +73,21 @@ async def create_inspector(
             license_files=uploaded_files,
         )
     )
+
+
+@inspector_router.get(
+    path='/dashboard',
+    summary='Get inspector dashboard data',
+    dependencies=[Depends(get_current_user)],
+)
+async def get_inspector_dashboard(
+    admin_user: Annotated[User, Depends(get_current_user)],
+    inspector_service: Annotated[
+        InspectorService, Depends(get_service(InspectorService))
+    ],
+) -> InspectorDashboardResponseSchema:
+    dashboard_dto = await inspector_service.get_inspectors_dashboard(admin_user.id)
+    return InspectorDashboardResponseSchema.model_validate(dashboard_dto)
 
 
 @inspector_router.get(

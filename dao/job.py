@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from typing import Any
 
 from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
@@ -36,6 +37,22 @@ class JobDAO(BaseDAO):
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def update_by_id(
+        self,
+        job_id: int,
+        update_data: dict[str, Any],
+    ) -> Job | None:
+        """Update job by id."""
+        job = await self.get_by_id(job_id)
+        if not job:
+            return None
+        for key, value in update_data.items():
+            if hasattr(job, key):
+                setattr(job, key, value)
+        await self._session.flush()
+        await self._session.refresh(job)
+        return job
 
     async def get_by_id_with_relations(self, job_id: int) -> Job | None:
         stmt = (
