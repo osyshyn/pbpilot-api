@@ -100,9 +100,7 @@ class ProjectDAO(BaseDAO):
             return None
 
         total_properties = len(project.properties)
-        total_units = sum(
-            prop.number_of_units for prop in project.properties
-        )
+        total_units = sum(prop.number_of_units for prop in project.properties)
 
         project_information = ProjectInformationDTO(
             total_properties=total_properties,

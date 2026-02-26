@@ -113,7 +113,9 @@ async def get_jobs_by_project(
     )
     pages = (total + pagination.size - 1) // pagination.size
     return PaginatedResponse(
-        items=[JobListItemResponseSchema.model_validate(item) for item in items],
+        items=[
+            JobListItemResponseSchema.model_validate(item) for item in items
+        ],
         total=total,
         page=pagination.page,
         size=pagination.size,
@@ -137,7 +139,9 @@ async def get_jobs_by_inspector(
     )
     pages = (total + pagination.size - 1) // pagination.size
     return PaginatedResponse(
-        items=[JobListItemResponseSchema.model_validate(item) for item in items],
+        items=[
+            JobListItemResponseSchema.model_validate(item) for item in items
+        ],
         total=total,
         page=pagination.page,
         size=pagination.size,

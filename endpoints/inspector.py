@@ -86,7 +86,9 @@ async def get_inspector_dashboard(
         InspectorService, Depends(get_service(InspectorService))
     ],
 ) -> InspectorDashboardResponseSchema:
-    dashboard_dto = await inspector_service.get_inspectors_dashboard(admin_user.id)
+    dashboard_dto = await inspector_service.get_inspectors_dashboard(
+        admin_user.id
+    )
     return InspectorDashboardResponseSchema.model_validate(dashboard_dto)
 
 
