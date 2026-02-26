@@ -62,7 +62,7 @@ async def get_job_by_id(
     job_id: int,
     job_service: Annotated[JobService, Depends(get_service(JobService))],
 ) -> JobResponseSchema:
-    job = await job_service.get_job_by_id(job_id=job_id)
+    job = await job_service.get_job_details(job_id=job_id)
     return JobResponseSchema.model_validate(job)
 
 
@@ -94,16 +94,3 @@ async def get_job_details(
 ) -> JobDetailsResponseSchema:
     details_dto = await job_service.get_job_details(job_id=job_id)
     return JobDetailsResponseSchema.model_validate(details_dto)
-
-
-@job_router.delete(
-    path='/{job_id}',
-    summary='Delete job by id',
-    dependencies=[Depends(get_current_user)],
-)
-async def delete_job_by_id(
-    job_id: int,
-    job_service: Annotated[JobService, Depends(get_service(JobService))],
-) -> JobResponseSchema:
-    job = await job_service.delete_job_by_id(job_id=job_id)
-    return JobResponseSchema.model_validate(job)
