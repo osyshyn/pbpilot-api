@@ -78,4 +78,6 @@ class InspectorService(BaseService):
         self,
         user_id: int,
     ) -> InspectorDashboardDTO:
-        return await self._inspector_dao.get_inspectors_dashboard(user_id=user_id)
+        return await self._inspector_dao.get_inspectors_dashboard(
+            user_id=user_id
+        )

@@ -105,3 +105,13 @@ class JobDetailsResponseSchema(BaseModelSchema):
     property: JobPropertyDetailsResponseSchema
     progress: JobInspectionProgressResponseSchema
     notes: str | None
+
+
+class JobListItemResponseSchema(BaseModelSchema):
+    property_address: str
+    status: ProjectStatusEnum
+    job_type: InspectionTypeEnum
+    inspector: str | None
+    units: int
+    progress: int
+    date_created: datetime

@@ -95,6 +95,49 @@ class JobDAO(BaseDAO):
         result = await self._session.execute(stmt)
         return list(result.scalars().all())
 
+    async def get_by_project_id(
+        self,
+        project_id: int,
+        page: int,
+        limit: int,
+    ) -> tuple[list[Job], int]:
+        stmt = (
+            select(Job)
+            .join(ProjectProperty, Job.property_id == ProjectProperty.id)
+            .where(
+                ProjectProperty.project_id == project_id,
+                Job.is_active == True,  # noqa: E712
+            )
+            .options(
+                selectinload(Job.property).selectinload(
+                    ProjectProperty.project
+                ),
+                selectinload(Job.inspector),
+            )
+        )
+        return await self.paginate(query=stmt, page=page, limit=limit)
+
+    async def get_by_inspector_id_paginated(
+        self,
+        inspector_id: int,
+        page: int,
+        limit: int,
+    ) -> tuple[list[Job], int]:
+        stmt = (
+            select(Job)
+            .where(
+                Job.inspector_id == inspector_id,
+                Job.is_active == True,  # noqa: E712
+            )
+            .options(
+                selectinload(Job.property).selectinload(
+                    ProjectProperty.project
+                ),
+                selectinload(Job.inspector),
+            )
+        )
+        return await self.paginate(query=stmt, page=page, limit=limit)
+
     async def delete_by_id(self, job_id: int) -> Job | None:
         stmt = (
             update(Job)

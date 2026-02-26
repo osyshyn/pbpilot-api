@@ -24,6 +24,7 @@ from .jobs import (
     AssignInspectorRequestSchema,
     CreateJobRequestSchema,
     JobDetailsResponseSchema,
+    JobListItemResponseSchema,
     JobResponseSchema,
 )
 from .main import HealthCheckResponseSchema
@@ -44,6 +45,7 @@ from .user import UserResponseSchema
 __all__ = [
     'AssignFreeReportsRequestSchema',
     'AssignFreeReportsResponseSchema',
+    'AssignInspectorRequestSchema',
     'ClientResponseSchema',
     'CompanyResponseSchema',
     'CreateClientRequestSchema',
@@ -51,15 +53,15 @@ __all__ = [
     'CreateCompanyScheduleItemRequestSchema',
     'CreateEquipmentRequestSchema',
     'CreateInspectorRequestSchema',
-    'InspectorDashboardResponseSchema',
-    'AssignInspectorRequestSchema',
     'CreateJobRequestSchema',
     'CreateProjectRequestSchema',
     'CreateUserByAdminRequestSchema',
     'EquipmentResponseSchema',
     'HealthCheckResponseSchema',
+    'InspectorDashboardResponseSchema',
     'InspectorResponseSchema',
     'JobDetailsResponseSchema',
+    'JobListItemResponseSchema',
     'JobResponseSchema',
     'LogInRequestSchema',
     'PricingPlanListResponseSchema',

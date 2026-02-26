@@ -10,6 +10,7 @@ from dto import (
     JobDetailsDTO,
     JobInfoDTO,
     JobInspectionProgressDTO,
+    JobListItemDTO,
     JobPropertyDetailsDTO,
 )
 from exceptions import (
@@ -191,3 +192,117 @@ class JobService(BaseService):
             progress=inspection_progress,
             notes=job.notes,
         )
+
+    async def get_jobs_by_project(
+        self,
+        project_id: int,
+        pagination: PaginationParams,
+    ) -> tuple[list[JobListItemDTO], int]:
+        jobs, total = await self._job_dao.get_by_project_id(
+            project_id=project_id,
+            page=pagination.page,
+            limit=pagination.size,
+        )
+
+        items: list[JobListItemDTO] = []
+        for job in jobs:
+            project_property = job.property
+            if not project_property:
+                continue
+            project = project_property.project
+            if not project:
+                continue
+
+            inspector = job.inspector
+            inspector_name = inspector.full_name if inspector else None
+
+            job_created = True
+            inspection_scheduled = False
+            inspection_completed = False
+            lab_results_received = False
+            invoice_sent_to_client = False
+            report_generated = False
+            report_sent_to_client = False
+
+            steps = [
+                job_created,
+                inspection_scheduled,
+                inspection_completed,
+                lab_results_received,
+                invoice_sent_to_client,
+                report_generated,
+                report_sent_to_client,
+            ]
+            completed_steps = sum(1 for step in steps if step)
+            progress_percent = int(completed_steps / len(steps) * 100)
+
+            items.append(
+                JobListItemDTO(
+                    property_address=project_property.address,
+                    status=project.status,
+                    job_type=job.inspection_type,
+                    inspector=inspector_name,
+                    units=project_property.number_of_units,
+                    progress=progress_percent,
+                    date_created=job.created_at,
+                )
+            )
+
+        return items, total
+
+    async def get_jobs_by_inspector(
+        self,
+        inspector_id: int,
+        pagination: PaginationParams,
+    ) -> tuple[list[JobListItemDTO], int]:
+        jobs, total = await self._job_dao.get_by_inspector_id_paginated(
+            inspector_id=inspector_id,
+            page=pagination.page,
+            limit=pagination.size,
+        )
+
+        items: list[JobListItemDTO] = []
+        for job in jobs:
+            project_property = job.property
+            if not project_property:
+                continue
+            project = project_property.project
+            if not project:
+                continue
+
+            inspector = job.inspector
+            inspector_name = inspector.full_name if inspector else None
+
+            job_created = True
+            inspection_scheduled = False
+            inspection_completed = False
+            lab_results_received = False
+            invoice_sent_to_client = False
+            report_generated = False
+            report_sent_to_client = False
+
+            steps = [
+                job_created,
+                inspection_scheduled,
+                inspection_completed,
+                lab_results_received,
+                invoice_sent_to_client,
+                report_generated,
+                report_sent_to_client,
+            ]
+            completed_steps = sum(1 for step in steps if step)
+            progress_percent = int(completed_steps / len(steps) * 100)
+
+            items.append(
+                JobListItemDTO(
+                    property_address=project_property.address,
+                    status=project.status,
+                    job_type=job.inspection_type,
+                    inspector=inspector_name,
+                    units=project_property.number_of_units,
+                    progress=progress_percent,
+                    date_created=job.created_at,
+                )
+            )
+
+        return items, total

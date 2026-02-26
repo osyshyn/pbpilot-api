@@ -122,7 +122,9 @@ class ProjectService(BaseService):
 
     async def get_project_by_id(self, project_id: int) -> ProjectDetailsDTO:
         """Get aggregated project details for project view."""
-        project_details = await self._project_dao.get_project_details(project_id)
+        project_details = await self._project_dao.get_project_details(
+            project_id
+        )
         if not project_details:
             raise ProjectNotFoundException
         return project_details

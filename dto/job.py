@@ -50,3 +50,14 @@ class JobDetailsDTO(BaseDTO):
     property: JobPropertyDetailsDTO
     progress: JobInspectionProgressDTO
     notes: str | None
+
+
+@dataclass(slots=True)
+class JobListItemDTO(BaseDTO):
+    property_address: str
+    status: ProjectStatusEnum
+    job_type: InspectionTypeEnum
+    inspector: str | None
+    units: int
+    progress: int
+    date_created: datetime
