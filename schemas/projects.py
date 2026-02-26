@@ -217,6 +217,7 @@ class ProjectResponseSchema(BaseModelSchema):
 class ProjectInformationResponseSchema(BaseModelSchema):
     """Aggregated information about the project."""
 
+    project_name: str
     total_properties: int
     total_units: int
     created_date: datetime
