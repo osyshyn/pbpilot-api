@@ -1,5 +1,7 @@
 import logging
+from typing import Any
 
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import BaseService
@@ -7,10 +9,14 @@ from dao import ClientDAO, ProjectDAO
 from dto import (
     ProjectDashboardDTO,
 )
-from exceptions import ClientNotFoundException, ProjectNotFoundException
+from exceptions import (
+    ClientEmailAlreadyRegisteredException,
+    ClientNotFoundException,
+    ProjectNotFoundException,
+)
 from models import Project
 from models.projects import ProjectStatusEnum
-from schemas.projects import CreateProjectRequestSchema
+from schemas.projects import CreateProjectRequestSchema, UpdateProjectRequestSchema
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +58,55 @@ class ProjectService(BaseService):
         if not project:
             raise ProjectNotFoundException
         return project
+
+    async def update_project(
+        self,
+        project_id: int,
+        project_update_data: UpdateProjectRequestSchema,
+    ) -> Project:
+        """Update project name and related contact data."""
+        update_data = project_update_data.model_dump(exclude_unset=True)
+
+        project_update_fields: dict[str, Any] = {}
+        client_update_fields: dict[str, Any] = {}
+
+        if 'project_name' in update_data:
+            project_update_fields['project_name'] = update_data.pop('project_name')
+
+        if 'email' in update_data:
+            client_update_fields['email'] = update_data.pop('email')
+        if 'phone_number' in update_data:
+            client_update_fields['phone_number'] = update_data.pop('phone_number')
+
+        project = None
+        if project_update_fields:
+            project = await self._project_dao.update_by_id(
+                project_id=project_id,
+                update_data=project_update_fields,
+            )
+            if not project:
+                raise ProjectNotFoundException
+        else:
+            project = await self._project_dao.get_by_id_with_relations(project_id)
+            if not project:
+                raise ProjectNotFoundException
+
+        if client_update_fields:
+            try:
+                client = await self._client_dao.update_by_id(
+                    client_id=project.client_id,
+                    update_data=client_update_fields,
+                )
+            except IntegrityError:
+                raise ClientEmailAlreadyRegisteredException from None
+            if not client:
+                raise ClientNotFoundException
+
+        await self._session.commit()
+        updated_project = await self._project_dao.get_by_id_with_relations(project_id)
+        if not updated_project:
+            raise ProjectNotFoundException
+        return updated_project
 
     async def get_project_by_id(self, project_id: int) -> Project:
         """Get single project with its properties and structures."""
