@@ -8,6 +8,7 @@ from core import BaseService
 from dao import ClientDAO, ProjectDAO
 from dto import (
     ProjectDashboardDTO,
+    ProjectDetailsDTO,
 )
 from exceptions import (
     ClientEmailAlreadyRegisteredException,
@@ -119,12 +120,12 @@ class ProjectService(BaseService):
             raise ProjectNotFoundException
         return updated_project
 
-    async def get_project_by_id(self, project_id: int) -> Project:
-        """Get single project with its properties and structures."""
-        project = await self._project_dao.get_by_id_with_relations(project_id)
-        if not project:
+    async def get_project_by_id(self, project_id: int) -> ProjectDetailsDTO:
+        """Get aggregated project details for project view."""
+        project_details = await self._project_dao.get_project_details(project_id)
+        if not project_details:
             raise ProjectNotFoundException
-        return project
+        return project_details
 
     async def delete_by_id(self, project_id: int) -> Project:
         """Soft delete project by id."""

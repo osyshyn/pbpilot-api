@@ -10,6 +10,7 @@ from models import User
 from schemas.projects import (
     CreateProjectRequestSchema,
     ProjectDashboardResponseSchema,
+    ProjectDetailsResponseSchema,
     ProjectResponseSchema,
     UpdateProjectRequestSchema,
 )
@@ -79,8 +80,8 @@ async def get_project_by_id(
     project_service: Annotated[
         ProjectService, Depends(get_service(ProjectService))
     ],
-) -> ProjectResponseSchema:
-    return ProjectResponseSchema.model_validate(
+) -> ProjectDetailsResponseSchema:
+    return ProjectDetailsResponseSchema.model_validate(
         await project_service.get_project_by_id(project_id=project_id)
     )
 

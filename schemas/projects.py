@@ -214,6 +214,47 @@ class ProjectResponseSchema(BaseModelSchema):
     created_at: datetime
 
 
+class ProjectInformationResponseSchema(BaseModelSchema):
+    """Aggregated information about the project."""
+
+    total_properties: int
+    total_units: int
+    created_date: datetime
+    last_updated: datetime
+
+
+class ProjectContactDetailsResponseSchema(BaseModelSchema):
+    """Contact information for the project client."""
+
+    client_fullname: str
+    client_phone: str | None
+    client_email: str
+
+
+class ProjectLabResultResponseSchema(BaseModelSchema):
+    """Laboratory result information for the project."""
+
+    laboratory_name: str
+    match_status: str
+    status: str
+
+
+class ProjectReportResponseSchema(BaseModelSchema):
+    """Report information for the project."""
+
+    report_name: str
+    creation_date: datetime
+
+
+class ProjectDetailsResponseSchema(BaseModelSchema):
+    """Full project details grouped into sections."""
+
+    project_information: ProjectInformationResponseSchema
+    contact_details: ProjectContactDetailsResponseSchema
+    lab_results: list[ProjectLabResultResponseSchema] = []
+    reports: list[ProjectReportResponseSchema] = []
+
+
 class _OngoingProjectResponseSchema(BaseModelSchema):
     amount: Annotated[
         int,
