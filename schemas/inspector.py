@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import Form
 from pydantic import EmailStr, Field
 
-from core import BaseModelSchema
+from core import BaseModelSchema, BaseUpdateSchema
 from models.inspector import LicenseTypeEnum
 
 
@@ -67,6 +67,53 @@ class CreateInspectorRequestSchema(BaseModelSchema):
     @classmethod
     def from_form(cls, data: str = Form(...)) -> 'CreateInspectorRequestSchema':
         return cls.model_validate_json(data)
+
+
+class UpdateInspectorRequestSchema(BaseUpdateSchema):
+    """Schema for updating inspector (name, surname, email, phone)."""
+
+    name: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='First name of the inspector',
+            min_length=3,
+            max_length=15,
+            pattern=r'^[a-zA-Z]+$',
+            examples=['John'],
+        ),
+    ]
+    surname: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Last name of the inspector',
+            min_length=3,
+            max_length=15,
+            pattern=r'^[a-zA-Z]+$',
+            examples=['Doe'],
+        ),
+    ]
+    email: Annotated[
+        EmailStr | None,
+        Field(
+            default=None,
+            description='Email address of the inspector',
+            min_length=3,
+            max_length=254,
+            examples=['inspector@example.com'],
+        ),
+    ]
+    phone_number: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Phone number of the inspector',
+            min_length=1,
+            max_length=32,
+            examples=['+1 234 567 8901', '12345678900'],
+        ),
+    ]
 
 
 class InspectorResponseSchema(BaseModelSchema):

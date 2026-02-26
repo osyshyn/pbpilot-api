@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy import func, select
 
 from core.dao import BaseDAO
@@ -48,6 +50,22 @@ class InspectorDAO(BaseDAO):
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def update_by_id(
+        self,
+        inspector_id: int,
+        update_data: dict[str, Any],
+    ) -> Inspector | None:
+        """Update inspector by id."""
+        inspector = await self.get_by_id(inspector_id)
+        if not inspector:
+            return None
+        for key, value in update_data.items():
+            if hasattr(inspector, key):
+                setattr(inspector, key, value)
+        await self._session.flush()
+        await self._session.refresh(inspector)
+        return inspector
 
     async def get_inspectors_dashboard(
         self,

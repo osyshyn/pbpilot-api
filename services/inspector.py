@@ -12,6 +12,7 @@ from exceptions.user import UserNotFoundByIdException
 from models import Inspector
 from schemas import (
     CreateInspectorRequestSchema,
+    UpdateInspectorRequestSchema,
 )
 
 logger = logging.getLogger(__name__)
@@ -65,6 +66,25 @@ class InspectorService(BaseService):
         )
         if not inspector or not inspector.is_active:
             raise UserNotFoundByIdException
+        return inspector
+
+    async def update_inspector(
+        self,
+        inspector_id: int,
+        inspector_update_data: UpdateInspectorRequestSchema,
+    ) -> Inspector:
+        try:
+            inspector = await self._inspector_dao.update_by_id(
+                inspector_id=inspector_id,
+                update_data=inspector_update_data.model_dump(
+                    exclude_unset=True
+                ),
+            )
+        except IntegrityError:
+            raise EmailAlreadyRegisteredException from None
+        if not inspector:
+            raise UserNotFoundByIdException
+        await self._session.commit()
         return inspector
 
     async def get_all_inspectors(
