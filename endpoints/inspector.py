@@ -62,7 +62,7 @@ async def create_inspector(
         list[CreateEquipmentRequestSchema],
         Depends(CreateEquipmentRequestSchema.list_from_form),
     ],
-    license_files: Annotated[UploadFile, File()], #TODO: Change to 1 file in all
+    license_file: Annotated[UploadFile, File()],
     certificate_files: Annotated[list[UploadFile], File()],
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
@@ -72,7 +72,7 @@ async def create_inspector(
     uploaded_licenses: list[
         UploadFileDTO
     ] = await upload_file_service.upload_files(
-        files=license_files, prefix=INSPECTOR_LICENSE_PREFIX
+        files=license_file, prefix=INSPECTOR_LICENSE_PREFIX
     )
     uploaded_certificates: list[
         UploadFileDTO
