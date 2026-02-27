@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy import select
 
 from core.dao import BaseDAO
@@ -38,3 +40,18 @@ class EquipmentDAO(BaseDAO):
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def update_by_id(
+        self,
+        equipment_id: int,
+        update_data: dict[str, Any],
+    ) -> Equipment | None:
+        equipment = await self.get_by_id(equipment_id)
+        if not equipment:
+            return None
+        for key, value in update_data.items():
+            if hasattr(equipment, key):
+                setattr(equipment, key, value)
+        await self._session.flush()
+        await self._session.refresh(equipment)
+        return equipment

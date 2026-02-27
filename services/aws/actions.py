@@ -220,6 +220,18 @@ class S3Actions(AWSActions, FileActionMixin):
             ExpiresIn=expires_in,
         )
 
+    def delete_object(self, key: str) -> None:
+        """Delete an object from S3 by key.
+
+        Args:
+            key: S3 storage key (path) of the object to delete.
+
+        """
+        self.s3_client.delete_object(
+            Bucket=self.aws_bucket_name,
+            Key=key,
+        )
+
     def _get_file_extension(self, content_type: str) -> str:
         """Get file extension from MIME type.
 

@@ -130,6 +130,28 @@ async def get_inspector_dashboard(
     return InspectorDashboardResponseSchema.model_validate(dashboard_dto)
 
 
+@inspector_router.delete(
+    path='/{inspector_id}/license-files/{file_index}',
+    summary='Delete one license file by index',
+    dependencies=[Depends(get_current_user)],
+)
+async def delete_inspector_license_file(
+    inspector_id: int,
+    file_index: int,
+    inspector_service: Annotated[
+        InspectorService, Depends(get_service(InspectorService))
+    ],
+    upload_file_service: FileUploadService = Depends(FileUploadService),
+) -> InspectorResponseSchema:
+    return InspectorResponseSchema.model_validate(
+        await inspector_service.delete_license_file(
+            inspector_id=inspector_id,
+            file_index=file_index,
+            file_upload_service=upload_file_service,
+        )
+    )
+
+
 @inspector_router.get(
     path='/{inspector_id}',
     summary='Get inspector by id',
