@@ -11,6 +11,7 @@ class EquipmentDAO(BaseDAO):
     ) -> list[Equipment]:
         db_equipments: list[Equipment] = [
             Equipment(
+                inspector_id=equipment.inspector_id,
                 name=equipment.name,
                 manufacturer=equipment.manufacturer,
                 model=equipment.model,

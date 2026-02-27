@@ -7,6 +7,7 @@ from models.equipment import OperationModeEnum
 
 @dataclass(slots=True)
 class CreateEquipmentDTO(BaseDTO):
+    inspector_id: int
     name: str
     manufacturer: str
     model: str

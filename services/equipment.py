@@ -24,16 +24,18 @@ class EquipmentService(BaseService):
 
     async def create_equipment(
         self,
+        inspector_id: int,
         equipment_schema: CreateEquipmentRequestSchema,
         certificate_files: list[UploadFileDTO],
     ) -> Equipment:
-        """Create one equipment with multiple certificate photo files."""
+        """Create one equipment for an inspector with multiple certificate photos."""
         if not certificate_files:
             raise ValueError('At least one certificate file is required')
         training_certificate_keys = [f.key for f in certificate_files]
         equipment_dto: CreateEquipmentDTO = SchemaMapper.to_dto(
             CreateEquipmentDTO,
             equipment_schema,
+            inspector_id=inspector_id,
             training_certificate_keys=training_certificate_keys,
         )
         equipments: list[Equipment] = await self._equipment_dao.create_bulk(
@@ -44,10 +46,15 @@ class EquipmentService(BaseService):
 
     async def create_new_equipments(
         self,
+        inspector_id: int,
         equipment_data: list[CreateEquipmentRequestSchema],
     ) -> list[Equipment]:
         equipments_dto: list[CreateEquipmentDTO] = [
-            SchemaMapper.to_dto(CreateEquipmentDTO, equipment)
+            SchemaMapper.to_dto(
+                CreateEquipmentDTO,
+                equipment,
+                inspector_id=inspector_id,
+            )
             for equipment in equipment_data
         ]
         equipments: list[Equipment] = await self._equipment_dao.create_bulk(
