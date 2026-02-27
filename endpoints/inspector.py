@@ -10,6 +10,7 @@ from dependencies import get_current_user
 from dto import UploadFileDTO
 from models import User
 from schemas import (
+    CreateEquipmentRequestSchema,
     CreateInspectorRequestSchema,
     InspectorDashboardResponseSchema,
     InspectorResponseSchema,
@@ -57,8 +58,12 @@ async def create_inspector(
         CreateInspectorRequestSchema,
         Depends(CreateInspectorRequestSchema.from_form),
     ],
-    license_files: Annotated[UploadFile, File()],
-    certificate_files: Annotated[UploadFile, File()],
+    equipment_data: Annotated[
+        list[CreateEquipmentRequestSchema],
+        Depends(CreateEquipmentRequestSchema.list_from_form),
+    ],
+    license_files: Annotated[UploadFile, File()], #TODO: Change to 1 file in all
+    certificate_files: Annotated[list[UploadFile], File()],
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
     ],
@@ -75,9 +80,11 @@ async def create_inspector(
         files=certificate_files, prefix=EQUIPMENT_PREFIX
     )
     return InspectorResponseSchema.model_validate(
-        await inspector_service.create_new_inspector(
+        await inspector_service.create_new_inspector_with_equipment(
             inspector_schema=inspector_data,
             license_files=uploaded_licenses,
+            certificates_files=uploaded_certificates,
+            equipment_data=equipment_data,
         )
     )
 
