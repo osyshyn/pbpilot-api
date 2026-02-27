@@ -25,8 +25,8 @@ from .jobs import (
     AssignInspectorRequestSchema,
     CreateJobRequestSchema,
     JobDetailsResponseSchema,
-    JobListItemResponseSchema,
     JobListFiltersSchema,
+    JobListItemResponseSchema,
     JobResponseSchema,
 )
 from .main import HealthCheckResponseSchema
@@ -63,8 +63,8 @@ __all__ = [
     'InspectorDashboardResponseSchema',
     'InspectorResponseSchema',
     'JobDetailsResponseSchema',
-    'JobListItemResponseSchema',
     'JobListFiltersSchema',
+    'JobListItemResponseSchema',
     'JobResponseSchema',
     'LogInRequestSchema',
     'PricingPlanListResponseSchema',

@@ -126,9 +126,7 @@ class JobDAO(BaseDAO):
         if inspector_id is not None:
             stmt = stmt.where(Job.inspector_id == inspector_id)
         if created_on_date is not None:
-            stmt = stmt.where(
-                cast(Job.created_at, Date) == created_on_date
-            )
+            stmt = stmt.where(cast(Job.created_at, Date) == created_on_date)
         return await self.paginate(query=stmt, page=page, limit=limit)
 
     async def get_by_inspector_id_paginated(

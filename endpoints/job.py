@@ -10,8 +10,8 @@ from schemas import (
     AssignInspectorRequestSchema,
     CreateJobRequestSchema,
     JobDetailsResponseSchema,
-    JobListItemResponseSchema,
     JobListFiltersSchema,
+    JobListItemResponseSchema,
     JobResponseSchema,
 )
 from services.job import JobService

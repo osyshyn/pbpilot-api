@@ -35,6 +35,7 @@ class SampleTypeEnum(StrEnum):
     WATER = 'WATER'
     SOIL = 'SOIL'
 
+
 class Job(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'jobs'
 
