@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, File, UploadFile
 
 from core import get_service
-from core.constants import INSPECTOR_LICENSE_PREFIX
+from core.constants import INSPECTOR_LICENSE_PREFIX, EQUIPMENT_PREFIX
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_current_user
 from dto import UploadFileDTO
@@ -58,6 +58,7 @@ async def create_inspector(
         Depends(CreateInspectorRequestSchema.from_form),
     ],
     license_files: Annotated[UploadFile, File()],
+    certificate_files: Annotated[UploadFile, File()],
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
     ],
@@ -67,6 +68,11 @@ async def create_inspector(
         UploadFileDTO
     ] = await upload_file_service.upload_files(
         files=license_files, prefix=INSPECTOR_LICENSE_PREFIX
+    )
+    uploaded_certificates: list[
+        UploadFileDTO
+    ] = await upload_file_service.upload_files(
+        files=certificate_files, prefix=EQUIPMENT_PREFIX
     )
     return InspectorResponseSchema.model_validate(
         await inspector_service.create_new_inspector(
