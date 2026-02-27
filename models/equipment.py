@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 from datetime import date
 from enum import StrEnum
 
-from sqlalchemy import Date, Enum, String
+from sqlalchemy import Date, Enum, ForeignKey, String
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
 
@@ -15,6 +17,12 @@ class OperationModeEnum(StrEnum):
 
 class Equipment(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'equipments'
+
+    inspector_id: Mapped[int] = mapped_column(
+        ForeignKey('inspectors.id', ondelete='CASCADE'),
+        nullable=False,
+        index=True,
+    )
 
     name: Mapped[str] = mapped_column(
         String(254),
@@ -45,6 +53,11 @@ class Equipment(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         JSONB,
         nullable=True,
         comment='S3 keys for training certificate images',
+    )
+
+    inspector: Mapped['Inspector'] = relationship(
+        'Inspector',
+        back_populates='equipments',
     )
 
     def __repr__(self) -> str:

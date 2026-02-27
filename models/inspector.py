@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 from datetime import date
 from enum import StrEnum
 
 from sqlalchemy import Enum, Index, String, text
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
 
@@ -65,6 +67,12 @@ class Inspector(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         JSONB,
         nullable=True,
         comment='S3 keys for license images',
+    )
+
+    equipments: Mapped[list['Equipment']] = relationship(
+        'Equipment',
+        back_populates='inspector',
+        cascade='all, delete-orphan',
     )
 
     @property
