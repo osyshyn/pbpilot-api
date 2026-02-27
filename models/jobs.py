@@ -22,6 +22,19 @@ class InspectionTypeEnum(StrEnum):
     RETEST = 'RETEST'
 
 
+class JobStatusEnum(StrEnum):
+    COMPLETED = 'COMPLETED'
+    IN_PROGRESS = 'IN_PROGRESS'
+    SCHEDULED = 'SCHEDULED'
+    AWAITING_RESULTS = 'AWAITING_RESULTS'
+
+
+class SampleTypeEnum(StrEnum):
+    PAINT_CHIP = 'PAINT_CHIP'
+    DUST_WIPE = 'DUST_WIPE'
+    WATER = 'WATER'
+    SOIL = 'SOIL'
+
 class Job(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     __tablename__ = 'jobs'
 
@@ -58,7 +71,10 @@ class Job(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         ),
         nullable=False,
     )
-
+    status: Mapped[JobStatusEnum] = mapped_column(
+        Enum(JobStatusEnum, name='job_status_enum', create_type=False),
+        nullable=False,
+    )
     notes: Mapped[str | None] = mapped_column(
         String(2048),
         nullable=True,
