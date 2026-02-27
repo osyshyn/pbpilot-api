@@ -5,18 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import BaseService, SchemaMapper
 from core.pagination import PaginationParams
-from dao import EquipmentDAO, InspectorDAO
-from dto import (
-    CreateEquipmentDTO,
-    CreateInspectorDTO,
-    InspectorDashboardDTO,
-    UploadFileDTO,
-)
-from exceptions import EmailAlreadyRegisteredException, FileUploadException
+from dao import InspectorDAO
+from dto import CreateInspectorDTO, InspectorDashboardDTO, UploadFileDTO
+from exceptions import EmailAlreadyRegisteredException
 from exceptions.user import UserNotFoundByIdException
 from models import Inspector
 from schemas import (
-    CreateEquipmentRequestSchema,
     CreateInspectorRequestSchema,
     UpdateInspectorRequestSchema,
 )
@@ -34,49 +28,23 @@ class InspectorService(BaseService):
         super().__init__(db_session)
         self._inspector_dao = inspector_dao or InspectorDAO(db_session)
 
-    async def create_new_inspector_with_equipment(
+    async def create_new_inspector(
         self,
-        license_files: list[UploadFileDTO] | UploadFileDTO,
-        certificates_files: list[UploadFileDTO] | UploadFileDTO,
         inspector_schema: CreateInspectorRequestSchema,
-        equipment_data: list[CreateEquipmentRequestSchema],
+        license_files: list[UploadFileDTO],
     ) -> Inspector:
-        if isinstance(license_files, UploadFileDTO):
-            license_files_list: list[UploadFileDTO] = [license_files]
-        else:
-            license_files_list = license_files
-
-        if isinstance(certificates_files, UploadFileDTO):
-            certificates_files_list: list[UploadFileDTO] = [certificates_files]
-        else:
-            certificates_files_list = certificates_files
-
-        if len(equipment_data) != len(certificates_files_list):
-            # One equipment must strictly correspond to one certificate photo
-            raise FileUploadException()
-
+        if not license_files:
+            raise ValueError('At least one license file is required')
+        license_image_keys = [f.key for f in license_files]
         try:
             inspector_data: CreateInspectorDTO = SchemaMapper.to_dto(
                 CreateInspectorDTO,
                 inspector_schema,
-                license_image_key=license_files_list[0].key,
+                license_image_keys=license_image_keys,
             )
             inspector: Inspector = await self._inspector_dao.create(
                 inspector_data=inspector_data
             )
-
-            equipment_dao = EquipmentDAO(self._session)
-
-            equipments_dto: list[CreateEquipmentDTO] = [
-                SchemaMapper.to_dto(
-                    CreateEquipmentDTO,
-                    equipment_schema,
-                    training_certificate_key=certificates_files_list[idx].key,
-                )
-                for idx, equipment_schema in enumerate(equipment_data)
-            ]
-
-            await equipment_dao.create_bulk(equipments=equipments_dto)
         except IntegrityError:
             raise EmailAlreadyRegisteredException from None
         await self._session.commit()

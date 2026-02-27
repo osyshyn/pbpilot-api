@@ -31,7 +31,7 @@ class InspectorDAO(BaseDAO):
             licence_type=inspector_data.licence_type,
             issue_date=inspector_data.issue_date,
             expiration_date=inspector_data.expiration_date,
-            license_image_key=inspector_data.license_image_key,
+            license_image_keys=inspector_data.license_image_keys or None,
         )
         self._session.add(inspector)
         await self._session.flush()

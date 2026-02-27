@@ -17,7 +17,7 @@ class EquipmentDAO(BaseDAO):
                 serial_number=equipment.serial_number,
                 mode=equipment.mode,
                 date_of_radioactive_source=equipment.date_of_radioactive_source,
-                training_certificate_key=equipment.training_certificate_key,
+                training_certificate_keys=equipment.training_certificate_keys,
             )
             for equipment in equipments
         ]

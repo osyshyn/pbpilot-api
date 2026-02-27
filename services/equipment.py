@@ -2,14 +2,12 @@ import logging
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core import BaseService
+from core import BaseService, SchemaMapper
 from core.pagination import PaginationParams
 from dao import EquipmentDAO
-from dto import CreateEquipmentDTO
+from dto import CreateEquipmentDTO, UploadFileDTO
 from models import Equipment
-from schemas import (
-    CreateEquipmentRequestSchema,
-)
+from schemas import CreateEquipmentRequestSchema
 
 logger = logging.getLogger(__name__)
 
@@ -24,19 +22,32 @@ class EquipmentService(BaseService):
         super().__init__(db_session)
         self._equipment_dao = equipment_dao or EquipmentDAO(db_session)
 
+    async def create_equipment(
+        self,
+        equipment_schema: CreateEquipmentRequestSchema,
+        certificate_files: list[UploadFileDTO],
+    ) -> Equipment:
+        """Create one equipment with multiple certificate photo files."""
+        if not certificate_files:
+            raise ValueError('At least one certificate file is required')
+        training_certificate_keys = [f.key for f in certificate_files]
+        equipment_dto: CreateEquipmentDTO = SchemaMapper.to_dto(
+            CreateEquipmentDTO,
+            equipment_schema,
+            training_certificate_keys=training_certificate_keys,
+        )
+        equipments: list[Equipment] = await self._equipment_dao.create_bulk(
+            equipments=[equipment_dto]
+        )
+        await self._session.commit()
+        return equipments[0]
+
     async def create_new_equipments(
         self,
         equipment_data: list[CreateEquipmentRequestSchema],
     ) -> list[Equipment]:
         equipments_dto: list[CreateEquipmentDTO] = [
-            CreateEquipmentDTO(
-                name=equipment.name,
-                manufacturer=equipment.manufacturer,
-                model=equipment.model,
-                serial_number=equipment.serial_number,
-                mode=equipment.mode,
-                date_of_radioactive_source=equipment.date_of_radioactive_source,
-            )
+            SchemaMapper.to_dto(CreateEquipmentDTO, equipment)
             for equipment in equipment_data
         ]
         equipments: list[Equipment] = await self._equipment_dao.create_bulk(
