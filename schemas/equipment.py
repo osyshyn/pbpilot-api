@@ -1,6 +1,6 @@
+import json
 from datetime import date
 from typing import Annotated
-import json
 
 from fastapi import Form
 from pydantic import Field

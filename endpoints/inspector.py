@@ -65,10 +65,10 @@ async def create_inspector(
     ],
     upload_file_service: FileUploadService = Depends(FileUploadService),
 ) -> InspectorResponseSchema:
-    uploaded_licenses: list[UploadFileDTO] = (
-        await upload_file_service.upload_files(
-            files=license_files, prefix=INSPECTOR_LICENSE_PREFIX
-        )
+    uploaded_licenses: list[
+        UploadFileDTO
+    ] = await upload_file_service.upload_files(
+        files=license_files, prefix=INSPECTOR_LICENSE_PREFIX
     )
     return InspectorResponseSchema.model_validate(
         await inspector_service.create_new_inspector(
@@ -99,10 +99,10 @@ async def create_inspector_equipment(
     upload_file_service: FileUploadService = Depends(FileUploadService),
 ) -> EquipmentResponseSchema:
     await inspector_service.get_inspector_by_id(inspector_id=inspector_id)
-    uploaded_certificates: list[UploadFileDTO] = (
-        await upload_file_service.upload_files(
-            files=certificate_files, prefix=EQUIPMENT_PREFIX
-        )
+    uploaded_certificates: list[
+        UploadFileDTO
+    ] = await upload_file_service.upload_files(
+        files=certificate_files, prefix=EQUIPMENT_PREFIX
     )
     return EquipmentResponseSchema.model_validate(
         await equipment_service.create_equipment(

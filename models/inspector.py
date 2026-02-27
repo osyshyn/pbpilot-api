@@ -2,12 +2,16 @@ from __future__ import annotations
 
 from datetime import date
 from enum import StrEnum
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Enum, Index, String, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
+
+if TYPE_CHECKING:
+    from models.equipment import Equipment
 
 
 class LicenseTypeEnum(StrEnum):
@@ -69,7 +73,7 @@ class Inspector(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         comment='S3 keys for license images',
     )
 
-    equipments: Mapped[list['Equipment']] = relationship(
+    equipments: Mapped[list[Equipment]] = relationship(
         'Equipment',
         back_populates='inspector',
         cascade='all, delete-orphan',
