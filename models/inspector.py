@@ -61,11 +61,6 @@ class Inspector(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     issue_date: Mapped[date]
     expiration_date: Mapped[date]
 
-    license_image_key: Mapped[str | None] = mapped_column(
-        String(512),
-        nullable=True,
-        comment='S3 key for image (first from license_image_keys)',
-    )
     license_image_keys: Mapped[list[str] | None] = mapped_column(
         JSONB,
         nullable=True,

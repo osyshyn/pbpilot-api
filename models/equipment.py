@@ -41,11 +41,6 @@ class Equipment(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
         nullable=True,
     )
 
-    training_certificate_key: Mapped[str | None] = mapped_column(
-        String(512),
-        nullable=True,
-        comment='S3 key for image (first from training_certificate_keys)',
-    )
     training_certificate_keys: Mapped[list[str] | None] = mapped_column(
         JSONB,
         nullable=True,
