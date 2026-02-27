@@ -30,3 +30,13 @@ class IncorrectFileSizeException(FileException):
             status_code=400,
             detail=detail,
         )
+
+
+class LicenseFileIndexOutOfRangeException(FileException):
+    """Raised when license file index is out of range."""
+
+    def __init__(self) -> None:
+        super().__init__(
+            status_code=404,
+            detail='License file index out of range',
+        )

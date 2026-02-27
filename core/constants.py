@@ -67,3 +67,7 @@ MIME_TO_EXTENSION: dict[str, str] = {
 INSPECTOR_LICENSE_PREFIX: str = 'inspectors/licenses'
 INSPECTOR_AVATAR_PREFIX: str = 'inspectors/avatars'
 EQUIPMENT_PREFIX: str = 'equipments/training-certificates'
+
+# Model field names for update_data (inspector / equipment)
+INSPECTOR_FIELD_LICENSE_IMAGE_KEYS: str = 'license_image_keys'
+EQUIPMENT_FIELD_TRAINING_CERTIFICATE_KEYS: str = 'training_certificate_keys'
