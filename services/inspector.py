@@ -3,7 +3,7 @@ import logging
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core import BaseService
+from core import BaseService, SchemaMapper
 from core.pagination import PaginationParams
 from dao import InspectorDAO
 from dto import CreateInspectorDTO, InspectorDashboardDTO, UploadFileDTO
@@ -30,27 +30,17 @@ class InspectorService(BaseService):
 
     async def create_new_inspector(
         self,
-        license_files: list[UploadFileDTO] | UploadFileDTO,
         inspector_schema: CreateInspectorRequestSchema,
+        license_files: list[UploadFileDTO],
     ) -> Inspector:
-        license_file: UploadFileDTO = (
-            license_files
-            if isinstance(license_files, UploadFileDTO)
-            else license_files[0]
-        )
+        if not license_files:
+            raise ValueError('At least one license file is required')
+        license_image_keys = [f.key for f in license_files]
         try:
-            inspector_data: CreateInspectorDTO = (
-                CreateInspectorDTO(  # TODO: User mapper here
-                    name=inspector_schema.name,
-                    surname=inspector_schema.surname,
-                    email=inspector_schema.email,
-                    phone_number=inspector_schema.phone_number,
-                    license_number=inspector_schema.license_number,
-                    licence_type=inspector_schema.licence_type,
-                    issue_date=inspector_schema.issue_date,
-                    expiration_date=inspector_schema.expiration_date,
-                    license_image_key=license_file.key,
-                )
+            inspector_data: CreateInspectorDTO = SchemaMapper.to_dto(
+                CreateInspectorDTO,
+                inspector_schema,
+                license_image_keys=license_image_keys,
             )
             inspector: Inspector = await self._inspector_dao.create(
                 inspector_data=inspector_data

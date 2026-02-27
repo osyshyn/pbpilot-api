@@ -18,7 +18,8 @@ class InspectionTypeEnum(StrEnum):
     LIRA = 'LIRA'
     CLEARANCE = 'CLEARANCE'
     PRE_INSPECTION = 'PRE_INSPECTION'
-    SAMPLING_OR_RETEST = 'SAMPLING_OR_RETEST'
+    SAMPLING = 'SAMPLING'
+    RETEST = 'RETEST'
 
 
 class Job(BaseIdMixin, BaseTimeStampMixin, SoftDelete):

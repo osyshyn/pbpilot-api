@@ -4,18 +4,20 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, File, UploadFile
 
 from core import get_service
-from core.constants import INSPECTOR_LICENSE_PREFIX
+from core.constants import EQUIPMENT_PREFIX, INSPECTOR_LICENSE_PREFIX
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_current_user
 from dto import UploadFileDTO
 from models import User
 from schemas import (
+    CreateEquipmentRequestSchema,
     CreateInspectorRequestSchema,
+    EquipmentResponseSchema,
     InspectorDashboardResponseSchema,
     InspectorResponseSchema,
     UpdateInspectorRequestSchema,
 )
-from services import InspectorService
+from services import EquipmentService, InspectorService
 from services.aws import FileUploadService
 
 logger = logging.getLogger(__name__)
@@ -57,21 +59,56 @@ async def create_inspector(
         CreateInspectorRequestSchema,
         Depends(CreateInspectorRequestSchema.from_form),
     ],
-    files: Annotated[UploadFile, File()],
+    license_files: Annotated[list[UploadFile], File()],
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
     ],
     upload_file_service: FileUploadService = Depends(FileUploadService),
 ) -> InspectorResponseSchema:
-    uploaded_files: list[
-        UploadFileDTO
-    ] = await upload_file_service.upload_files(
-        files=files, prefix=INSPECTOR_LICENSE_PREFIX
+    uploaded_licenses: list[UploadFileDTO] = (
+        await upload_file_service.upload_files(
+            files=license_files, prefix=INSPECTOR_LICENSE_PREFIX
+        )
     )
     return InspectorResponseSchema.model_validate(
         await inspector_service.create_new_inspector(
             inspector_schema=inspector_data,
-            license_files=uploaded_files,
+            license_files=uploaded_licenses,
+        )
+    )
+
+
+@inspector_router.post(
+    path='/{inspector_id}/equipments',
+    summary='Create equipment for inspector',
+    dependencies=[Depends(get_current_user)],
+)
+async def create_inspector_equipment(
+    inspector_id: int,
+    equipment_data: Annotated[
+        CreateEquipmentRequestSchema,
+        Depends(CreateEquipmentRequestSchema.from_form),
+    ],
+    certificate_files: Annotated[list[UploadFile], File()],
+    inspector_service: Annotated[
+        InspectorService, Depends(get_service(InspectorService))
+    ],
+    equipment_service: Annotated[
+        EquipmentService, Depends(get_service(EquipmentService))
+    ],
+    upload_file_service: FileUploadService = Depends(FileUploadService),
+) -> EquipmentResponseSchema:
+    await inspector_service.get_inspector_by_id(inspector_id=inspector_id)
+    uploaded_certificates: list[UploadFileDTO] = (
+        await upload_file_service.upload_files(
+            files=certificate_files, prefix=EQUIPMENT_PREFIX
+        )
+    )
+    return EquipmentResponseSchema.model_validate(
+        await equipment_service.create_equipment(
+            inspector_id=inspector_id,
+            equipment_schema=equipment_data,
+            certificate_files=uploaded_certificates,
         )
     )
 

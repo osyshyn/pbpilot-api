@@ -65,8 +65,8 @@ class CreateInspectorRequestSchema(BaseModelSchema):
     expiration_date: date
 
     @classmethod
-    def from_form(cls, data: str = Form(...)) -> 'CreateInspectorRequestSchema':
-        return cls.model_validate_json(data)
+    def from_form(cls, inspector_data: str = Form(...)) -> 'CreateInspectorRequestSchema':
+        return cls.model_validate_json(inspector_data)
 
 
 class UpdateInspectorRequestSchema(BaseUpdateSchema):

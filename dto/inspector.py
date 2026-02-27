@@ -14,7 +14,7 @@ class CreateInspectorDTO(BaseDTO):
     licence_type: LicenseTypeEnum
     issue_date: date
     expiration_date: date
-    license_image_key: str
+    license_image_keys: list[str]
     phone_number: str | None = None
 
 

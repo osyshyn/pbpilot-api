@@ -11,13 +11,14 @@ class EquipmentDAO(BaseDAO):
     ) -> list[Equipment]:
         db_equipments: list[Equipment] = [
             Equipment(
+                inspector_id=equipment.inspector_id,
                 name=equipment.name,
                 manufacturer=equipment.manufacturer,
                 model=equipment.model,
                 serial_number=equipment.serial_number,
                 mode=equipment.mode,
                 date_of_radioactive_source=equipment.date_of_radioactive_source,
-                training_certificate_key=equipment.training_certificate_key,
+                training_certificate_keys=equipment.training_certificate_keys,
             )
             for equipment in equipments
         ]

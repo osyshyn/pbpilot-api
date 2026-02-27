@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends
 from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_current_user
-from schemas import CreateEquipmentRequestSchema, EquipmentResponseSchema
+from schemas import EquipmentResponseSchema
 from services import EquipmentService
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ equipment_router = APIRouter()
     summary='Get all equipments',
     dependencies=[Depends(get_current_user)],
 )
-async def get_all_clients(
+async def get_all_equipments(
     pagination: Annotated[PaginationParams, Depends()],
     equipment_service: Annotated[
         EquipmentService, Depends(get_service(EquipmentService))
@@ -36,25 +36,6 @@ async def get_all_clients(
         size=pagination.size,
         pages=pages,
     )
-
-
-@equipment_router.post(
-    path='/',
-    summary='Create a new equipment',
-    dependencies=[Depends(get_current_user)],
-)
-async def create_equipment(
-    equipment_data: list[CreateEquipmentRequestSchema],
-    equipment_service: Annotated[
-        EquipmentService, Depends(get_service(EquipmentService))
-    ],
-) -> list[EquipmentResponseSchema]:
-    return [
-        EquipmentResponseSchema.model_validate(equipment)
-        for equipment in await equipment_service.create_new_equipments(
-            equipment_data=equipment_data
-        )
-    ]
 
 
 @equipment_router.get(

@@ -1,4 +1,5 @@
 """Constants for file validation and processing."""
+from dao import EquipmentDAO
 
 # Size constants
 KB = 1024
@@ -66,3 +67,4 @@ MIME_TO_EXTENSION: dict[str, str] = {
 # S3 prefixes
 INSPECTOR_LICENSE_PREFIX: str = 'inspectors/licenses'
 INSPECTOR_AVATAR_PREFIX: str = 'inspectors/avatars'
+EQUIPMENT_PREFIX: str = 'equipments/training-certificates'
