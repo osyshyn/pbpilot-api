@@ -1,11 +1,30 @@
+from datetime import date as DateType
 from datetime import datetime
 from typing import Annotated
 
 from pydantic import Field
 
 from core import BaseModelSchema
-from models.jobs import InspectionTypeEnum
+from models.jobs import InspectionTypeEnum, JobStatusEnum
 from models.projects import BuildingTypeEnum, ProjectStatusEnum
+
+
+class JobListFiltersSchema(BaseModelSchema):
+    """Optional filters for listing jobs by project."""
+
+    status: JobStatusEnum | None = Field(
+        default=None,
+        description='Filter by job status',
+    )
+    inspector_id: int | None = Field(
+        default=None,
+        description='Filter by inspector id',
+        gt=0,
+    )
+    date: DateType | None = Field(
+        default=None,
+        description='Filter by job creation date',
+    )
 
 
 class CreateJobRequestSchema(BaseModelSchema):

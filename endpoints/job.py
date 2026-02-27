@@ -10,6 +10,7 @@ from schemas import (
     AssignInspectorRequestSchema,
     CreateJobRequestSchema,
     JobDetailsResponseSchema,
+    JobListFiltersSchema,
     JobListItemResponseSchema,
     JobResponseSchema,
 )
@@ -105,11 +106,13 @@ async def get_job_details(
 async def get_jobs_by_project(
     project_id: int,
     pagination: Annotated[PaginationParams, Depends()],
+    filters: Annotated[JobListFiltersSchema, Depends()],
     job_service: Annotated[JobService, Depends(get_service(JobService))],
 ) -> PaginatedResponse[JobListItemResponseSchema]:
     items, total = await job_service.get_jobs_by_project(
         project_id=project_id,
         pagination=pagination,
+        filters=filters,
     )
     pages = (total + pagination.size - 1) // pagination.size
     return PaginatedResponse(

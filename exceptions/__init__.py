@@ -13,10 +13,6 @@ from .company import (
     CompanyAlreadyExistsException,
     CompanyNotFoundException,
 )
-from .equipment import (
-    CertificateFileIndexOutOfRangeException,
-    EquipmentNotFoundException,
-)
 from .domain import (
     BaseDomainFileException,
     EmptyFileException,
@@ -24,6 +20,10 @@ from .domain import (
     FileUploadException,
     IncorrectFileSizeException,
     UnknownFiletypeException,
+)
+from .equipment import (
+    CertificateFileIndexOutOfRangeException,
+    EquipmentNotFoundException,
 )
 from .file import (  # type: ignore
     IncorrectFileSizeException,

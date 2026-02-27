@@ -21,7 +21,11 @@ from exceptions import (
 from exceptions.user import UserNotFoundByIdException
 from models import Job
 from models.projects import ProjectProperty
-from schemas import AssignInspectorRequestSchema, CreateJobRequestSchema
+from schemas import (
+    AssignInspectorRequestSchema,
+    CreateJobRequestSchema,
+    JobListFiltersSchema,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -197,11 +201,15 @@ class JobService(BaseService):
         self,
         project_id: int,
         pagination: PaginationParams,
+        filters: JobListFiltersSchema,
     ) -> tuple[list[JobListItemDTO], int]:
         jobs, total = await self._job_dao.get_by_project_id(
             project_id=project_id,
             page=pagination.page,
             limit=pagination.size,
+            status=filters.status,
+            inspector_id=filters.inspector_id,
+            created_on_date=filters.date,
         )
 
         items: list[JobListItemDTO] = []

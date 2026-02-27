@@ -1,11 +1,13 @@
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from typing import Any
 
-from sqlalchemy import select, update
+from sqlalchemy import cast, select, update
 from sqlalchemy.orm import selectinload
+from sqlalchemy.types import Date
 
 from core.dao import BaseDAO
 from models import Job, Project, ProjectProperty
+from models.jobs import JobStatusEnum
 
 
 class JobDAO(BaseDAO):
@@ -100,6 +102,10 @@ class JobDAO(BaseDAO):
         project_id: int,
         page: int,
         limit: int,
+        *,
+        status: JobStatusEnum | None = None,
+        inspector_id: int | None = None,
+        created_on_date: date | None = None,
     ) -> tuple[list[Job], int]:
         stmt = (
             select(Job)
@@ -115,6 +121,12 @@ class JobDAO(BaseDAO):
                 selectinload(Job.inspector),
             )
         )
+        if status is not None:
+            stmt = stmt.where(Job.status == status)
+        if inspector_id is not None:
+            stmt = stmt.where(Job.inspector_id == inspector_id)
+        if created_on_date is not None:
+            stmt = stmt.where(cast(Job.created_at, Date) == created_on_date)
         return await self.paginate(query=stmt, page=page, limit=limit)
 
     async def get_by_inspector_id_paginated(
