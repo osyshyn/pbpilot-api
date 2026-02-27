@@ -1,5 +1,4 @@
 """Constants for file validation and processing."""
-from dao import EquipmentDAO
 
 # Size constants
 KB = 1024
