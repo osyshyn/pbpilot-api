@@ -2,6 +2,7 @@ from datetime import date
 from enum import StrEnum
 
 from sqlalchemy import Enum, Index, String, text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.models import BaseIdMixin, BaseTimeStampMixin, SoftDelete
@@ -63,7 +64,12 @@ class Inspector(BaseIdMixin, BaseTimeStampMixin, SoftDelete):
     license_image_key: Mapped[str | None] = mapped_column(
         String(512),
         nullable=True,
-        comment='S3 key for image',
+        comment='S3 key for image (first from license_image_keys)',
+    )
+    license_image_keys: Mapped[list[str] | None] = mapped_column(
+        JSONB,
+        nullable=True,
+        comment='S3 keys for license images',
     )
 
     @property
