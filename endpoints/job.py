@@ -7,8 +7,11 @@ from core import get_service
 from core.pagination import PaginatedResponse, PaginationParams
 from dependencies import get_current_user
 from schemas import (
+    AssignInspectorRequestSchema,
     CreateJobRequestSchema,
     JobDetailsResponseSchema,
+    JobListFiltersSchema,
+    JobListItemResponseSchema,
     JobResponseSchema,
 )
 from services.job import JobService
@@ -65,6 +68,23 @@ async def get_job_by_id(
     return JobResponseSchema.model_validate(job)
 
 
+@job_router.patch(
+    path='/{job_id}/assign_inspector',
+    summary='Assign inspector to job',
+    dependencies=[Depends(get_current_user)],
+)
+async def assign_inspector_to_job(
+    job_id: int,
+    inspector_data: AssignInspectorRequestSchema,
+    job_service: Annotated[JobService, Depends(get_service(JobService))],
+) -> JobResponseSchema:
+    job = await job_service.assign_inspector(
+        job_id=job_id,
+        inspector_data=inspector_data,
+    )
+    return JobResponseSchema.model_validate(job)
+
+
 @job_router.get(
     path='/{job_id}/details',
     summary='Get job details by id',
@@ -78,14 +98,55 @@ async def get_job_details(
     return JobDetailsResponseSchema.model_validate(details_dto)
 
 
-@job_router.delete(
-    path='/{job_id}',
-    summary='Delete job by id',
+@job_router.get(
+    path='/by-project/{project_id}',
+    summary='Get jobs by project id',
     dependencies=[Depends(get_current_user)],
 )
-async def delete_job_by_id(
-    job_id: int,
+async def get_jobs_by_project(
+    project_id: int,
+    pagination: Annotated[PaginationParams, Depends()],
+    filters: Annotated[JobListFiltersSchema, Depends()],
     job_service: Annotated[JobService, Depends(get_service(JobService))],
-) -> JobResponseSchema:
-    job = await job_service.delete_job_by_id(job_id=job_id)
-    return JobResponseSchema.model_validate(job)
+) -> PaginatedResponse[JobListItemResponseSchema]:
+    items, total = await job_service.get_jobs_by_project(
+        project_id=project_id,
+        pagination=pagination,
+        filters=filters,
+    )
+    pages = (total + pagination.size - 1) // pagination.size
+    return PaginatedResponse(
+        items=[
+            JobListItemResponseSchema.model_validate(item) for item in items
+        ],
+        total=total,
+        page=pagination.page,
+        size=pagination.size,
+        pages=pages,
+    )
+
+
+@job_router.get(
+    path='/by-inspector/{inspector_id}',
+    summary='Get jobs by inspector id',
+    dependencies=[Depends(get_current_user)],
+)
+async def get_jobs_by_inspector(
+    inspector_id: int,
+    pagination: Annotated[PaginationParams, Depends()],
+    job_service: Annotated[JobService, Depends(get_service(JobService))],
+) -> PaginatedResponse[JobListItemResponseSchema]:
+    items, total = await job_service.get_jobs_by_inspector(
+        inspector_id=inspector_id,
+        pagination=pagination,
+    )
+    pages = (total + pagination.size - 1) // pagination.size
+    return PaginatedResponse(
+        items=[
+            JobListItemResponseSchema.model_validate(item) for item in items
+        ],
+        total=total,
+        page=pagination.page,
+        size=pagination.size,
+        pages=pages,
+    )

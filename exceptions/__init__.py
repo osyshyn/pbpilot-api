@@ -21,8 +21,13 @@ from .domain import (
     IncorrectFileSizeException,
     UnknownFiletypeException,
 )
+from .equipment import (
+    CertificateFileIndexOutOfRangeException,
+    EquipmentNotFoundException,
+)
 from .file import (  # type: ignore
     IncorrectFileSizeException,
+    LicenseFileIndexOutOfRangeException,
     UnknownFiletypeException,
 )
 from .job import JobNotFoundException
@@ -39,9 +44,12 @@ __all__ = [
     'ClientNotFoundException',
     'CompanyAlreadyExistsException',
     'CompanyNotFoundException',
+    'CertificateFileIndexOutOfRangeException',
     'EmailAlreadyRegisteredException',
+    'EquipmentNotFoundException',
     'IncorrectFileSizeException',
     'JobNotFoundException',
+    'LicenseFileIndexOutOfRangeException',
     'NoFiltersException',
     'NoUpdateDataException',
     'ProjectNotFoundException',

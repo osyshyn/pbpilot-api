@@ -20,7 +20,7 @@ Welcome to the detailed architectural guide for the `pbpilot-api` project. This 
 ## 2. Application Core & Configuration
 
 ### Environment Management (`config/settings.py`)
-Configuration is managed using `pydantic-settings`. 
+Configuration is managed using `pydantic-settings`.
 *   **Environments**: The app determines its environment (`local`, `dev`, `prod`) via the `ENV` system variable and loads the corresponding `.env` file (e.g., `.env.local`).
 *   **Settings Classes**: Configuration is strictly typed and broken down into logical sub-classes: `TokenSettings`, `DatabaseSettings`, `LoggingSettings`, `AwsSettings`, and `EmailSettings`.
 *   **Singleton Pattern**: The settings are loaded using `@cache` on the `Settings.load()` classmethod, ensuring only one instance is created per process for performance.
@@ -42,7 +42,7 @@ FastAPI's `Depends` is highly utilized to build a clean, testable dependency gra
     # Example from an endpoint:
     service: Annotated[CompanyService, Depends(get_service(CompanyService))]
     ```
-*   **Authentication Flow**: 
+*   **Authentication Flow**:
     1.  The `oauth_scheme` extracts a bearer token.
     2.  `get_current_user` decodes the token using `AuthService` and fetches the `User` from `UserService`.
     3.  Role-based dependencies (`get_admin_user_from_token`, `get_manager_user_from_token`, etc.) wrap `get_current_user` to restrict endpoint access easily.
@@ -92,7 +92,7 @@ SQLAlchemy 2.0 explicitly typed models. To reduce boilerplate, models inherit fr
 ## 5. Error Handling and Exceptions
 
 **Directory:** `exceptions/`
-The project does not raise generic HTTP 400s inside the deepest parts of code. 
+The project does not raise generic HTTP 400s inside the deepest parts of code.
 *   **Domain Exceptions**: Instead, business logic errors are represented as custom Python exceptions (e.g., `CompanyAlreadyExistsException`, `UserHasNoPermissionPermission`).
 *   **Handling**: These exceptions bubble up and are intercepted by global exception handlers configured at the FastAPI `app` level. The handlers map specific Exceptions (like "Not Found") to proper HTTP status codes (like 404) and standardize the JSON error structure returned to the client.
 
@@ -103,7 +103,7 @@ The project does not raise generic HTTP 400s inside the deepest parts of code.
 If you contribute to this project, your code must pass strict automated checks defined in `pyproject.toml`:
 
 1.  **Fully Asynchronous**: You cannot use synchronous blocking calls (like `requests` or synchronous `time.sleep`). Use `httpx`, `asyncio.sleep`, and native SQLAlchemy async features.
-2.  **MyPy `strict=True`**: 
+2.  **MyPy `strict=True`**:
     *   No dynamic `Any` logic without explicit ignoring.
     *   All functions must have explicit return types (`-> None`, `-> int`).
     *   All class attributes and variables should use modern Python type hinting.
@@ -111,7 +111,7 @@ If you contribute to this project, your code must pass strict automated checks d
     *   Max line length: **80 characters**.
     *   **Single quotes** strictly enforced for strings (unless inside another string).
     *   `ruff check --fix` will automatically sort imports (`I`), rewrite old syntax (`UP`), and remove unused code. No commented-out code (`ERA001`) or print statements are permitted in commits.
-4.  **No Logic in Init**: `__init__.py` files are kept clean and are primarily used for explicit exports. 
+4.  **No Logic in Init**: `__init__.py` files are kept clean and are primarily used for explicit exports.
 
 ---
 

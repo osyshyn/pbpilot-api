@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from typing import Any
 
 from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
@@ -7,7 +8,12 @@ from core.dao import BaseDAO
 from dto import (
     NeedScheduledDTO,
     OngoingProjectDTO,
+    ProjectContactDetailsDTO,
     ProjectDashboardDTO,
+    ProjectDetailsDTO,
+    ProjectInformationDTO,
+    ProjectLabResultDTO,
+    ProjectReportDTO,
     ReadyToFinalizeDTO,
     UnassignedJobsDTO,
 )
@@ -71,6 +77,7 @@ class ProjectDAO(BaseDAO):
             select(Project)
             .where(Project.id == project_id, Project.deleted_at.is_(None))
             .options(
+                selectinload(Project.client),
                 selectinload(Project.properties).selectinload(
                     ProjectProperty.structures
                 ),
@@ -78,6 +85,77 @@ class ProjectDAO(BaseDAO):
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def get_project_details(
+        self,
+        project_id: int,
+    ) -> ProjectDetailsDTO | None:
+        """Get aggregated project details for project view.
+
+        TODO: Replace mocked lab_results and reports with real data when
+        laboratory and reporting models are available.
+        """
+        project = await self.get_by_id_with_relations(project_id)
+        if not project:
+            return None
+
+        total_properties = len(project.properties)
+        total_units = sum(prop.number_of_units for prop in project.properties)
+
+        project_information = ProjectInformationDTO(
+            project_name=project.project_name,
+            total_properties=total_properties,
+            total_units=total_units,
+            created_date=project.created_at,
+            last_updated=project.updated_at,
+        )
+
+        client = project.client
+        contact_details = ProjectContactDetailsDTO(
+            client_fullname=client.full_name,
+            client_phone=client.phone_number,
+            client_email=client.email,
+        )
+
+        now = datetime.now(UTC)
+
+        lab_results = [
+            ProjectLabResultDTO(
+                laboratory_name='Mock Laboratory',
+                match_status='MATCHED',
+                status='COMPLETED',
+            ),
+        ]
+
+        reports = [
+            ProjectReportDTO(
+                report_name='Initial project report',
+                creation_date=now,
+            ),
+        ]
+
+        return ProjectDetailsDTO(
+            project_information=project_information,
+            contact_details=contact_details,
+            lab_results=lab_results,
+            reports=reports,
+        )
+
+    async def update_by_id(
+        self,
+        project_id: int,
+        update_data: dict[str, Any],
+    ) -> Project | None:
+        """Update project by id."""
+        project = await self.get_by_id_with_relations(project_id)
+        if not project:
+            return None
+        for key, value in update_data.items():
+            if hasattr(project, key):
+                setattr(project, key, value)
+        await self._session.flush()
+        await self._session.refresh(project)
+        return project
 
     async def delete_by_id(self, project_id: int) -> Project | None:
         """Soft delete project by id."""

@@ -15,10 +15,18 @@ from .company import (
     CreateCompanyScheduleItemRequestSchema,
 )
 from .equipment import CreateEquipmentRequestSchema, EquipmentResponseSchema
-from .inspector import CreateInspectorRequestSchema, InspectorResponseSchema
+from .inspector import (
+    CreateInspectorRequestSchema,
+    InspectorDashboardResponseSchema,
+    InspectorResponseSchema,
+    UpdateInspectorRequestSchema,
+)
 from .jobs import (
+    AssignInspectorRequestSchema,
     CreateJobRequestSchema,
     JobDetailsResponseSchema,
+    JobListFiltersSchema,
+    JobListItemResponseSchema,
     JobResponseSchema,
 )
 from .main import HealthCheckResponseSchema
@@ -36,7 +44,9 @@ from .pricing_plan import (
 from .projects import (
     CreateProjectRequestSchema,
     ProjectDashboardResponseSchema,
+    ProjectDetailsResponseSchema,
     ProjectResponseSchema,
+    UpdateProjectRequestSchema,
 )
 from .token import RefreshTokenRequestSchema, TokenResponseSchemas
 from .user import UserResponseSchema
@@ -44,6 +54,7 @@ from .user import UserResponseSchema
 __all__ = [
     'AssignFreeReportsRequestSchema',
     'AssignFreeReportsResponseSchema',
+    'AssignInspectorRequestSchema',
     'ClientResponseSchema',
     'CompanyResponseSchema',
     'CreateClientRequestSchema',
@@ -57,16 +68,20 @@ __all__ = [
     'EquipmentResponseSchema',
     'HazardsGroupedSchema',
     'HealthCheckResponseSchema',
+    'InspectorDashboardResponseSchema',
     'InspectorResponseSchema',
     'ObservationResponseSchema',
     'ParseTextRequestSchema',
     'ParseTextResponseSchema',
     'JobDetailsResponseSchema',
+    'JobListFiltersSchema',
+    'JobListItemResponseSchema',
     'JobResponseSchema',
     'LogInRequestSchema',
     'PricingPlanListResponseSchema',
     'PricingPlanResponseSchema',
     'ProjectDashboardResponseSchema',
+    'ProjectDetailsResponseSchema',
     'ProjectResponseSchema',
     'RefreshTokenRequestSchema',
     'SignUpRequestSchema',
@@ -74,5 +89,7 @@ __all__ = [
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
     'UnitHazardsSchema',
+    'UpdateInspectorRequestSchema',
+    'UpdateProjectRequestSchema',
     'UserResponseSchema',
 ]

@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import Annotated, Self
 
-from pydantic import Field, model_validator
+from pydantic import EmailStr, Field, model_validator
 
-from core import BaseModelSchema
+from core import BaseModelSchema, BaseUpdateSchema
 from models.projects import BuildingTypeEnum, ProjectStatusEnum
 
 
@@ -146,6 +146,39 @@ class CreateProjectRequestSchema(BaseModelSchema):
     ]
 
 
+class UpdateProjectRequestSchema(BaseUpdateSchema):
+    """Schema for updating project and its contact information."""
+
+    project_name: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Project name',
+            examples=['Updated project name'],
+            min_length=1,
+            max_length=255,
+        ),
+    ]
+    email: Annotated[
+        EmailStr | None,
+        Field(
+            default=None,
+            description='Contact email for the project',
+            examples=['project_contact@example.com'],
+        ),
+    ]
+    phone_number: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description='Contact phone number for the project',
+            examples=['+12345678901'],
+            min_length=3,
+            max_length=128,
+        ),
+    ]
+
+
 class PropertyStructureResponseSchema(BaseModelSchema):
     """Schema for a property structure in response."""
 
@@ -179,6 +212,48 @@ class ProjectResponseSchema(BaseModelSchema):
     property_manager_name: str | None
     properties: list[ProjectPropertyResponseSchema] = []
     created_at: datetime
+
+
+class ProjectInformationResponseSchema(BaseModelSchema):
+    """Aggregated information about the project."""
+
+    project_name: str
+    total_properties: int
+    total_units: int
+    created_date: datetime
+    last_updated: datetime
+
+
+class ProjectContactDetailsResponseSchema(BaseModelSchema):
+    """Contact information for the project client."""
+
+    client_fullname: str
+    client_phone: str | None
+    client_email: str
+
+
+class ProjectLabResultResponseSchema(BaseModelSchema):
+    """Laboratory result information for the project."""
+
+    laboratory_name: str
+    match_status: str
+    status: str
+
+
+class ProjectReportResponseSchema(BaseModelSchema):
+    """Report information for the project."""
+
+    report_name: str
+    creation_date: datetime
+
+
+class ProjectDetailsResponseSchema(BaseModelSchema):
+    """Full project details grouped into sections."""
+
+    project_information: ProjectInformationResponseSchema
+    contact_details: ProjectContactDetailsResponseSchema
+    lab_results: list[ProjectLabResultResponseSchema] = []
+    reports: list[ProjectReportResponseSchema] = []
 
 
 class _OngoingProjectResponseSchema(BaseModelSchema):

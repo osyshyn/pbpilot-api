@@ -43,3 +43,12 @@ class FileUploadService:
                 )
             )
         return results
+
+    def delete_file(self, key: str) -> None:
+        """Delete a file from S3 by key.
+
+        Args:
+            key: S3 storage key of the file to delete.
+
+        """
+        self._s3.delete_object(key=key)

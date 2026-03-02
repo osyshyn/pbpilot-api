@@ -1,11 +1,30 @@
+from datetime import date as DateType
 from datetime import datetime
 from typing import Annotated
 
 from pydantic import Field
 
 from core import BaseModelSchema
-from models.jobs import InspectionTypeEnum
+from models.jobs import InspectionTypeEnum, JobStatusEnum
 from models.projects import BuildingTypeEnum, ProjectStatusEnum
+
+
+class JobListFiltersSchema(BaseModelSchema):
+    """Optional filters for listing jobs by project."""
+
+    status: JobStatusEnum | None = Field(
+        default=None,
+        description='Filter by job status',
+    )
+    inspector_id: int | None = Field(
+        default=None,
+        description='Filter by inspector id',
+        gt=0,
+    )
+    date: DateType | None = Field(
+        default=None,
+        description='Filter by job creation date',
+    )
 
 
 class CreateJobRequestSchema(BaseModelSchema):
@@ -39,6 +58,20 @@ class CreateJobRequestSchema(BaseModelSchema):
             default=None,
             description='Additional notes for the job',
             max_length=2048,
+        ),
+    ]
+
+
+class AssignInspectorRequestSchema(BaseModelSchema):
+    """Schema for assigning or unassigning inspector to a job."""
+
+    inspector_id: Annotated[
+        int | None,
+        Field(
+            default=None,
+            description='ID of assigned inspector (nullable to unassign)',
+            gt=0,
+            examples=[1],
         ),
     ]
 
@@ -91,3 +124,13 @@ class JobDetailsResponseSchema(BaseModelSchema):
     property: JobPropertyDetailsResponseSchema
     progress: JobInspectionProgressResponseSchema
     notes: str | None
+
+
+class JobListItemResponseSchema(BaseModelSchema):
+    property_address: str
+    status: ProjectStatusEnum
+    job_type: InspectionTypeEnum
+    inspector: str | None
+    units: int
+    progress: int
+    date_created: datetime

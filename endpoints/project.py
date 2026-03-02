@@ -10,7 +10,9 @@ from models import User
 from schemas.projects import (
     CreateProjectRequestSchema,
     ProjectDashboardResponseSchema,
+    ProjectDetailsResponseSchema,
     ProjectResponseSchema,
+    UpdateProjectRequestSchema,
 )
 from services.project import ProjectService
 
@@ -78,8 +80,8 @@ async def get_project_by_id(
     project_service: Annotated[
         ProjectService, Depends(get_service(ProjectService))
     ],
-) -> ProjectResponseSchema:
-    return ProjectResponseSchema.model_validate(
+) -> ProjectDetailsResponseSchema:
+    return ProjectDetailsResponseSchema.model_validate(
         await project_service.get_project_by_id(project_id=project_id)
     )
 
@@ -96,6 +98,25 @@ async def delete_project_by_id(
     ],
 ) -> ProjectResponseSchema:
     project = await project_service.delete_by_id(project_id=project_id)
+    return ProjectResponseSchema.model_validate(project)
+
+
+@project_router.patch(
+    path='/{project_id}',
+    summary='Update project',
+    dependencies=[Depends(get_current_user)],
+)
+async def update_project(
+    project_id: int,
+    project_update_data: UpdateProjectRequestSchema,
+    project_service: Annotated[
+        ProjectService, Depends(get_service(ProjectService))
+    ],
+) -> ProjectResponseSchema:
+    project = await project_service.update_project(
+        project_id=project_id,
+        project_update_data=project_update_data,
+    )
     return ProjectResponseSchema.model_validate(project)
 
 
