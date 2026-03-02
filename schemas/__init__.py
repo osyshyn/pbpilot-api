@@ -35,6 +35,13 @@ from .jobs import (
     JobResponseSchema,
 )
 from .main import HealthCheckResponseSchema
+from .observation import (
+    HazardsGroupedSchema,
+    ObservationResponseSchema,
+    ParseTextRequestSchema,
+    ParseTextResponseSchema,
+    UnitHazardsSchema,
+)
 from .pricing_plan import (
     PricingPlanListResponseSchema,
     PricingPlanResponseSchema,
@@ -64,11 +71,15 @@ __all__ = [
     'CreateProjectRequestSchema',
     'CreateUserByAdminRequestSchema',
     'EquipmentResponseSchema',
+    'HazardsGroupedSchema',
     'HealthCheckResponseSchema',
     'InspectorDashboardResponseSchema',
     'InspectorDetailsResponseSchema',
     'InspectorResponseSchema',
     'UpdateInspectorLicenseRequestSchema',
+    'ObservationResponseSchema',
+    'ParseTextRequestSchema',
+    'ParseTextResponseSchema',
     'JobDetailsResponseSchema',
     'JobListFiltersSchema',
     'JobListItemResponseSchema',
@@ -84,6 +95,7 @@ __all__ = [
     'SignUpResponseSchema',
     'TokenResponseSchemas',
     'UpdateClientRequestSchema',
+    'UnitHazardsSchema',
     'UpdateInspectorRequestSchema',
     'UpdateProjectRequestSchema',
     'UserResponseSchema',

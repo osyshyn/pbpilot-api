@@ -6,6 +6,7 @@ from .debug import debug_router
 from .equimpent import equipment_router
 from .inspector import inspector_router
 from .job import job_router
+from .lead_paint import lead_paint_router
 from .main import main_router
 from .pricing_plan import pricing_plan_router
 from .project import project_router
@@ -20,6 +21,7 @@ __all__ = [
     'equipment_router',
     'inspector_router',
     'job_router',
+    'lead_paint_router',
     'main_router',
     'pricing_plan_router',
     'project_router',
