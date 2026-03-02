@@ -32,8 +32,7 @@ def get_structured_llm() -> Any:
     api_key = settings.openai_settings.API_KEY
     if not api_key:
         raise ValueError(
-            'OPENAI_API_KEY is not set. '
-            'Add OPENAI_API_KEY to your .env file.'
+            'OPENAI_API_KEY is not set. Add OPENAI_API_KEY to your .env file.'
         )
 
     llm = ChatOpenAI(
@@ -64,8 +63,7 @@ def get_async_structured_llm() -> Any:
     api_key = settings.openai_settings.API_KEY
     if not api_key:
         raise ValueError(
-            'OPENAI_API_KEY is not set. '
-            'Add OPENAI_API_KEY to your .env file.'
+            'OPENAI_API_KEY is not set. Add OPENAI_API_KEY to your .env file.'
         )
 
     llm = ChatOpenAI(

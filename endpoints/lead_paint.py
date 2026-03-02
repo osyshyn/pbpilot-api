@@ -58,11 +58,13 @@ def _build_categorized_response(
     use_side_as_room: bool = False,
 ) -> ParseTextResponseSchema:
     """Split into hazards / future_risk / excluded; group hazards and future_risk by unit/room."""
-    hazards_list, future_risk_list, excluded_list = group_observations_by_category(
-        observations
+    hazards_list, future_risk_list, excluded_list = (
+        group_observations_by_category(observations)
     )
     return ParseTextResponseSchema(
-        hazards=_build_grouped_schema(hazards_list, use_side_as_room=use_side_as_room),
+        hazards=_build_grouped_schema(
+            hazards_list, use_side_as_room=use_side_as_room
+        ),
         future_risk=_build_grouped_schema(
             future_risk_list, use_side_as_room=use_side_as_room
         ),
@@ -97,7 +99,9 @@ async def parse_exterior(
 
     """
     try:
-        observations = await _lead_paint_service.parse_exterior_async(request.text)
+        observations = await _lead_paint_service.parse_exterior_async(
+            request.text
+        )
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

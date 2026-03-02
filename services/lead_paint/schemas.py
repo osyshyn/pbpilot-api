@@ -33,9 +33,7 @@ class ObservationSchema(BaseModel):
     category: str = Field(
         description="Must be 'HAZARD', 'FUTURE_RISK', or 'EXCLUSION'"
     )
-    is_exterior: bool = Field(
-        description='True if exterior, False if interior'
-    )
+    is_exterior: bool = Field(description='True if exterior, False if interior')
     unit: str | None = Field(
         default=None,
         description="Unit name, e.g., 'Unit Down', 'Unit 1'. Null if exterior.",
@@ -61,8 +59,8 @@ class ObservationSchema(BaseModel):
     )
     raw_text: str = Field(
         description=(
-            "The exact original line or bullet point from the input text that was "
-            "used to generate this observation."
+            'The exact original line or bullet point from the input text that was '
+            'used to generate this observation.'
         ),
     )
 
@@ -90,7 +88,10 @@ class ObservationSchema(BaseModel):
             return 'All'
         if v.upper() in ('A', 'B', 'C', 'D'):
             return v.upper()
-        if v in ('1', '2', '3', 'two', '1-2', '1-3') or v.replace('-', '').isdigit():
+        if (
+            v in ('1', '2', '3', 'two', '1-2', '1-3')
+            or v.replace('-', '').isdigit()
+        ):
             return None
         return v
 

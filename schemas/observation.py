@@ -45,8 +45,8 @@ class ObservationResponseSchema(BaseModel):
     identifiers: str | None = None
     raw_text: str = Field(
         description=(
-            "The exact original line or bullet point from the input text that was "
-            "used to generate this observation."
+            'The exact original line or bullet point from the input text that was '
+            'used to generate this observation.'
         ),
     )
 

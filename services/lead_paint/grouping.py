@@ -5,7 +5,9 @@ from services.lead_paint.schemas import ObservationSchema
 
 def group_observations_by_category(
     observations: list[ObservationSchema],
-) -> tuple[list[ObservationSchema], list[ObservationSchema], list[ObservationSchema]]:
+) -> tuple[
+    list[ObservationSchema], list[ObservationSchema], list[ObservationSchema]
+]:
     """Split observations into three lists by category.
 
     - hazards: category == 'HAZARD'
@@ -55,6 +57,7 @@ def group_by_unit_and_room(
 
     Returns:
         Tuple (by_unit_dict, by_room_dict). Keys are strings (unit id, room name).
+
     """
     by_unit: dict[str, dict[str, list[ObservationSchema]]] = {}
     by_room: dict[str, list[ObservationSchema]] = {}
