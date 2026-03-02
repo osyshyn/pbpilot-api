@@ -21,6 +21,7 @@ from schemas import (
     InspectorDetailsResponseSchema,
     InspectorEquipmentItemSchema,
     InspectorLicenseSchema,
+    UpdateInspectorLicenseRequestSchema,
     UpdateInspectorRequestSchema,
 )
 from services.aws import FileUploadService, S3Actions
@@ -126,6 +127,25 @@ class InspectorService(BaseService):
         if updated:
             await self._session.refresh(updated)
             return updated
+        return inspector
+
+    async def update_inspector_license(
+        self,
+        inspector_id: int,
+        license_data: UpdateInspectorLicenseRequestSchema,
+    ) -> Inspector:
+        update_data = license_data.model_dump(exclude_unset=True)
+        if not update_data:
+            from exceptions import NoUpdateDataException
+
+            raise NoUpdateDataException
+        inspector = await self._inspector_dao.update_by_id(
+            inspector_id=inspector_id,
+            update_data=update_data,
+        )
+        if not inspector:
+            raise UserNotFoundByIdException
+        await self._session.commit()
         return inspector
 
     async def get_inspector_details(

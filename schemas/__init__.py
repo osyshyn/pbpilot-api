@@ -23,6 +23,7 @@ from .inspector import (
     InspectorDashboardResponseSchema,
     InspectorDetailsResponseSchema,
     InspectorResponseSchema,
+    UpdateInspectorLicenseRequestSchema,
     UpdateInspectorRequestSchema,
 )
 from .jobs import (
@@ -67,6 +68,7 @@ __all__ = [
     'InspectorDashboardResponseSchema',
     'InspectorDetailsResponseSchema',
     'InspectorResponseSchema',
+    'UpdateInspectorLicenseRequestSchema',
     'JobDetailsResponseSchema',
     'JobListFiltersSchema',
     'JobListItemResponseSchema',

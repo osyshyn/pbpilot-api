@@ -119,6 +119,24 @@ class UpdateInspectorRequestSchema(BaseUpdateSchema):
     ]
 
 
+class UpdateInspectorLicenseRequestSchema(BaseUpdateSchema):
+    """Schema for updating inspector license information."""
+
+    license_number: Annotated[
+        str | None,
+        Field(
+            default=None,
+            min_length=1,
+            max_length=32,
+            description='License number of the inspector',
+            examples=['License #1'],
+        ),
+    ]
+    licence_type: LicenseTypeEnum | None = None
+    issue_date: date | None = None
+    expiration_date: date | None = None
+
+
 class InspectorResponseSchema(BaseModelSchema):
     id: int
     full_name: str

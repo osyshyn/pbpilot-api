@@ -16,6 +16,7 @@ from schemas import (
     InspectorDashboardResponseSchema,
     InspectorDetailsResponseSchema,
     InspectorResponseSchema,
+    UpdateInspectorLicenseRequestSchema,
     UpdateInspectorRequestSchema,
 )
 from services import EquipmentService, InspectorService
@@ -187,4 +188,25 @@ async def update_inspector(
             inspector_id=inspector_id,
             inspector_update_data=inspector_update_data,
         )
+    )
+
+
+@inspector_router.patch(
+    path='/{inspector_id}/license',
+    summary='Update inspector license',
+    dependencies=[Depends(get_current_user)],
+)
+async def update_inspector_license(
+    inspector_id: int,
+    inspector_license_data: UpdateInspectorLicenseRequestSchema,
+    inspector_service: Annotated[
+        InspectorService, Depends(get_service(InspectorService))
+    ],
+) -> InspectorDetailsResponseSchema:
+    await inspector_service.update_inspector_license(
+        inspector_id=inspector_id,
+        license_data=inspector_license_data,
+    )
+    return await inspector_service.get_inspector_details(
+        inspector_id=inspector_id
     )
