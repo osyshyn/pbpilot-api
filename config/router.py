@@ -16,6 +16,7 @@ from endpoints import (
     equipment_router,
     inspector_router,
     job_router,
+    lead_paint_router,
     main_router,
     pricing_plan_router,
     project_router,
@@ -63,6 +64,9 @@ def initialize_routers() -> APIRouter:
         equipment_router, prefix='/equipment', tags=['equipment']
     )
     main_api_router.include_router(job_router, prefix='/job', tags=['job'])
+    main_api_router.include_router(
+        lead_paint_router, prefix='/lead-paint', tags=['lead-paint']
+    )
     if settings.ENV in {'dev', 'local'}:
         main_api_router.include_router(
             debug_router, prefix='/debug', tags=['debug']

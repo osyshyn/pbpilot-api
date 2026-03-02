@@ -141,6 +141,23 @@ class AwsSettings(BaseSettings):
     BUCKET_NAME: str
 
 
+class OpenAISettings(BaseSettings):
+    """Settings for OpenAI API (e.g. LangChain/LangGraph in test_scripts).
+
+    All settings are prefixed with 'OPENAI_' in environment variables.
+
+    Attributes:
+        API_KEY: OpenAI API key (required for ChatOpenAI in ETL graph).
+
+    """
+
+    model_config = SettingsConfigDict(
+        env_prefix='OPENAI_', env_file=env_file, extra='ignore'
+    )
+
+    API_KEY: str | None = None
+
+
 class EmailSettings(BaseSettings):
     """Settings for email sending.
 
@@ -185,6 +202,7 @@ class Settings(BaseSettings):
         logging_settings: Nested logging configuration.
         aws_settings: Nested AWS configuration.
         email_settings: Nested email configuration.
+        openai_settings: Nested OpenAI configuration (for ETL graph, etc.).
 
     """
 
@@ -214,6 +232,7 @@ class Settings(BaseSettings):
     logging_settings: LoggingSettings = Field(default_factory=LoggingSettings)
     aws_settings: AwsSettings = Field(default_factory=AwsSettings)  # type: ignore
     email_settings: EmailSettings = Field(default_factory=EmailSettings)
+    openai_settings: OpenAISettings = Field(default_factory=OpenAISettings)
 
     @classmethod
     @cache

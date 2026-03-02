@@ -7,20 +7,28 @@ requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.18.3",
     "asyncpg>=0.31.0",
+    "bcrypt>=5.0.0",
+    "boto3>=1.35.0",
     "fastapi>=0.128.0",
+    "jinja2>=3.1.0",
     "mangum>=0.21.0",
+    "playwright>=1.40.0",
     "pre-commit>=4.5.1",
     "pydantic[email]>=2.12.5",
     "pydantic-settings>=2.12.0",
-    "sqlalchemy>=2.0.46",
-    "uvicorn[standard]>=0.40.0",
-    "bcrypt>=5.0.0",
     "python-jose>=3.5.0",
     "python-multipart>=0.0.22",
     "sqladmin[full]>=0.23.0",
+    "sqlalchemy>=2.0.46",
+    "uvicorn[standard]>=0.40.0",
 ]
 
 [dependency-groups]
+graph = [
+    "langchain-core>=0.3.0",
+    "langchain-openai>=0.2.0",
+    "langgraph>=0.2.0",
+]
 dev = [
     "boto3-stubs[mypy-boto3-dynamodb,mypy-boto3-lambda,mypy-boto3-s3]>=1.42.5",
     "httpx>=0.28.1",
@@ -39,6 +47,7 @@ exclude = [
     "^migrations/",
     "^models/migrations/",
     "^scripts/",
+    "^test_scripts/",
     "^tests/",
     "^docs/",
 ]

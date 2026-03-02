@@ -1,9 +1,12 @@
 import logging
+import time
+from typing import Any, Awaitable, Callable
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
+from starlette.responses import Response
 
 from config.logger import configure_logging
 from config.router import initialize_admin_panel, initialize_routers
@@ -28,6 +31,25 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
+
+
+@app.middleware('http')
+async def add_process_time_middleware(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[Response]],
+) -> Response:
+    start_time = time.perf_counter()
+    response = await call_next(request)
+    process_time = time.perf_counter() - start_time
+    response.headers['X-Process-Time'] = f'{process_time:.4f}'
+    logger.info(
+        'Request: %s %s - Completed in: %.4fs',
+        request.method,
+        request.url.path,
+        process_time,
+    )
+    return response
+
 
 initialize_admin_panel(app)
 main_api_router = initialize_routers()
