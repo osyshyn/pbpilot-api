@@ -5,6 +5,7 @@ from fastapi import Form
 from pydantic import EmailStr, Field
 
 from core import BaseModelSchema, BaseUpdateSchema
+from models.equipment import OperationModeEnum
 from models.inspector import LicenseTypeEnum
 
 
@@ -118,6 +119,24 @@ class UpdateInspectorRequestSchema(BaseUpdateSchema):
     ]
 
 
+class UpdateInspectorLicenseRequestSchema(BaseUpdateSchema):
+    """Schema for updating inspector license information."""
+
+    license_number: Annotated[
+        str | None,
+        Field(
+            default=None,
+            min_length=1,
+            max_length=32,
+            description='License number of the inspector',
+            examples=['License #1'],
+        ),
+    ]
+    licence_type: LicenseTypeEnum | None = None
+    issue_date: date | None = None
+    expiration_date: date | None = None
+
+
 class InspectorResponseSchema(BaseModelSchema):
     id: int
     full_name: str
@@ -125,6 +144,37 @@ class InspectorResponseSchema(BaseModelSchema):
     expiration_date: date
     email: EmailStr
     phone_number: str
+
+
+class InspectorDetailsInspectorSchema(BaseModelSchema):
+    full_name: str
+    email: EmailStr
+    phone_number: str | None
+    total_jobs: int
+    active_jobs: int
+
+
+class InspectorLicenseSchema(BaseModelSchema):
+    license_number: str
+    license_type: LicenseTypeEnum
+    issue_date: date
+    expiration_date: date
+
+
+class InspectorEquipmentItemSchema(BaseModelSchema):
+    name: str
+    manufacturer: str
+    model: str
+    serial_number: str
+    mode_of_operation: OperationModeEnum
+    radioactive_source_date: date | None
+
+
+class InspectorDetailsResponseSchema(BaseModelSchema):
+    inspector: InspectorDetailsInspectorSchema
+    licenses: InspectorLicenseSchema
+    equipments: list[InspectorEquipmentItemSchema]
+    files: list[str]
 
 
 class _InspectorListWithAmountResponseSchema(BaseModelSchema):

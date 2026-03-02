@@ -14,7 +14,9 @@ from schemas import (
     CreateInspectorRequestSchema,
     EquipmentResponseSchema,
     InspectorDashboardResponseSchema,
+    InspectorDetailsResponseSchema,
     InspectorResponseSchema,
+    UpdateInspectorLicenseRequestSchema,
     UpdateInspectorRequestSchema,
 )
 from services import EquipmentService, InspectorService
@@ -154,18 +156,19 @@ async def delete_inspector_license_file(
 
 @inspector_router.get(
     path='/{inspector_id}',
-    summary='Get inspector by id',
+    summary='Get inspector details by id',
     dependencies=[Depends(get_current_user)],
 )
-async def get_company_by_id(
+async def get_inspector_by_id(
     inspector_id: int,
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
     ],
-) -> InspectorResponseSchema:
-    return InspectorResponseSchema.model_validate(
-        await inspector_service.get_inspector_by_id(inspector_id=inspector_id)
+) -> InspectorDetailsResponseSchema:
+    details = await inspector_service.get_inspector_details(
+        inspector_id=inspector_id
     )
+    return details
 
 
 @inspector_router.patch(
@@ -185,4 +188,25 @@ async def update_inspector(
             inspector_id=inspector_id,
             inspector_update_data=inspector_update_data,
         )
+    )
+
+
+@inspector_router.patch(
+    path='/{inspector_id}/license',
+    summary='Update inspector license',
+    dependencies=[Depends(get_current_user)],
+)
+async def update_inspector_license(
+    inspector_id: int,
+    inspector_license_data: UpdateInspectorLicenseRequestSchema,
+    inspector_service: Annotated[
+        InspectorService, Depends(get_service(InspectorService))
+    ],
+) -> InspectorDetailsResponseSchema:
+    await inspector_service.update_inspector_license(
+        inspector_id=inspector_id,
+        license_data=inspector_license_data,
+    )
+    return await inspector_service.get_inspector_details(
+        inspector_id=inspector_id
     )
