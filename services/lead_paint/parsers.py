@@ -5,12 +5,16 @@ from typing import cast
 from langchain_core.prompts import ChatPromptTemplate
 
 from services.lead_paint.llm import get_async_structured_llm, get_structured_llm
-from services.lead_paint.schemas import ObservationSchema, SectionExtractionSchema
+from services.lead_paint.schemas import (
+    ObservationSchema,
+    SectionExtractionSchema,
+)
 
-_EXTERIOR_PROMPT = ChatPromptTemplate.from_messages([
-    (
-        'system',
-        """You are an expert data extraction bot for Lead-Based Paint Inspections.
+_EXTERIOR_PROMPT = ChatPromptTemplate.from_messages(
+    [
+        (
+            'system',
+            """You are an expert data extraction bot for Lead-Based Paint Inspections.
 Your task is to extract observations from the EXTERIOR of a building.
 
 CRITICAL RULES:
@@ -32,14 +36,16 @@ CRITICAL RULES:
 10. If a single input line or bullet results in multiple observations, use that same original line as `raw_text` for ALL of those observations.
 
 OUTPUT FORMAT: Put only plain text in every field. Never include JSON syntax inside field values.""",
-    ),
-    ('user', 'Text:\n\n{text}'),
-])
+        ),
+        ('user', 'Text:\n\n{text}'),
+    ]
+)
 
-_INTERIOR_PROMPT = ChatPromptTemplate.from_messages([
-    (
-        'system',
-        """You are an expert data extraction bot for Lead-Based Paint Inspections.
+_INTERIOR_PROMPT = ChatPromptTemplate.from_messages(
+    [
+        (
+            'system',
+            """You are an expert data extraction bot for Lead-Based Paint Inspections.
 Your task is to parse INTERIOR hazards and exclusions into observations.
 
 CRITICAL RULES:
@@ -56,9 +62,11 @@ CRITICAL RULES:
 8. For each observation, copy the EXACT original line or bullet point from the input text into the `raw_text` field. Do not summarize or rephrase it; only trim leading bullet characters and surrounding whitespace.
 
 Extract component and condition from each line. Put only plain text in every field. Never include JSON syntax inside field values. For missing values, use null.""",
-    ),
-    ('user', 'Text:\n\n{text}'),
-])
+        ),
+        ('user', 'Text:\n\n{text}'),
+    ]
+)
+
 
 def parse_exterior_text(text: str) -> list[ObservationSchema]:
     """Parse exterior lead hazards text into observations (sync).
@@ -95,7 +103,9 @@ async def parse_exterior_text_async(text: str) -> list[ObservationSchema]:
 
     result = cast(
         SectionExtractionSchema,
-        await (_EXTERIOR_PROMPT | get_async_structured_llm()).ainvoke({'text': text}),
+        await (_EXTERIOR_PROMPT | get_async_structured_llm()).ainvoke(
+            {'text': text}
+        ),
     )
     return result.observations
 
@@ -135,6 +145,8 @@ async def parse_interior_text_async(text: str) -> list[ObservationSchema]:
 
     result = cast(
         SectionExtractionSchema,
-        await (_INTERIOR_PROMPT | get_async_structured_llm()).ainvoke({'text': text}),
+        await (_INTERIOR_PROMPT | get_async_structured_llm()).ainvoke(
+            {'text': text}
+        ),
     )
     return result.observations

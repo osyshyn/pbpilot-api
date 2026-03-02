@@ -133,4 +133,3 @@ class LeadPaintService:
         except LangChainException:
             logger.exception('OpenAI API error during interior parsing')
             raise
-
