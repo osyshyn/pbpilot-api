@@ -157,7 +157,7 @@ async def delete_inspector_license_file(
     summary='Get inspector by id',
     dependencies=[Depends(get_current_user)],
 )
-async def get_company_by_id(
+async def get_inspector_by_id(
     inspector_id: int,
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
