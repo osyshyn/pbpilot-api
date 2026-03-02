@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core import BaseService, SchemaMapper
 from core.constants import INSPECTOR_FIELD_LICENSE_IMAGE_KEYS
 from core.pagination import PaginationParams
-from dao import InspectorDAO
+from dao import EquipmentDAO, InspectorDAO, JobDAO
 from dto import CreateInspectorDTO, InspectorDashboardDTO, UploadFileDTO
 from exceptions import (
     EmailAlreadyRegisteredException,
@@ -14,11 +14,16 @@ from exceptions import (
 )
 from exceptions.user import UserNotFoundByIdException
 from models import Inspector
+from models.jobs import JobStatusEnum
 from schemas import (
     CreateInspectorRequestSchema,
+    InspectorDetailsInspectorSchema,
+    InspectorDetailsResponseSchema,
+    InspectorEquipmentItemSchema,
+    InspectorLicenseSchema,
     UpdateInspectorRequestSchema,
 )
-from services.aws import FileUploadService
+from services.aws import FileUploadService, S3Actions
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +37,8 @@ class InspectorService(BaseService):
     ):
         super().__init__(db_session)
         self._inspector_dao = inspector_dao or InspectorDAO(db_session)
+        self._job_dao = JobDAO(db_session)
+        self._equipment_dao = EquipmentDAO(db_session)
 
     async def create_new_inspector(
         self,
@@ -120,3 +127,60 @@ class InspectorService(BaseService):
             await self._session.refresh(updated)
             return updated
         return inspector
+
+    async def get_inspector_details(
+        self,
+        inspector_id: int,
+    ) -> InspectorDetailsResponseSchema:
+        inspector = await self.get_inspector_by_id(inspector_id)
+
+        jobs = await self._job_dao.get_all_by_inspector_id(inspector_id)
+        total_jobs = len(jobs)
+        active_jobs = sum(
+            1 for job in jobs if job.status != JobStatusEnum.COMPLETED
+        )
+
+        equipments = await self._equipment_dao.get_all_by_inspector_id(
+            inspector_id
+        )
+
+        s3 = S3Actions()
+        license_keys = inspector.license_image_keys or []
+        files = [
+            s3.get_presigned_url(key=key, require_object=False)
+            for key in license_keys
+        ]
+
+        inspector_block = InspectorDetailsInspectorSchema(
+            full_name=inspector.full_name,
+            email=inspector.email,
+            phone_number=inspector.phone_number,
+            total_jobs=total_jobs,
+            active_jobs=active_jobs,
+        )
+
+        license_block = InspectorLicenseSchema(
+            license_number=inspector.license_number,
+            license_type=inspector.licence_type,
+            issue_date=inspector.issue_date,
+            expiration_date=inspector.expiration_date,
+        )
+
+        equipments_block = [
+            InspectorEquipmentItemSchema(
+                name=e.name,
+                manufacturer=e.manufacturer,
+                model=e.model,
+                serial_number=e.serial_number,
+                mode_of_operation=e.mode,
+                radioactive_source_date=e.date_of_radioactive_source,
+            )
+            for e in equipments
+        ]
+
+        return InspectorDetailsResponseSchema(
+            inspector=inspector_block,
+            licenses=license_block,
+            equipments=equipments_block,
+            files=files,
+        )

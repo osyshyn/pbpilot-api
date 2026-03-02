@@ -14,6 +14,7 @@ from schemas import (
     CreateInspectorRequestSchema,
     EquipmentResponseSchema,
     InspectorDashboardResponseSchema,
+    InspectorDetailsResponseSchema,
     InspectorResponseSchema,
     UpdateInspectorRequestSchema,
 )
@@ -154,7 +155,7 @@ async def delete_inspector_license_file(
 
 @inspector_router.get(
     path='/{inspector_id}',
-    summary='Get inspector by id',
+    summary='Get inspector details by id',
     dependencies=[Depends(get_current_user)],
 )
 async def get_inspector_by_id(
@@ -162,10 +163,11 @@ async def get_inspector_by_id(
     inspector_service: Annotated[
         InspectorService, Depends(get_service(InspectorService))
     ],
-) -> InspectorResponseSchema:
-    return InspectorResponseSchema.model_validate(
-        await inspector_service.get_inspector_by_id(inspector_id=inspector_id)
+) -> InspectorDetailsResponseSchema:
+    details = await inspector_service.get_inspector_details(
+        inspector_id=inspector_id
     )
+    return details
 
 
 @inspector_router.patch(

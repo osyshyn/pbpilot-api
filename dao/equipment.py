@@ -41,6 +41,17 @@ class EquipmentDAO(BaseDAO):
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def get_all_by_inspector_id(
+        self,
+        inspector_id: int,
+    ) -> list[Equipment]:
+        stmt = select(Equipment).where(
+            Equipment.inspector_id == inspector_id,
+            Equipment.is_active == True,  # noqa: E712
+        )
+        result = await self._session.execute(stmt)
+        return list(result.scalars().all())
+
     async def update_by_id(
         self,
         equipment_id: int,
