@@ -1,0 +1,183 @@
+import logging
+from datetime import date
+from typing import Any
+
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from core import BaseService
+from dao import ClientDAO, ProjectDAO
+from dto import (
+    ProjectDashboardDTO,
+    ProjectDetailsDTO,
+)
+from exceptions import (
+    ClientEmailAlreadyRegisteredException,
+    ClientNotFoundException,
+    ProjectNotFoundException,
+)
+from models import Project
+from models.projects import ProjectStatusEnum
+from schemas.projects import (
+    CreateProjectRequestSchema,
+    ProjectFilesResponseSchema,
+    UpdateProjectRequestSchema,
+)
+
+logger = logging.getLogger(__name__)
+
+
+class ProjectService(BaseService):
+    def __init__(
+        self,
+        db_session: AsyncSession,
+        *,
+        project_dao: ProjectDAO | None = None,
+        client_dao: ClientDAO | None = None,
+    ):
+        super().__init__(db_session)
+        self._project_dao = project_dao or ProjectDAO(db_session)
+        self._client_dao = client_dao or ClientDAO(db_session)
+
+    async def search_by_name(self, project_name: str) -> list[Project]:
+        return await self._project_dao.search_by_name(
+            project_name=project_name,
+        )
+
+    async def create_project(self, data: CreateProjectRequestSchema) -> Project:
+        """Create a project with properties and structures."""
+        client = await self._client_dao.get_by_id(data.client_id)
+        if not client:
+            raise ClientNotFoundException
+        await self._client_dao.update_last_activity(client_id=client.id)
+        created_project = await self._project_dao.create_with_properties(
+            client_id=data.client_id,
+            project_name=data.project_name,
+            property_manager_name=data.property_manager,
+            properties_data=data.properties,
+            status=ProjectStatusEnum.IN_PROGRESS,
+        )
+        await self._session.commit()
+        project = await self._project_dao.get_by_id_with_relations(
+            created_project.id
+        )
+        if not project:
+            raise ProjectNotFoundException
+        return project
+
+    async def update_project(
+        self,
+        project_id: int,
+        project_update_data: UpdateProjectRequestSchema,
+    ) -> Project:
+        """Update project name and related contact data."""
+        update_data = project_update_data.model_dump(exclude_unset=True)
+
+        project_update_fields: dict[str, Any] = {}
+        client_update_fields: dict[str, Any] = {}
+
+        if 'project_name' in update_data:
+            project_update_fields['project_name'] = update_data.pop(
+                'project_name'
+            )
+
+        if 'email' in update_data:
+            client_update_fields['email'] = update_data.pop('email')
+        if 'phone_number' in update_data:
+            client_update_fields['phone_number'] = update_data.pop(
+                'phone_number'
+            )
+
+        project = None
+        if project_update_fields:
+            project = await self._project_dao.update_by_id(
+                project_id=project_id,
+                update_data=project_update_fields,
+            )
+            if not project:
+                raise ProjectNotFoundException
+        else:
+            project = await self._project_dao.get_by_id_with_relations(
+                project_id
+            )
+            if not project:
+                raise ProjectNotFoundException
+
+        if client_update_fields:
+            try:
+                client = await self._client_dao.update_by_id(
+                    client_id=project.client_id,
+                    update_data=client_update_fields,
+                )
+            except IntegrityError:
+                raise ClientEmailAlreadyRegisteredException from None
+            if not client:
+                raise ClientNotFoundException
+
+        await self._session.commit()
+        updated_project = await self._project_dao.get_by_id_with_relations(
+            project_id
+        )
+        if not updated_project:
+            raise ProjectNotFoundException
+        return updated_project
+
+    async def get_project_by_id(self, project_id: int) -> ProjectDetailsDTO:
+        """Get aggregated project details for project view."""
+        project_details = await self._project_dao.get_project_details(
+            project_id
+        )
+        if not project_details:
+            raise ProjectNotFoundException
+        return project_details
+
+    async def delete_by_id(self, project_id: int) -> Project:
+        """Soft delete project by id."""
+        project = await self._project_dao.delete_by_id(project_id)
+        if not project:
+            raise ProjectNotFoundException
+        await self._session.commit()
+        return project
+
+    async def get_all_projects(
+        self,
+        page: int,
+        size: int,
+        *,
+        status: ProjectStatusEnum | None = None,
+        client_id: int | None = None,
+        inspector_id: int | None = None,
+        date: date | None = None,
+    ) -> tuple[list[Project], int]:
+        """Get all active projects with pagination and optional filters."""
+        return await self._project_dao.get_all(
+            page=page,
+            limit=size,
+            status=status,
+            client_id=client_id,
+            inspector_id=inspector_id,
+            date=date,
+        )
+
+    async def get_projects_dashboard(self, user_id: int) -> ProjectDashboardDTO:
+        return await self._project_dao.get_projects_dashboard(user_id=user_id)
+
+    async def get_project_files(
+        self, project_id: int
+    ) -> ProjectFilesResponseSchema:
+        """Return files associated with a project.
+
+        Currently a stub — returns an empty list.
+        When S3 integration is ready, populate `files` with ProjectFileSchema
+        items, where each item contains:
+          - key: S3 object key
+          - url: pre-signed S3 URL (generated via boto3 generate_presigned_url)
+          - file_type: category (e.g. 'report', 'lab_result', 'license_image')
+          - filename: human-friendly file name
+        """
+        project = await self._project_dao.get_by_id_with_relations(project_id)
+        if not project:
+            raise ProjectNotFoundException
+
+        # TODO: Fetch real S3 keys from DB / model fields and generate pre-signed URLs.
+        return ProjectFilesResponseSchema(files=[], total=0)

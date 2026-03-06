@@ -1,0 +1,19 @@
+version = 0.1
+
+[default.deploy.parameters]
+resolve_s3 = true
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+
+confirm_changeset = false
+fail_on_empty_changeset = false
+
+[dev.deploy.parameters]
+stack_name = "PbPilotAPI-dev"
+s3_prefix = "PbPilotAPI-dev"
+parameter_overrides = "EnvMode=dev"
+
+[prod.deploy.parameters]
+stack_name = "PbPilotAPI-prod"
+s3_prefix = "PbPilotAPI-prod"
+parameter_overrides = "EnvMode=prod"
