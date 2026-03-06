@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 """Base directory of the project."""
 
 
-env_mode = os.getenv('ENV', 'env')
+env_mode = os.getenv('ENV', 'dev')
 """Current environment mode (dev, prod, etc.)."""
 
 match env_mode:
