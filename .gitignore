@@ -1,0 +1,6 @@
+test_scripts/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example

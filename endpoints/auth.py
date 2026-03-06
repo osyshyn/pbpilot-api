@@ -1,0 +1,163 @@
+from typing import Annotated
+
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
+
+from config.settings import Settings
+from core import get_service
+from schemas import (
+    LogInRequestSchema,
+    RefreshTokenRequestSchema,
+    SignUpRequestSchema,
+    SignUpResponseSchema,
+    TokenResponseSchemas,
+)
+from services import AuthService, UserService
+
+auth_router = APIRouter()
+settings = Settings.load()
+
+
+@auth_router.post(
+    path='/signup',
+    description='Create new user.',
+    response_model=SignUpResponseSchema,
+)
+async def signup_user(
+    user_data: SignUpRequestSchema,
+    auth_service: Annotated[UserService, Depends(get_service(UserService))],
+) -> SignUpResponseSchema:
+    """Create a new user in the system.
+
+    Args:
+        user_data (CreateUserRequestSchema): Schema with new user data.
+        auth_service (UserService): Service for user-related operations.
+
+    Returns:
+        UserResponseShema: Schema representing the newly created user.
+
+    """
+    return SignUpResponseSchema.model_validate(
+        await auth_service.create_new_user(user_data=user_data)
+    )
+
+
+@auth_router.post(
+    path='/swagger_login',
+    response_model=TokenResponseSchemas,
+    summary='User login',
+    description=(
+        'Authenticate user with email and password to get access to tokens.'
+    ),
+)
+async def swagger_login_user(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    auth_service: Annotated[AuthService, Depends(get_service(AuthService))],
+) -> TokenResponseSchemas:
+    """Authenticate user and return access and refresh tokens.
+
+    Args:
+        form_data (OAuth2PasswordRequestForm): Username and password.
+        auth_service (AuthService): Auth service dependency.
+
+    Returns:
+        TokenSchemas: Access and refresh tokens with type.
+
+    """
+    user = await auth_service.auth_user(
+        email=form_data.username,
+        password=form_data.password,
+    )
+    access, refresh = await auth_service.create_token(
+        author_id=user.id,
+    )
+    return TokenResponseSchemas(
+        access_token=access,
+        refresh_token=refresh,
+        user_role=user.role,
+    )
+
+
+@auth_router.post(
+    path='/login',
+    response_model=TokenResponseSchemas,
+    summary='User login',
+    description=(
+        'Authenticate user with email and password to get access to tokens.'
+    ),
+)
+async def login_user(
+    user_data: LogInRequestSchema,
+    auth_service: Annotated[AuthService, Depends(get_service(AuthService))],
+) -> TokenResponseSchemas:
+    user = await auth_service.auth_user(
+        email=user_data.email,
+        password=user_data.password,
+    )
+    access, refresh = await auth_service.create_token(
+        author_id=user.id,
+    )
+    return TokenResponseSchemas(
+        access_token=access,
+        refresh_token=refresh,
+        user_role=user.role,
+    )
+
+
+@auth_router.post(
+    path='/refresh',
+    response_model=TokenResponseSchemas,
+    summary='Refresh access token',
+    description='Get new access and refresh tokens using a valid one.',
+)
+async def refresh_token(
+    refresh_request: Annotated[RefreshTokenRequestSchema, Depends()],
+    auth_service: Annotated[AuthService, Depends(get_service(AuthService))],
+) -> TokenResponseSchemas:
+    """Refresh access and refresh tokens using a valid refresh token.
+
+    Args:
+        refresh_request (RefreshTokenRequestSchema): Schema containing
+            the refresh token.
+        auth_service (AuthService): Auth service dependency.
+
+    Returns:
+        TokenSchemas: New access and refresh tokens.
+
+    """
+    (
+        access_token,
+        new_refresh_token,
+        user_role,
+    ) = await auth_service.refresh_token(
+        refresh_token=refresh_request.refresh_token,
+    )
+    return TokenResponseSchemas(
+        access_token=access_token,
+        refresh_token=new_refresh_token,
+        user_role=user_role,
+    )
+
+
+@auth_router.delete(
+    path='/logout',
+    status_code=204,
+    summary='User logout',
+    description='Invalidate the provided refresh token to log out the user.',
+)
+async def logout_user(
+    refresh_request: Annotated[RefreshTokenRequestSchema, Depends()],
+    auth_service: Annotated[AuthService, Depends(get_service(AuthService))],
+) -> None:
+    """Invalidate the provided refresh token, logging out the user.
+
+    Args:
+        refresh_request (RefreshTokenRequestSchema): Schema containing
+            the refresh token to invalidate.
+        auth_service (AuthService): Auth service dependency.
+
+    Returns:
+        None
+
+    """
+    await auth_service.logout_user(refresh_request.refresh_token)
