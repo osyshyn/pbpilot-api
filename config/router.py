@@ -7,7 +7,7 @@ from sqladmin import Admin
 
 from admins import ADMIN_VIEWS
 from config.database import engine
-from config.settings import Settings
+from config.settings import Settings, _SECRET_KEY
 from core import AdminAuth
 from endpoints import (
     admin_router,
@@ -85,7 +85,7 @@ def initialize_admin_panel(app: FastAPI) -> None:
     if settings.ENV in {'dev', 'local'}:
         logger.info('Initializing admin panel: %s', ADMIN_VIEWS)
         authentication_backend = AdminAuth(
-            secret_key="da01100e28c9943d3da853addc43defcf252756d43f1eb8663e9a939364a73e2"
+            secret_key=_SECRET_KEY
         )
         admin = Admin(
             app=app,

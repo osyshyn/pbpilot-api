@@ -10,7 +10,7 @@ from starlette.responses import Response
 
 from config.logger import configure_logging
 from config.router import initialize_admin_panel, initialize_routers
-from config.settings import Settings
+from config.settings import Settings, _SECRET_KEY
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ app.add_middleware(
     allow_headers=['*'],
 )
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
-app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
+app.add_middleware(SessionMiddleware, secret_key=_SECRET_KEY)
 
 @app.middleware('http')
 async def add_process_time_middleware(

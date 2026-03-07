@@ -13,7 +13,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 """Base directory of the project."""
-
+# TODO: need to remove this to .env
+_SECRET_KEY: str = "da01100e28c9943d3da853addc43defcf252756d43f1eb8663e9a939364a73e2"
 
 env_mode = os.getenv('ENV', 'dev')
 """Current environment mode (dev, prod, etc.)."""
