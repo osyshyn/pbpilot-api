@@ -86,7 +86,7 @@ def initialize_admin_panel(app: FastAPI) -> None:
         admin = Admin(
             app=app,
             engine=engine,
-            base_url="/Prod/admin",
+            base_url="/admin",
         )
         for view_name in ADMIN_VIEWS:
             admin.add_view(view_name)
