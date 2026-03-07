@@ -83,7 +83,11 @@ def initialize_admin_panel(app: FastAPI) -> None:
     """Initialize an admin panel for the application."""
     if settings.ENV in {'dev', 'local'}:
         logger.info('Initializing admin panel: %s', ADMIN_VIEWS)
-        admin = Admin(app=app, engine=engine)
+        admin = Admin(
+            app=app,
+            engine=engine,
+            base_url="/Prod/admin",
+        )
         for view_name in ADMIN_VIEWS:
             admin.add_view(view_name)
     else:
