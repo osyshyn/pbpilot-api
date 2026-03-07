@@ -1,4 +1,4 @@
-from .admin import TimestampAdminMixin
+from .admin import TimestampAdminMixin, AdminAuth
 from .dependencies import get_service
 from .handlers import exception_handler, timing_handler
 from .mapper import SchemaMapper
@@ -16,6 +16,7 @@ __all__ = [
     'SchemaMapper',
     'SoftDelete',
     'TimestampAdminMixin',
+    'AdminAuth',
     'exception_handler',
     'get_service',
     'timing_handler',
